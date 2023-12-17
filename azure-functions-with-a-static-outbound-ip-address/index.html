@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Azure Functions with a Static Outbound IP Address</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preload" as="style" href="/assets/built/screen.css?v=c95e7abf59">
+    <link rel="preload" as="script" href="/assets/built/source.js?v=c95e7abf59">
+
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css?v=c95e7abf59">
+
+    <style>
+        :root {
+            --background-color: #ffffff
+        }
+    </style>
+
+    <script>
+        /* The script for calculating the color contrast has been taken from
+        https://gomakethings.com/dynamically-changing-the-text-color-based-on-background-color-contrast-with-vanilla-js/ */
+        var accentColor = getComputedStyle(document.documentElement).getPropertyValue('--background-color');
+        accentColor = accentColor.trim().slice(1);
+        var r = parseInt(accentColor.substr(0, 2), 16);
+        var g = parseInt(accentColor.substr(2, 2), 16);
+        var b = parseInt(accentColor.substr(4, 2), 16);
+        var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        var textColor = (yiq >= 128) ? 'dark' : 'light';
+
+        document.documentElement.className = `has-${textColor}-text`;
+    </script>
+
+    <link rel="canonical" href="http://localhost:2368/azure-functions-with-a-static-outbound-ip-address/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Note to Self - Ghost Edition">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Azure Functions with a Static Outbound IP Address">
+    <meta property="og:description" content="“So to complete our configuration we just need your outbound static IP…” This is something that pops up again and again, specially if you work integrating legacy systems, like banks, government agencies or other older systems that requires a static IP Address to add to firewall inbound rules.
+
+
+
+
+
+In the">
+    <meta property="og:url" content="http://localhost:2368/azure-functions-with-a-static-outbound-ip-address/">
+    <meta property="og:image" content="http://localhost:2368/content/images/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg">
+    <meta property="article:published_time" content="2020-11-21T07:37:20.000Z">
+    <meta property="article:modified_time" content="2020-12-09T07:57:06.000Z">
+    <meta property="article:tag" content="azure functions">
+    <meta property="article:tag" content="hybrid integration">
+    <meta property="article:tag" content="logic apps">
+    <meta property="article:tag" content="nat gateway">
+    <meta property="article:tag" content="networking">
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Azure Functions with a Static Outbound IP Address">
+    <meta name="twitter:description" content="“So to complete our configuration we just need your outbound static IP…” This is something that pops up again and again, specially if you work integrating legacy systems, like banks, government agencies or other older systems that requires a static IP Address to add to firewall inbound rules.
+
+
+
+
+
+In the">
+    <meta name="twitter:url" content="http://localhost:2368/azure-functions-with-a-static-outbound-ip-address/">
+    <meta name="twitter:image" content="http://localhost:2368/content/images/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="wsilveiranz">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="azure functions, hybrid integration, logic apps, nat gateway, networking">
+    <meta name="twitter:site" content="@ghost">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="507">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Note to Self - Ghost Edition",
+        "url": "http://localhost:2368/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "http://localhost:2368/favicon.ico"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "wsilveiranz",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://secure.gravatar.com/avatar/8cf8f21650fd5355a5b2c08e0f9ca914?s=512&d=mm&r=g",
+            "width": 512,
+            "height": 512
+        },
+        "url": "http://localhost:2368/author/wsilveiranz/",
+        "sameAs": []
+    },
+    "headline": "Azure Functions with a Static Outbound IP Address",
+    "url": "http://localhost:2368/azure-functions-with-a-static-outbound-ip-address/",
+    "datePublished": "2020-11-21T07:37:20.000Z",
+    "dateModified": "2020-12-09T07:57:06.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "http://localhost:2368/content/images/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg",
+        "width": 1200,
+        "height": 507
+    },
+    "keywords": "azure functions, hybrid integration, logic apps, nat gateway, networking",
+    "description": "\n\n\n“So to complete our configuration we just need your outbound static IP…” This is something that pops up again and again, specially if you work integrating legacy systems, like banks, government agencies or other older systems that requires a static IP Address to add to firewall inbound rules.\n\n\n\n\n\nIn the past I had to use on of the subscription tiers from Azure API Management or in some cases deploy the code within a self hosted service in a Virtual Machine. And both of them are valid options",
+    "mainEntityOfPage": "http://localhost:2368/azure-functions-with-a-static-outbound-ip-address/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.75">
+    <link rel="alternate" type="application/rss+xml" title="Note to Self - Ghost Edition" href="http://localhost:2368/rss/">
+    <script defer src="https://cdn.jsdelivr.net/ghost/portal@~2.36/umd/portal.min.js" data-i18n="false" data-ghost="http://localhost:2368/" data-key="4d946a7b27dfe0cf2428731cab" data-api="http://localhost:2368/ghost/api/content/" crossorigin="anonymous"></script><style id="gh-members-styles">.gh-post-upgrade-cta-content,
+.gh-post-upgrade-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+    width: 100%;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.gh-post-upgrade-cta-content {
+    border-radius: 8px;
+    padding: 40px 4vw;
+}
+
+.gh-post-upgrade-cta h2 {
+    color: #ffffff;
+    font-size: 28px;
+    letter-spacing: -0.2px;
+    margin: 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta p {
+    margin: 20px 0 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta small {
+    font-size: 16px;
+    letter-spacing: -0.2px;
+}
+
+.gh-post-upgrade-cta a {
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a:hover {
+    color: #ffffff;
+    opacity: 0.8;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a.gh-btn {
+    display: block;
+    background: #ffffff;
+    text-decoration: none;
+    margin: 28px 0 0;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.gh-post-upgrade-cta a.gh-btn:hover {
+    opacity: 0.92;
+}</style>
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="4d946a7b27dfe0cf2428731cab" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="http://localhost:2368/" crossorigin="anonymous"></script>
+    
+    <link href="http://localhost:2368/webmentions/receive/" rel="webmention">
+    <script defer src="/public/member-attribution.min.js?v=c95e7abf59"></script><style>:root {--ghost-accent-color: #FF1A75;}</style>
+
+</head>
+<body class="post-template tag-azure-functions tag-hybrid-integration tag-logic-apps tag-nat-gateway tag-networking tag-hash-wordpress tag-hash-import-2023-12-17-09-11 has-sans-title has-sans-body">
+
+<div class="gh-viewport">
+    
+    <header id="gh-navigation" class="gh-navigation is-middle-logo gh-outer">
+    <div class="gh-navigation-inner gh-inner">
+
+        <div class="gh-navigation-brand">
+            <a class="gh-navigation-logo is-title" href="http://localhost:2368">
+                    Note to Self - Ghost Edition
+            </a>
+            <button class="gh-search gh-icon-button" aria-label="Search this site" data-ghost-search>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>            <button class="gh-burger gh-icon-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path></svg>                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg>            </button>
+        </div>
+
+        <nav class="gh-navigation-menu">
+            <ul class="nav">
+    <li class="nav-home"><a href="http://localhost:2368/">Home</a></li>
+    <li class="nav-about"><a href="http://localhost:2368/about/">About</a></li>
+</ul>
+
+        </nav>
+
+        <div class="gh-navigation-actions">
+                <button class="gh-search gh-icon-button" aria-label="Search this site" data-ghost-search>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>                <div class="gh-navigation-members">
+                            <a href="#/portal/signin" data-portal="signin">Sign in</a>
+                                <a class="gh-button" href="#/portal/signup" data-portal="signup">Subscribe</a>
+                </div>
+        </div>
+
+    </div>
+</header>
+
+    
+
+<main class="gh-main">
+
+    <article class="gh-article post tag-azure-functions tag-hybrid-integration tag-logic-apps tag-nat-gateway tag-networking tag-hash-wordpress tag-hash-import-2023-12-17-09-11">
+
+        <header class="gh-article-header gh-canvas">
+
+                <a class="gh-article-tag" href="http://localhost:2368/tag/azure-functions/">azure functions</a>
+            <h1 class="gh-article-title is-title">Azure Functions with a Static Outbound IP Address</h1>
+
+            <div class="gh-article-meta">
+                <div class="gh-article-author-image">
+                            <a href="/author/wsilveiranz/">
+                                <img class="author-profile-image" src="https://secure.gravatar.com/avatar/8cf8f21650fd5355a5b2c08e0f9ca914?s&#x3D;512&amp;d&#x3D;mm&amp;r&#x3D;g" alt="wsilveiranz" />
+                            </a>
+                </div>
+                <div class="gh-article-meta-wrapper">
+                    <h4 class="gh-article-author-name"><a href="/author/wsilveiranz/">wsilveiranz</a></h4>
+                    <div class="gh-article-meta-content">
+                        <time class="gh-article-meta-date" datetime="2020-11-21">Nov 21, 2020</time>
+                            <span class="gh-article-meta-length"><span class="bull">—</span> 6 min read</span>
+                    </div>
+                </div>
+            </div>
+
+                <figure class="gh-article-image">
+        <img
+            srcset="/content/images/size/w320/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg 320w,
+                    /content/images/size/w600/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg 600w,
+                    /content/images/size/w960/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg 960w,
+                    /content/images/size/w1200/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg 1200w,
+                    /content/images/size/w2000/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg 2000w"
+            src="/content/images/size/w1200/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg"
+            alt="Azure Functions with a Static Outbound IP Address"
+        >
+    </figure>
+
+        </header>
+
+        <section class="gh-content gh-canvas is-body">
+            <!--kg-card-begin: html-->
+<p>&#8220;So to complete our configuration we just need your outbound static IP&#8230;&#8221; This is something that pops up again and again, specially if you work integrating legacy systems, like banks, government agencies or other older systems that requires a static IP Address to add to firewall inbound rules.</p>
+
+
+
+<p>In the past I had to use on of the subscription tiers from Azure API Management or in some cases deploy the code within a self hosted service in a Virtual Machine. And both of them are valid options if you already have one of those components in place. But in a couple of my last projects, Not only I needed to implement a new component (in this case API Management) just to fulfil this requirement. I also had to change my design a bit, because API Management didn&#8217;t support one of the streaming requirements I had (but that is a story for another post).</p>
+
+
+
+<p>But I wouldn&#8217;t be writing a post just to complain about this (not that this has never happened before) &#8211; I actually found another solution &#8211; one that I&#8217;ve tried and discarded earlier this year, but thanks to some good work from the App Services Engineering team, is finally a viable solution: Azure Functions + VNET Integration + NAT Gateways!</p>
+
+
+
+<!--more-->
+
+
+
+<h2>How does it work?</h2>
+
+
+
+<p>According to Microsoft Docs:</p>
+
+
+
+<blockquote class="wp-block-quote"><p>&#8220;NAT gateway resources are part of&nbsp;<a href="https://docs.microsoft.com/en-us/azure/virtual-network/nat-overview?WT.mc_id=AZ-MVP-5002438&ref=localhost" target="_blank" rel="noreferrer noopener">Virtual Network NAT</a>&nbsp;and provide outbound Internet connectivity for one or more subnets of a virtual network. The subnet of the virtual network states which NAT gateway will be used. NAT provides source network address translation (SNAT) for a subnet. NAT gateway resources specify which static IP addresses virtual machines use when creating outbound flows.&#8221;</p><cite><a href="https://docs.microsoft.com/en-us/azure/virtual-network/nat-gateway-resource?WT.mc_id=AZ-MVP-5002438&ref=localhost" target="_blank" rel="noreferrer noopener">Designing virtual networks with NAT gateway resources</a></cite></blockquote>
+
+
+
+<p>So, the NAT Gateways provides a way to specify a static IP addresses to be used as outbound address to any outbound traffic that is leaving a subnet towards the internet. Sounds like something we would like to do right?</p>
+
+
+
+<p>When I first learned about this resource around the end of 2019, I&#8217;ve tried to configure the following scenario:</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" src="http://localhost:2368/content/images/wordpress/2020/11/image.png" alt class="wp-image-3112" width="591" height="208" srcset="http://localhost:2368/content/images/wordpress/2020/11/image.png 788w, http://localhost:2368/content/images/wordpress/2020/11/image-300x105.png 300w, http://localhost:2368/content/images/wordpress/2020/11/image-768x270.png 768w" sizes="(max-width: 591px) 85vw, 591px"></figure>
+
+
+
+<p>But I got stuck on an issue &#8211; NAT Gateway were not compatible with the App Service Plans for either Azure Function Consumption Premium or Dedicated plans. Doing some research I found that the NAT Gateway at that point was not compatible with the basic load balancer and any products that used basic load balancer.</p>
+
+
+
+<p>But just this week, the App Services team provided us with some good news:</p>
+
+
+
+<figure class="wp-block-embed-twitter wp-block-embed is-type-rich is-provider-twitter"><div class="wp-block-embed__wrapper">
+<blockquote class="twitter-tweet" data-width="550" data-dnt="true"><p lang="en" dir="ltr"><a href="https://twitter.com/hashtag/AzureAppService?src=hash&ref_src=twsrc%5Etfw&ref=localhost">#AzureAppService</a> Want a dedicated outbound address to the internet? Want to escape SNAT port restrictions? Now you can. Use a NAT Gateway with your app. To set it up, use VNet Integration, set integration subnet as subnet used with NAT Gateway, then enjoy. <a href="https://t.co/I69hFGg2kz?ref=localhost">https://t.co/I69hFGg2kz</a></p>&mdash; Christina Compy (@ccompy) <a href="https://twitter.com/ccompy/status/1329199536846249984?ref_src=twsrc%5Etfw&ref=localhost">November 18, 2020</a></blockquote><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div></figure>
+
+
+
+<p>You can read their <a rel="noreferrer noopener" href="https://azure.github.io/AppService/2020/11/15/web-app-nat-gateway.html?ref=localhost" target="_blank">blog post</a> here. So whatever incompatibility between the NAT Gateway and the App service plans are now solved! So let&#8217;s try to get it working&#8230;</p>
+
+
+
+<h2>Pre-requisites</h2>
+
+
+
+<p>In order to implement this you will need the following items:</p>
+
+
+
+<ul><li>An Azure Function configured with an App Service plan that supports VNET integration (Premium Consumption, or one of the following dedicated plans: Standard, Premium V2 or Premium V3),</li><li>A Virtual Network with at least one available subnet,</li><li>A standard IP Address and</li><li>A NAT Gateway.</li></ul>
+
+
+
+<p>You can find more information about how to configure the NAT Gateway and associate it to a subnet <a rel="noreferrer noopener" href="https://docs.microsoft.com/en-us/azure/virtual-network/nat-gateway-resource?ref=localhost#how-to-deploy-nat?WT.mc_id=AZ-MVP-5002438" target="_blank">here</a>. The configuration is pretty simple &#8211; just requires the standard IP address and the VNET/Subnet associated.</p>
+
+
+
+<div class="wp-block-media-text alignwide is-stacked-on-mobile is-vertically-aligned-top" style="grid-template-columns:15% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3.png" alt class="wp-image-1214" srcset="http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p class="has-normal-font-size"><em>Notice that a single NAT Gateway can be connected to multiple subnets. So as long as applications requires the same outbound IP addresses, they can be integrated to subnets connected to the same NAT Gateway.</em></p>
+</div></div>
+
+
+
+<h2>Azure Function Configuration</h2>
+
+
+
+<p>The configuration for Azure Functions is quite straightforward. First you need to go to Networking (1) and select configuration (2).</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" src="http://localhost:2368/content/images/wordpress/2020/11/image-1-1024x448.png" alt class="wp-image-3120" width="628" height="275" srcset="http://localhost:2368/content/images/wordpress/2020/11/image-1-1024x448.png 1024w, http://localhost:2368/content/images/wordpress/2020/11/image-1-300x131.png 300w, http://localhost:2368/content/images/wordpress/2020/11/image-1-768x336.png 768w, http://localhost:2368/content/images/wordpress/2020/11/image-1-1200x525.png 1200w, http://localhost:2368/content/images/wordpress/2020/11/image-1.png 1313w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p>After that you need to click on + Add Vnet (1), then select an existing Virtual Network (2), click on select existing (3) and choose one of the available subnets (4) and finally click Ok (5). </p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" src="http://localhost:2368/content/images/wordpress/2020/11/image-2-1024x424.png" alt class="wp-image-3121" width="623" height="258" srcset="http://localhost:2368/content/images/wordpress/2020/11/image-2-1024x424.png 1024w, http://localhost:2368/content/images/wordpress/2020/11/image-2-300x124.png 300w, http://localhost:2368/content/images/wordpress/2020/11/image-2-768x318.png 768w, http://localhost:2368/content/images/wordpress/2020/11/image-2-1536x636.png 1536w, http://localhost:2368/content/images/wordpress/2020/11/image-2-1200x497.png 1200w, http://localhost:2368http://localhost:2368/content/images/wordpress/2020/11/image-2.png 1892w, http://localhost:2368http://localhost:2368/content/images/wordpress/2020/11/image-2.png 1680w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p>Once the VNET configuration is completed, it should look like this:</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" src="http://localhost:2368/content/images/wordpress/2020/11/image-4-1024x830.png" alt class="wp-image-3124" width="625" height="507" srcset="http://localhost:2368/content/images/wordpress/2020/11/image-4-1024x830.png 1024w, http://localhost:2368/content/images/wordpress/2020/11/image-4-300x243.png 300w, http://localhost:2368/content/images/wordpress/2020/11/image-4-768x622.png 768w, http://localhost:2368/content/images/wordpress/2020/11/image-4-1200x973.png 1200w, http://localhost:2368/content/images/wordpress/2020/11/image-4.png 1356w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p><em>To confirm that the subnet is configured to connect to the NAT Gate</em>way, you can click on the subnet name, which will bring you to the subnet configuration page. Here, you can confirm that the NAT Gateway is assigned to that subnet.</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" src="http://localhost:2368/content/images/wordpress/2020/11/image-5.png" alt class="wp-image-3125" width="620" height="461" srcset="http://localhost:2368/content/images/wordpress/2020/11/image-5.png 935w, http://localhost:2368/content/images/wordpress/2020/11/image-5-300x223.png 300w, http://localhost:2368/content/images/wordpress/2020/11/image-5-768x570.png 768w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<div class="wp-block-media-text alignwide is-stacked-on-mobile is-vertically-aligned-top" style="grid-template-columns:15% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3.png" alt class="wp-image-1214" srcset="http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p class="has-normal-font-size"><em>I&#8217;ve noticed (and some other people also noticed) that when you add the VNET integration to the Azure Function (or web app), sometimes the NAT Gateway configuration is removed. I am not sure if that happens all the time, as I couldn&#8217;t reproduce it every time. But just bear that in mind &#8211; go back to the configuration of the subnet and make sure that it is associated to the NAT Gateway as a precaution. Thanks J.V. for highlighting this in the comments!  </em></p>
+</div></div>
+
+
+
+<p>Once the configuration is completed in the VNET side, you will need to force all outgoing traffic to go through the VNET &#8211; this will force the traffic going to the internet to be routed through public IP address associated to the NAT Gateway. This can be achieved by including a new app setting entry on your configuration. You must include the following entry:</p>
+
+
+
+<ul><li>WEBSITE_VNET_ROUTE_ALL = 1</li></ul>
+
+
+
+<p>To do this, search for Configuration on your side blade (1), click on Configuration (2), click on add to include a new value (3), add WEBSITE_VNET_ROUTE_ALL as the Name and 1 as the Value, then click OK (4). Don&#8217;t forget to click save (5) to persist your changes</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" src="http://localhost:2368/content/images/wordpress/2020/12/website-vnet-route-all-config-1024x764.png" alt class="wp-image-3138" width="631" height="471" srcset="http://localhost:2368/content/images/wordpress/2020/12/website-vnet-route-all-config-1024x764.png 1024w, http://localhost:2368/content/images/wordpress/2020/12/website-vnet-route-all-config-300x224.png 300w, http://localhost:2368/content/images/wordpress/2020/12/website-vnet-route-all-config-768x573.png 768w, http://localhost:2368/content/images/wordpress/2020/12/website-vnet-route-all-config-1200x896.png 1200w, http://localhost:2368/content/images/wordpress/2020/12/website-vnet-route-all-config.png 1467w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<h2>Testing your configuration</h2>
+
+
+
+<p>A simple way to test your configuration is to make a http request to a website that would return the IP address of the caller. I&#8217;ve used a PowerShell script to do that, taking the advantage of Azure Function support for PowerShell Core. You can find the code in the gist below:</p>
+
+
+
+<script src="https://gist.github.com/wsilveiranz/19f558a945305bfd185f9f13d3fb1115.js"></script>
+
+
+
+<h2>A whole new world&#8230;</h2>
+
+
+
+<p>The ability to have Azure Functions and Web Apps having a static outbound IP is a feature that have been requested for some time now. This will open up a number of scenarios that were not possible today with pure serverless and will simplify a lot the integration with other systems, in special legacy and on-premises systems that still depend on a static IP address to configure inbound access.</p>
+
+
+
+<p>That alone would already be fantastic news! But another recent announcement from the Enterprise Integration team combined with this makes those news even more exciting&#8230; <strong><em>The new Logic Apps runtime, which is an extension of Azure Functions Runtime, can also leverage from this configuration</em></strong>. So not only core Azure Functions implementations can take advantage of this implementation, but Logic Apps will soon be able to leverage from that as well.<strong><em> Actually, I&#8217;ve tested the same configuration on a logic apps (preview) resource and it behave as expected!</em></strong></p>
+
+
+
+<div class="wp-block-media-text alignwide is-stacked-on-mobile is-vertically-aligned-top" style="grid-template-columns:15% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3.png" alt class="wp-image-1214" srcset="http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p class="has-normal-font-size"><em>I&#8217;ve been doing a bit more research on the Logic Apps (preview) and what I found so far is that the managed connectors are still using their own IP addresses. For example, I&#8217;ve tried to connect to the an FTP server using the SFTP-SSH connector and it presented an IP from the managed connector in Australia East region. Hopefully this is something that will be addressed as the preview moves close to GA. Otherwise we will have to replace connector functionality with Azure Functions (still better than the original situation, but not ideal).</em></p>
+</div></div>
+
+
+
+<p></p>
+
+
+
+<h2>In Summary</h2>
+
+
+
+<ul><li>App Services can now leverage from the NAT Gateway functionality to expose a static outbound IP address to the internet.</li><li>Azure Function with either a Premium Consumption or Dedicated app service plan can also leverage from the same functionality.</li><li>Logic Apps (preview), which are based on the Azure Functions runtime will also benefit from the same type of configuration.</li><li>This will open up a number of scenarios that were not easily implemented before &#8211; in special when integrating with on-premises or legacy systems.</li></ul>
+<!--kg-card-end: html-->
+        </section>
+
+    </article>
+
+
+</main>
+
+
+        <section class="gh-container is-grid gh-outer">
+            <div class="gh-container-inner gh-inner">
+                <h2 class="gh-container-title">Read more</h2>
+                <div class="gh-feed">
+                        <article class="gh-card post">
+    <a class="gh-card-link" href="/and-all-of-a-sudden-its-2022/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="/content/images/size/w160/format/webp/wordpress/2022/01/soar.png 160w,
+                            /content/images/size/w320/format/webp/wordpress/2022/01/soar.png 320w,
+                            /content/images/size/w600/format/webp/wordpress/2022/01/soar.png 600w,
+                            /content/images/size/w960/format/webp/wordpress/2022/01/soar.png 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2022/01/soar.png 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2022/01/soar.png 2000w"
+                    sizes="320px"
+                    src="/content/images/size/w600/wordpress/2022/01/soar.png"
+                    alt="And all of a sudden, its 2022!"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">And all of a sudden, its 2022!</h3>
+                <p class="gh-card-excerpt is-body">And with that, another year goes by. Another year where communities had to revamp themselves and learn how to thrive in a online world. Here in NZ, after what started to look like we were pretty much bat to normal life, the reality of living during a pandemic stroked back,</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2022-01-09">Jan 9, 2022</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                        <article class="gh-card post">
+    <a class="gh-card-link" href="/calling-api-management-from-azure-function-using-managed-identities/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="/content/images/size/w160/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 160w,
+                            /content/images/size/w320/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 320w,
+                            /content/images/size/w600/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 600w,
+                            /content/images/size/w960/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 2000w"
+                    sizes="320px"
+                    src="/content/images/size/w600/wordpress/2017/09/field-notes-wide-e1515541406829.jpg"
+                    alt="Calling API Management from Azure Function using Managed Identities"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">Calling API Management from Azure Function using Managed Identities</h3>
+                <p class="gh-card-excerpt is-body">One of the solutions I am consulting on today is securing a number of APIs with OAuth with client credential flow, using Azure Active Directory as the identity provider. Those APIs are exposed via Azure API Management, which makes the validation of the access tokens provided as simple as injecting</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2021-04-05">Apr 5, 2021</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                        <article class="gh-card post">
+    <a class="gh-card-link" href="/countdown-to-global-integration-bootcamp-2021/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="/content/images/size/w160/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 160w,
+                            /content/images/size/w320/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 320w,
+                            /content/images/size/w600/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 600w,
+                            /content/images/size/w960/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 2000w"
+                    sizes="320px"
+                    src="/content/images/size/w600/wordpress/2021/02/GIB-2021-background.jpeg"
+                    alt="Countdown to Global Integration Bootcamp 2021"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">Countdown to Global Integration Bootcamp 2021</h3>
+                <p class="gh-card-excerpt is-body">Last January, I wrote about this year edition of Global Integration Bootcamp. As you might remember, this year we locked it on 26-27 February (UTC Time) running two different event streams starting at times that can be suitable for the three main time zone areas- APAC, EMEA and Americas.
+
+
+
+
+
+
+Lineup</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2021-02-19">Feb 19, 2021</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                        <article class="gh-card post">
+    <a class="gh-card-link" href="/global-integration-bootcamp-2021-goes-virtual/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="/content/images/size/w160/format/webp/wordpress/2020/01/friends_banner.jpg 160w,
+                            /content/images/size/w320/format/webp/wordpress/2020/01/friends_banner.jpg 320w,
+                            /content/images/size/w600/format/webp/wordpress/2020/01/friends_banner.jpg 600w,
+                            /content/images/size/w960/format/webp/wordpress/2020/01/friends_banner.jpg 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2020/01/friends_banner.jpg 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2020/01/friends_banner.jpg 2000w"
+                    sizes="320px"
+                    src="/content/images/size/w600/wordpress/2020/01/friends_banner.jpg"
+                    alt="Global Integration Bootcamp 2021 goes Virtual!!!"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">Global Integration Bootcamp 2021 goes Virtual!!!</h3>
+                <p class="gh-card-excerpt is-body">Hey there! Happy New Year!!!
+
+
+
+
+
+Many of you were asking about if we would be doing another Global Integration Bootcamp this year. I know that there is been a while since we provided any news about it, but the team was trying to come up with a formula that would</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2021-01-12">Jan 12, 2021</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                </div>
+            </div>
+        </section>
+
+    
+    <footer class="gh-footer gh-outer">
+    <div class="gh-footer-inner gh-inner">
+
+        <div class="gh-footer-bar">
+            <span class="gh-footer-logo is-title">
+                    Note to Self - Ghost Edition
+            </span>
+            <nav class="gh-footer-menu">
+                <ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>
+            <div class="gh-footer-copyright">
+                Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+        
+                <section class="gh-footer-signup">
+                    <h2 class="gh-footer-signup-header is-title">
+                        Note to Self - Ghost Edition
+                    </h2>
+                    <p class="gh-footer-signup-subhead is-body">
+                        Thoughts, stories and ideas.
+                    </p>
+                    <form class="gh-form" data-members-form>
+    <input class="gh-form-input" type="email" placeholder="jamie@example.com" required data-members-email>
+    <button class="gh-button" type="submit">
+        <span><span>Subscribe</span> <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 256 256"><path d="M224.49,136.49l-72,72a12,12,0,0,1-17-17L187,140H40a12,12,0,0,1,0-24H187L135.51,64.48a12,12,0,0,1,17-17l72,72A12,12,0,0,1,224.49,136.49Z"></path></svg></span>
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24">
+    <g stroke-linecap="round" stroke-width="2" fill="currentColor" stroke="none" stroke-linejoin="round" class="nc-icon-wrapper">
+        <g class="nc-loop-dots-4-24-icon-o">
+            <circle cx="4" cy="12" r="3"></circle>
+            <circle cx="12" cy="12" r="3"></circle>
+            <circle cx="20" cy="12" r="3"></circle>
+        </g>
+        <style data-cap="butt">
+            .nc-loop-dots-4-24-icon-o{--animation-duration:0.8s}
+            .nc-loop-dots-4-24-icon-o *{opacity:.4;transform:scale(.75);animation:nc-loop-dots-4-anim var(--animation-duration) infinite}
+            .nc-loop-dots-4-24-icon-o :nth-child(1){transform-origin:4px 12px;animation-delay:-.3s;animation-delay:calc(var(--animation-duration)/-2.666)}
+            .nc-loop-dots-4-24-icon-o :nth-child(2){transform-origin:12px 12px;animation-delay:-.15s;animation-delay:calc(var(--animation-duration)/-5.333)}
+            .nc-loop-dots-4-24-icon-o :nth-child(3){transform-origin:20px 12px}
+            @keyframes nc-loop-dots-4-anim{0%,100%{opacity:.4;transform:scale(.75)}50%{opacity:1;transform:scale(1)}}
+        </style>
+    </g>
+</svg>        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+    <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+    <style>
+        .checkmark {
+            width: 40px;
+            height: 40px;
+            display: block;
+            stroke-width: 2.5;
+            stroke: currentColor;
+            stroke-miterlimit: 10;
+        }
+
+        .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke .3s cubic-bezier(0.650, 0.000, 0.450, 1.000) forwards;
+        }
+
+        @keyframes stroke {
+            100% { stroke-dashoffset: 0; }
+        }
+    </style>
+</svg>    </button>
+</form>                </section>
+
+    </div>
+</footer>    
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/built/source.js?v=c95e7abf59"></script>
+
+
+
+</body>
+</html>
