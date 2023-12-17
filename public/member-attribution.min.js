@@ -14,7 +14,7 @@
 
     <meta http-equiv="cleartype" content="on">
 
-    <link rel="stylesheet" href="/public/ghost.css?v=c95e7abf59"/>
+    <link rel="stylesheet" href="/notetoselfblog/public/ghost.css?v=c95e7abf59"/>
 
   </head>
   <body>
