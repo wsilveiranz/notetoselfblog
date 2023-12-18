@@ -1,0 +1,2054 @@
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[Note to Self - Ghost Edition]]></title><description><![CDATA[Thoughts, stories and ideas.]]></description><link>http://localhost:2368/</link><image><url>http://localhost:2368/favicon.png</url><title>Note to Self - Ghost Edition</title><link>http://localhost:2368/</link></image><generator>Ghost 5.75</generator><lastBuildDate>Sun, 17 Dec 2023 19:05:03 GMT</lastBuildDate><atom:link href="http://wsilveiranz.github.io/notetoselfblog/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[And all of a sudden, its 2022!]]></title><description><![CDATA[<!--kg-card-begin: html-->
+<p>And with that, another year goes by. Another year where communities had to revamp themselves and learn how to thrive in a online world. Here in NZ, after what started to look like we were pretty much bat to normal life, the reality of living during a pandemic stroked back,</p>]]></description><link>http://localhost:2368/and-all-of-a-sudden-its-2022/</link><guid isPermaLink="false">657ebb613b57be75e033ecd6</guid><category><![CDATA[logic apps]]></category><category><![CDATA[Microsoft]]></category><category><![CDATA[theta]]></category><dc:creator><![CDATA[wsilveiranz]]></dc:creator><pubDate>Sun, 09 Jan 2022 11:16:11 GMT</pubDate><media:content url="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2022/01/soar.png" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: html-->
+<img src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2022/01/soar.png" alt="And all of a sudden, its 2022!"><p>And with that, another year goes by. Another year where communities had to revamp themselves and learn how to thrive in a online world. Here in NZ, after what started to look like we were pretty much bat to normal life, the reality of living during a pandemic stroked back, like the villain in the second movie of a trilogy. But if this pandemic is a trilogy, the good news is that we are going to the third instalment&#x2026; There will be strife, there will be challenges, but hopefully the writers of this cosmic trilogy are aiming for an ending where all of us completes the hero&#x2019;s journey successfully.</p>
+
+
+
+<p>2021 was a year of changes for me. </p>
+
+
+
+<!--more-->
+
+
+
+<p>In the last months of 2020 I was promoted to Digital Integration Practice Lead at Theta. It was the first time that I had to manage a group of people not just technically, but also from a career point of view. It was daunting and exciting in equal amounts. And I couldn&#x2019;t ask for a better group of people to manage &#x2013; technically fantastic, but most important, a group of people that took care of each other. One of my selling points of each new or prospective hire was that we had a team that behaved like a team. There was ups and downs. People left when I least expected, some others gave me the chance to counter balance offers. Looking back at that year, I learned a lot! Not as much technically as I could have, but I got a lot of other opportunities that only this role could give me, and for that I am really grateful.</p>
+
+
+
+<p>The last months of 2021 also brought another big experience and learning &#x2013; I had to say goodbye to a company I worked for 11 years (probably the longest I&#x2019;ve worked anywhere). It was very bittersweet to say goodbye to lots of good friends, projects that I cared about, and the team that I was just learning to help grow to the potential I know they have. But why I left, you might ask?</p>
+
+
+
+<p>Because 2022 will start for me on unfamiliar, but exciting territory &#x2013; after 11 years of Theta, I am moving to what I consider one of my dream jobs: <strong>I am joining Microsoft as a Senior Program Manager with the Logic Apps team!</strong> From 10 January onward I will have the privilege of helping the team of one of the technologies I used the most for the last 5 years to take it to the next level. Everything I heard so far makes me feel that it will be an incredible adventure! Learning a new job, adjusting to a new team (although I am happy to see so many familiar faces there, thanks to the MVP interactions), dealing with different time zones, working remote full time, all of this will be things I will learn (and hopefully master) this year.</p>
+
+
+
+<p>I might have to go for a deep dive while I learn a lot of those new things but, as much as I can, I will continue sharing the things I am learning and any tips and tricks I might pick up along the way. Stay tuned (and wish me luck &#x1F609;)!</p>
+<!--kg-card-end: html-->]]></content:encoded></item><item><title><![CDATA[Calling API Management from Azure Function using Managed Identities]]></title><description><![CDATA[<!--kg-card-begin: html-->
+<p>One of the solutions I am consulting on today is securing a number of APIs with <a rel="noreferrer noopener" href="https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-client-creds-grant-flow?WT.mc_id=AZ-MVP-5002438&amp;ref=localhost" target="_blank">OAuth with client credential flow</a>, using Azure Active Directory as the identity provider.  Those APIs are exposed via Azure API Management, which makes the validation of the access tokens provided as simple as injecting</p>]]></description><link>http://localhost:2368/calling-api-management-from-azure-function-using-managed-identities/</link><guid isPermaLink="false">657ebb613b57be75e033ecd4</guid><category><![CDATA[api management]]></category><category><![CDATA[Authentication/Authorization]]></category><category><![CDATA[Azure AD]]></category><category><![CDATA[azure functions]]></category><category><![CDATA[logic apps]]></category><category><![CDATA[managed identity]]></category><dc:creator><![CDATA[wsilveiranz]]></dc:creator><pubDate>Mon, 05 Apr 2021 20:16:42 GMT</pubDate><media:content url="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/field-notes-wide-e1515541406829.jpg" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: html-->
+<img src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/field-notes-wide-e1515541406829.jpg" alt="Calling API Management from Azure Function using Managed Identities"><p>One of the solutions I am consulting on today is securing a number of APIs with <a rel="noreferrer noopener" href="https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-client-creds-grant-flow?WT.mc_id=AZ-MVP-5002438&amp;ref=localhost" target="_blank">OAuth with client credential flow</a>, using Azure Active Directory as the identity provider.  Those APIs are exposed via Azure API Management, which makes the validation of the access tokens provided as simple as injecting a policy at a product, API or operation level.</p>
+
+
+
+<p>While this all works nicely, there is one item in this process which is a painpoint from an operations point of view: as they use client certificates to request access tokens, the certificate management is becoming a bit of a chore with the number of APIs and clients that access those APIs increasing.</p>
+
+
+
+<p>A lot of those clients are either Azure Functions or Azure Logic Apps, which today provide the ability to using a <a rel="noreferrer noopener" href="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview?WT.mc_id=AZ-MVP-5002438&amp;ref=localhost" target="_blank">managed identity</a> to easy the burden of maintaining credentials.</p>
+
+
+
+<p>So it was only logical to think about how would we be able to use the managed identities configured in both Azure Functions and Logic Apps to generate a token that can be validated by API Management. Turns out that this is quite possible, but needs a bit of preparation&#x2026;</p>
+
+
+
+<!--more-->
+
+
+
+<h2>Pre-Requisites</h2>
+
+
+
+<p>I already had an Azure Function in place and needed to integrate using managed identities. So, in order to get this working I needed do to 3 things:</p>
+
+
+
+<ol><li>Register a new Azure AD Application, with at least one role.</li><li>Create a managed identity and associate it to your Azure Function. </li><li>Associate the managed identity with the Azure AD Application role.</li></ol>
+
+
+
+<p>Once this is setup, I could implement the code that would generate the JWT token and pass it to Azure API Management, which in turn could validate the token, securing the backend.</p>
+
+
+
+<h3>Register a new Azure AD Application</h3>
+
+
+
+<p>You can find the detailed instructions to Register a new Azure AD Application <a rel="noreferrer noopener" href="https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal?ref=localhost#register-an-application-with-azure-ad-and-create-a-service-principal?WT.mc_id=AZ-MVP-5002438" data-type="URL" data-id="https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#register-an-application-with-azure-ad-and-create-a-service-principal?WT.mc_id=AZ-MVP-5002438" target="_blank">here</a>. For your convenience here are the basic steps:</p>
+
+
+
+<p>From the Azure Portal, navigate to Active Directory. From there:</p>
+
+
+
+<figure class="wp-block-image size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-300x155.png" alt="Calling API Management from Azure Function using Managed Identities" class="wp-image-3180" width="627" height="324" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-300x155.png 300w, http://localhost:2368/content/images/wordpress/2021/04/image-1024x528.png 1024w, http://localhost:2368/content/images/wordpress/2021/04/image-768x396.png 768w, http://localhost:2368/content/images/wordpress/2021/04/image-1200x619.png 1200w, http://localhost:2368/content/images/wordpress/2021/04/image.png 1486w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<ol><li>Click on Application Registrations</li><li>Click on New Registration</li></ol>
+
+
+
+<p>On the new Registration form:</p>
+
+
+
+<figure class="wp-block-image size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-1-300x249.png" alt="Calling API Management from Azure Function using Managed Identities" class="wp-image-3181" width="629" height="522" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-1-300x249.png 300w, http://localhost:2368/content/images/wordpress/2021/04/image-1-1024x850.png 1024w, http://localhost:2368/content/images/wordpress/2021/04/image-1-768x637.png 768w, http://localhost:2368/content/images/wordpress/2021/04/image-1.png 1121w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<ol><li>Provide a name</li><li>Select the types of supported accounts &#x2013; if using this app registration exclusively to authenticate with managed identities, you can use the default option (Accounts in this organizational directory only)</li><li>Provide a Redirect URI &#x2013; in this specific scenario, any URL is valid, since I believe this value is not used in the authentication with managed identity scenario.</li><li>After you complete the steps, the app registration is now ready to use.</li></ol>
+
+
+
+<p>There are a couple more steps to do to complete this process.</p>
+
+
+
+<h4>Expose the Registered App as an API</h4>
+
+
+
+<p>Find your newly created application registration and open it. From there:</p>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" width="643" height="181" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-2.png" alt="Calling API Management from Azure Function using Managed Identities" class="wp-image-3182" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-2.png 643w, http://localhost:2368/content/images/wordpress/2021/04/image-2-300x84.png 300w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<ol><li>Click on expose an API</li><li>Define the Application ID URI &#x2013; this is any valid URI that you will use later on to identity your application.</li></ol>
+
+
+
+<h4>Create a new role</h4>
+
+
+
+<p>Still from the App registration blade, follow the instructions below:</p>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" width="643" height="271" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-3.png" alt="Calling API Management from Azure Function using Managed Identities" class="wp-image-3183" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-3.png 643w, http://localhost:2368/content/images/wordpress/2021/04/image-3-300x126.png 300w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<ol><li>Click on App Roles</li><li>Click on Create app role</li><li>Provide the display name &#x2013; this is the string that will be showed in the App roles list)</li><li>Allowed member types &#x2013; I am selected Applications, as I only wanted this role used by the managed identity, but you can select either applications or both.</li><li>Provide a Value &#x2013; this is string that will be used later by the API Management to validate the token</li><li>Provide a description</li><li>Make sure you enable the role</li><li>Click on apply</li></ol>
+
+
+
+<p>This will create a new Role that you can use in a later step to associate to the managed identity.</p>
+
+
+
+<h3>Create a Managed Identity</h3>
+
+
+
+<p>There are two ways to ways to create a managed identity. You can either create a  managed identity and associate it to an Azure Function. You can either manually create a managed identity and associate it to the function, by associating an Azure Function to an <strong>User Assigned Managed Identity</strong> or let the system create one for you by associating an Azure Function to an <strong>System Assigned Managed Identity</strong>. In this post I will use a User Assigned Managed Identity, because this is what I needed on my example, and I didn&#x2019;t find as many examples as this one (but I will try to make notes below on the difference).</p>
+
+
+
+<h3>Associating a Function with an User Assigned Managed Identity.</h3>
+
+
+
+<h4>Create a new Managed Identity</h4>
+
+
+
+<p>To create your own managed identity, navigage to Managed Identities within the Azure Portal and follow the steps below:</p>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" width="643" height="326" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-4.png" alt="Calling API Management from Azure Function using Managed Identities" class="wp-image-3184" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-4.png 643w, http://localhost:2368/content/images/wordpress/2021/04/image-4-300x152.png 300w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<ol><li>Click on Add</li><li>Select the subscription where the User Assigned Managed Identity will be added</li><li>Select the Resource Group where it will be deployed</li><li>Select the Associated Region</li><li>Provide the name of the Managed Identity (you will need the name to associate it with the Azure Functions in the next step).</li><li>Click on Review and Create and once validations has passed, click on create.</li></ol>
+
+
+
+<h4>Connect User Assigned Identity to an Azure Function</h4>
+
+
+
+<p>Within the Azure Functions you want to connect, follow the steps below:</p>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" width="643" height="273" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-5.png" alt="Calling API Management from Azure Function using Managed Identities" class="wp-image-3185" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-5.png 643w, http://localhost:2368/content/images/wordpress/2021/04/image-5-300x127.png 300w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<ol><li>On the side blade, select Identity</li><li>Within the Identity blade, select User assigned</li><li>Click on Add</li><li>Select the correct subscription</li><li>Search and select the user assigned managed identity (using the name you gave in the previous step)</li><li>Confirm that the identity was selected (it will move to Selected identities)</li><li>Click on Add</li></ol>
+
+
+
+<p>Once you finish this, the new identity will show on the list of User Assigned Identities.</p>
+
+
+
+<div class="wp-block-media-text alignwide is-stacked-on-mobile is-vertically-aligned-top" style="grid-template-columns:15% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt="Calling API Management from Azure Function using Managed Identities" class="wp-image-1214 size-full" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p class="has-normal-font-size"><em>Things to notice:</em></p>
+
+
+
+<ul class="has-normal-font-size"><li><em>You can have more than one User Assigned Identity associated to a function. </em></li><li><em>You can follow the same process above to add an user assigned identity to a Logic Apps or Web Apps &#x2013; It will probably follow the same steps for any resource that exposes the interface above.</em></li><li><em>Creating a System assigned identity is as simple as clicking on System Assigned on that screen, setting the status to <strong>On</strong> and clicking on save. In this case, the name of the System Assigned Identity will be the same as the name of the resource you created (e.g. if your Azure Function is called MyFunction, the System Assigned Identity will be called MyFunction.</em></li></ul>
+</div></div>
+
+
+
+<h2>Associating the Managed Identity to the Application Role</h2>
+
+
+
+<p>To be able to request a token for the application setup on the first step, the managed identity create on step 2 needs to be given permission to access that application and have a role assigned. This is not something that can be done in the portal today. The script below can be used to assign a managed identity to a role:</p>
+
+
+
+<pre class="wp-block-code"><code lang="powershell" class="language-powershell line-numbers"> # Install the Azure AD module if you don&apos;t have it yer. (You need admin on the machine.)
+ # Install-Module AzureAD
+ &#xA0;
+ <strong>$tenantID</strong> <strong>=</strong> &apos;&lt;tenantID guid&gt;&apos;
+ <strong>$serverApplicationName</strong> <strong>=</strong> &apos;&lt;Application Registration Name&gt;&apos;
+ <strong>$managedIdentityName</strong> <strong>=</strong> &apos;&lt;managed identity name - for system assigned is the name of your resource&gt;&apos;
+ <strong>$appRoleName</strong> <strong>=</strong> &apos;&lt;role name&gt;&apos;
+ &#xA0;
+ Connect-AzureAD <strong>-</strong>TenantId <strong>$tenantID</strong>
+ &#xA0;
+ # Look up the web app&apos;s managed identity&apos;s object ID.
+ <strong>$managedIdentity</strong> <strong>=</strong> <strong>(</strong>Get-AzureADServicePrincipal <strong>-Filter</strong> &quot;DisplayName eq &apos;$managedIdentityName&apos;&quot;<strong>)</strong>
+ <strong>$managedIdentityObjectId</strong> <strong>=</strong> <strong>$managedIdentity.</strong>ObjectId
+ &#xA0;
+ # Look up the details about the server app&apos;s service principal and app role.
+ <strong>$serverServicePrincipal</strong> <strong>=</strong> <strong>(</strong>Get-AzureADServicePrincipal <strong>-Filter</strong> &quot;DisplayName eq &apos;$serverApplicationName&apos;&quot;<strong>)</strong>
+ <strong>$serverServicePrincipalObjectId</strong> <strong>=</strong> <strong>$serverServicePrincipal.</strong>ObjectId
+ <strong>$appRoleId</strong> <strong>=</strong> <strong>($serverServicePrincipal.</strong>AppRoles <strong>|</strong> Where-Object <strong>{$_.</strong>Value <strong>-</strong>eq <strong>$appRoleName</strong> <strong>}).</strong>Id
+ &#xA0;
+ # Assign the managed identity access to the app role.
+ New-AzureADServiceAppRoleAssignment <strong>-</strong>ObjectId <strong>$managedIdentityObjectId</strong>&#xA0; <strong>-</strong>Id <strong>$appRoleId</strong> <strong>-</strong>PrincipalId <strong>$managedIdentityObjectId</strong> <strong>-</strong>ResourceId <strong>$serverServicePrincipalObjectId</strong> </code></pre>
+
+
+
+<p>The code above was adjusted from an original post on Microsoft Docs. For more information you can find it <a rel="noreferrer noopener" href="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-assign-app-role-managed-identity-powershell?WT.mc_id=AZ-MVP-5002438&amp;ref=localhost" data-type="URL" data-id="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-assign-app-role-managed-identity-powershell?WT.mc_id=AZ-MVP-5002438" target="_blank">here</a>.</p>
+
+
+
+<h2>Using the Managed Identity inside an Azure Function</h2>
+
+
+
+<p>Once all of this are setup, I could finally get the Azure Function to request an JWT token to the application in my tenant&#x2019;s Azure Active Directory.</p>
+
+
+
+<p>To do that, I took advantage of the <a rel="noreferrer noopener" href="https://docs.microsoft.com/en-us/dotnet/api/overview/azure/service-to-service-authentication?ref=localhost#connection-string-support?WT.mc_id=AZ-MVP-5002438" data-type="URL" data-id="https://docs.microsoft.com/en-us/dotnet/api/overview/azure/service-to-service-authentication#connection-string-support?WT.mc_id=AZ-MVP-5002438" target="_blank">App Authentication client library for .NET</a> &#x2013; that library allows you to get access tokens from a specific resource within Azure Active Directory, allowing you to define which identity you require to request that token.</p>
+
+
+
+<p>The code is pretty simple, and looks like this:</p>
+
+
+
+<pre class="wp-block-code"><code lang="csharp" class="language-csharp"> 
+ /*
+  The following entries should be added to your Application Settings:
+  TargetApp        - API URI of the application registration created
+                     in step 1
+  TargetTenantID   - The Tenant where the application registration and
+                     managed identities where created was created
+  FunctionIdentity - The connection string used to select the type
+                     of managed identity
+ */
+ var&#xA0;target&#xA0;=&#xA0;Environment.GetEnvironmentVariable(&quot;TargetApp&quot;);
+ var&#xA0;tenantID&#xA0;=&#xA0;Environment.GetEnvironmentVariable(&quot;TargetTentantID&quot;);
+ var&#xA0;identity&#xA0;=&#xA0;Environment.GetEnvironmentVariable(&quot;FunctionIdentity&quot;);
+ &#xA0;
+ var&#xA0;azureServiceTokenProvider&#xA0;=&#xA0;new&#xA0;AzureServiceTokenProvider(identity);
+ string&#xA0;accessToken&#xA0;=&#xA0;await&#xA0;azureServiceTokenProvider.GetAccessTokenAsync(target,tenantID); </code></pre>
+
+
+
+<p>Most of the items above are quite self explanatory. The FunctionIdentity environment variable, though, needs a bit of more information. The AzureServiceTokenProvider class can receive a connection-string-like parameter, which defines the type of identity you are using to connect. There are many permutations of those connections strings. For the purpose of this example, the one that must be used when running in Azure is:</p>
+
+
+
+<pre class="wp-block-code"><code lang="properties" class="language-properties"> RunAs=App;AppId={ClientId of user-assigned identity}</code></pre>
+
+
+
+<p>ClientID in this case is the client ID of the user assigned identity associated with the function.</p>
+
+
+
+<p>Other useful connection strings can be found in the table below:</p>
+
+
+
+<figure class="wp-block-table"><table class="has-subtle-pale-blue-background-color has-background"><thead><tr><th>Connection String</th><th>Description</th></tr></thead><tbody><tr><td>RunAs=Developer; DeveloperTool=AzureCli</td><td>Used for local development. Azure CLI (object ID 04b07795-8ddb-461a-bbee-02f9e1bf7b46 should be add as a client to the App Registration in order for development to work. See more details <a href="https://www.schaeflein.net/use-a-cli-to-get-an-access-token-for-your-aad-protected-web-api?WT.mc_id=AZ-MVP-5002438&amp;ref=localhost" data-type="URL" data-id="https://www.schaeflein.net/use-a-cli-to-get-an-access-token-for-your-aad-protected-web-api?WT.mc_id=AZ-MVP-5002438" target="_blank" rel="noreferrer noopener">here</a>.</td></tr><tr><td>RunAs=App</td><td>Used for running in the cloud with System-Assigned Identity</td></tr></tbody></table></figure>
+
+
+
+<p>With access to the JWT token, it is just a matter now of making an HTTP request to API Management passing the token. In my case, the code looked like:</p>
+
+
+
+<pre class="wp-block-code"><code lang="csharp" class="language-csharp"> /*
+ The following entries should be added to your Application Settings:
+ ApimKey - the API Key associated to the API being called
+ ApimUrl - the Url of the endpoint being called
+ */
+ var apiKey = Environment.GetEnvironmentVariable(&quot;ApimKey&quot;);
+ var apiUrl = Environment.GetEnvironmentVariable(&quot;ApimUrl&quot;);
+
+ var wc = new System.Net.Http.HttpClient();
+ wc.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(&quot;Bearer&quot;, accessToken);
+ wc.DefaultRequestHeaders.Add(&quot;Ocp-Apim-Subscription-Key&quot;, apiKey);
+ // In this case the call is a GET, so using GetAsync.
+ var result = await wc.GetAsync(apiUrl);</code></pre>
+
+
+
+<div class="wp-block-media-text alignwide is-stacked-on-mobile is-vertically-aligned-top" style="grid-template-columns:15% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt="Calling API Management from Azure Function using Managed Identities" class="wp-image-1214 size-full" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p class="has-normal-font-size"><em>In order to apply the same technique to Logic Apps, and invoke APIM using a managed identity, once you setup all the pre-requisites you just need to configure the Authentication of an HTTP action</em>, <em>selecting Managed Identities (1), the identity you want to use (2) and providing the API URI of the app registration you defined on the first step (3):</em></p>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" width="555" height="433" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-6.png" alt="Calling API Management from Azure Function using Managed Identities" class="wp-image-3195" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-6.png 555w, http://localhost:2368/content/images/wordpress/2021/04/image-6-300x234.png 300w" sizes="(max-width: 555px) 85vw, 555px"></figure>
+</div></div>
+
+
+
+<h2>Finally, securing APIM</h2>
+
+
+
+<p>The last step of the puzzle was to make sure that APIM when receiving the call from Azure Functions would be able to validate the JWT token. That was something I did a couple of times before, and I was collecting pieces of the puzzle while creating the various App Registrations and roles.</p>
+
+
+
+<p>To secure an API in APIM, I simply included the following validate-JWT policy in the Inbound rule of my API:</p>
+
+
+
+<pre class="wp-block-code"><code lang="xml" class="language-xml">&lt;!--
+replace the following values with the values in your solution:
+tenantID - the guid representing your Azure Active Directory Tenant ID
+clientId - client ID of the Application registered on Step 1
+roleID   - the value of the role defined on Step 1
+--&gt;
+&lt;validate-jwt header-name=&quot;Authorization&quot; failed-validation-httpcode=&quot;401&quot; failed-validation-error-message=&quot;Unauthorized. Access token is missing or invalid.&quot; require-scheme=&quot;Bearer&quot;&gt;
+ &#xA0;&#xA0;&#xA0; &lt;openid-config url=&quot;https://login.microsoftonline.com/{{tenantID}}/v2.0/.well-known/openid-configuration&quot; /&gt;
+ &#xA0;&#xA0;&#xA0; &lt;audiences&gt;
+ &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0; &lt;audience&gt;{{clientID}}&lt;/audience&gt;
+ &#xA0;&#xA0;&#xA0; &lt;/audiences&gt;
+ &#xA0;&#xA0;&#xA0; &lt;issuers&gt;
+ &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0; &lt;issuer&gt;https://sts.windows.net/{{tenantID}}/&lt;/issuer&gt;
+ &#xA0;&#xA0;&#xA0; &lt;/issuers&gt;
+ &#xA0;&#xA0;&#xA0; &lt;required-claims&gt;
+ &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0; &lt;claim name=&quot;roles&quot; match=&quot;any&quot;&gt;
+ &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0; &lt;value&gt;{{roleId}}&lt;/value&gt;
+ &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0; &lt;/claim&gt;
+ &#xA0;&#xA0;&#xA0; &lt;/required-claims&gt;
+&lt;/validate-jwt&gt; </code></pre>
+
+
+
+<h2>But why all this trouble?</h2>
+
+
+
+<p>Although this looks like a lot of work, there is a big reason to go through all of this trouble &#x2013; once you have this in place, you will have a passwordless solution for all your API internal calls. The project I was working on had a lot of integration between systems, and in order to get all of this secured, using the classic client credentials flow, we would have to manage lots of certificates or shared secrets. That means that we had to make sure that:</p>
+
+
+
+<ul><li>We stored all the secrets in a secure manner</li><li>We have a good handle on rotating those secrets on a regular basis to avoid applications breaking due to secrets expiring.</li></ul>
+
+
+
+<p>Using this technique we would let Azure manage the secrets for us, removing a big burden from the operational maintenance of the app.</p>
+
+
+
+<h3> Food for thought: user assigned x system assigned managed identities</h3>
+
+
+
+<p>I initially implemented this using system assigned, as the process to create system assigned identities is so simple and now the identity inherits the name of the resource being created, which makes it much easier to identify.</p>
+
+
+
+<p>But think about it a bit more, I think user assigned identity in this case is a better option for the following reasons:</p>
+
+
+
+<ul><li>If you have multiple Function Apps that are logically the same application, you can give a single identity for all those apps.</li><li>On the other hand if in the same Function App you have different Functions that needs different roles, you can have multiple user assigned identities connected to the same function &#x2013; you can for example have a reader Identity and a writer Identity and make sure that you use the right identity at the right time, instead of have one identity that does all.</li><li>If your application is deployed in multiple regions for redundancy, you don&#x2019;t need to have each region creating its own identity. You can have a single identity that represents the actual application and centralize the permissions on that identity.</li></ul>
+
+
+
+<p>I couldn&#x2019;t find any real guidance on the use of user x system managed identity on Microsoft Docs, but I will update this post if I find any. In the meantime, I am leaning towards user assigned identity because of the flexibility it seems to provide.</p>
+
+
+
+<p></p>
+<!--kg-card-end: html-->]]></content:encoded></item><item><title><![CDATA[Countdown to Global Integration Bootcamp 2021]]></title><description><![CDATA[<!--kg-card-begin: html-->
+<p>Last January, I wrote about this year edition of Global Integration Bootcamp. As you might remember, this year <strong><em>we locked it on 26-27 February (UTC Time) running two different event streams starting at times that can be suitable for the three main time zone areas- APAC, EMEA and Americas.</em></strong></p>
+
+
+
+<h2>Lineup</h2>]]></description><link>http://localhost:2368/countdown-to-global-integration-bootcamp-2021/</link><guid isPermaLink="false">657ebb613b57be75e033ecd3</guid><category><![CDATA[azure]]></category><category><![CDATA[cloud integration]]></category><category><![CDATA[GIB2021]]></category><category><![CDATA[Global Integration Bootcamp]]></category><category><![CDATA[hybrid integration]]></category><dc:creator><![CDATA[wsilveiranz]]></dc:creator><pubDate>Fri, 19 Feb 2021 20:56:41 GMT</pubDate><media:content url="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/02/GIB-2021-background.jpeg" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: html-->
+<img src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/02/GIB-2021-background.jpeg" alt="Countdown to Global Integration Bootcamp 2021"><p>Last January, I wrote about this year edition of Global Integration Bootcamp. As you might remember, this year <strong><em>we locked it on 26-27 February (UTC Time) running two different event streams starting at times that can be suitable for the three main time zone areas- APAC, EMEA and Americas.</em></strong></p>
+
+
+
+<h2>Lineup</h2>
+
+
+
+<p>We&#x2019;ve received an awesome number of sessions and in the end, the event will count with 21 sessions and 19 speakers from APAC, EMEA and Americas, including Microsoft Cloud Advocates, Azure MVPs, Community Leaders and Industry Experts &#x2013; covering a long list of topics in the from cloud and data integration to hybrid integration and API design/development. Here is this year&#x2019;s lineup:</p>
+
+
+
+<!--more-->
+
+
+
+
+
+<h2>How to join</h2>
+
+
+
+<p>To make things simpler, instead of going through a registration process, we decided that we would simply watch the session on your preferred streaming platform (as long as it is either Twitch or YouTube&#x2026; &#x1F609;</p>
+
+
+
+<p>We will have dedicated streams for APAC and EMEA on YouTube. You can find the links for each below:</p>
+
+
+
+<h3><strong>Global Integration Bootcamp APAC Stream</strong></h3>
+
+
+
+<div class="wp-container-5 wp-block-columns">
+<div class="wp-container-3 wp-block-column is-vertically-aligned-bottom">
+<div class="wp-block-image"><figure class="alignright size-large is-resized"><a href="https://www.youtube.com/watch?v=zfuaPEK-wBk&amp;ref=localhost" target="_blank" rel="noopener"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/02/youtube.png" alt="Countdown to Global Integration Bootcamp 2021" class="wp-image-3161" width="201" height="151" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/02/youtube.png 400w, http://localhost:2368/content/images/wordpress/2021/02/youtube-300x225.png 300w" sizes="(max-width: 201px) 85vw, 201px"></a></figure></div>
+</div>
+
+
+
+<div class="wp-container-4 wp-block-column">
+<div class="wp-block-image"><figure class="alignleft size-large is-resized"><a href="https://www.twitch.tv/globalintegrationbootcamp?ref=localhost" target="_blank" rel="noopener"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/02/twitch.png" alt="Countdown to Global Integration Bootcamp 2021" class="wp-image-3162" width="203" height="156" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/02/twitch.png 768w, http://localhost:2368/content/images/wordpress/2021/02/twitch-300x231.png 300w" sizes="(max-width: 203px) 85vw, 203px"></a></figure></div>
+</div>
+</div>
+
+
+
+<p>26 February 2021 23:00 UTC<br>27 February 2021 10:00 Melbourne<br>27 February 2021 12:00 Auckland</p>
+
+
+
+<h3><strong><strong>Global Integration Bootcamp EMEA Stream</strong></strong></h3>
+
+
+
+<div class="wp-container-8 wp-block-columns">
+<div class="wp-container-6 wp-block-column is-vertically-aligned-bottom">
+<div class="wp-block-image"><figure class="alignright size-large is-resized"><a href="https://www.youtube.com/watch?v=7ZIVom6glyU&amp;ref=localhost" target="_blank" rel="noopener"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/02/youtube.png" alt="Countdown to Global Integration Bootcamp 2021" class="wp-image-3161" width="201" height="151" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/02/youtube.png 400w, http://localhost:2368/content/images/wordpress/2021/02/youtube-300x225.png 300w" sizes="(max-width: 201px) 85vw, 201px"></a></figure></div>
+</div>
+
+
+
+<div class="wp-container-7 wp-block-column">
+<div class="wp-block-image"><figure class="alignleft size-large is-resized"><a href="https://www.twitch.tv/globalintegrationbootcamp?ref=localhost" target="_blank" rel="noopener"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/02/twitch.png" alt="Countdown to Global Integration Bootcamp 2021" class="wp-image-3162" width="203" height="156" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/02/twitch.png 768w, http://localhost:2368/content/images/wordpress/2021/02/twitch-300x231.png 300w" sizes="(max-width: 203px) 85vw, 203px"></a></figure></div>
+</div>
+</div>
+
+
+
+<p>27 February 2021 08:00 UTC<br>27 February 2021 19:00 Melbourne<br>27 February 2021 21:00 Auckland</p>
+
+
+
+<p>So block your next weekend, and join us for one more Global Integration Bootcamp!!! The team is also planning to setup some channels to keep the conversation going between the streams and we are looking forward to this year event!</p>
+<!--kg-card-end: html-->]]></content:encoded></item><item><title><![CDATA[Global Integration Bootcamp 2021 goes Virtual!!!]]></title><description><![CDATA[<!--kg-card-begin: html-->
+<p>Hey there! Happy New Year!!!</p>
+
+
+
+<p>Many of you were asking about if we would be doing another Global Integration Bootcamp this year. I know that there is been a while since we provided any news about it, but the team was trying to come up with a formula that would</p>]]></description><link>http://localhost:2368/global-integration-bootcamp-2021-goes-virtual/</link><guid isPermaLink="false">657ebb613b57be75e033ecd2</guid><category><![CDATA[cloud integration]]></category><category><![CDATA[GIB2021]]></category><category><![CDATA[Global Integration Bootcamp]]></category><category><![CDATA[hybrid integration]]></category><dc:creator><![CDATA[wsilveiranz]]></dc:creator><pubDate>Tue, 12 Jan 2021 20:54:44 GMT</pubDate><media:content url="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/01/friends_banner.jpg" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: html-->
+<img src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/01/friends_banner.jpg" alt="Global Integration Bootcamp 2021 goes Virtual!!!"><p>Hey there! Happy New Year!!!</p>
+
+
+
+<p>Many of you were asking about if we would be doing another Global Integration Bootcamp this year. I know that there is been a while since we provided any news about it, but the team was trying to come up with a formula that would work for our goal of a 24 hour around the globe marathon of Microsoft Integration goodness! We knew that we wanted:</p>
+
+
+
+<ul><li>Stream it in a way that you could just tune in and watch whenever you were, instead of having to join a specific application.</li><li>Run through as many timezones as possible.</li><li>Open up for the community to bring their content either live or pre-recorded.</li></ul>
+
+
+
+<p>After much discussion (read HEAPS of Whats App messages going back and forth, tests on multiple streaming platforms, and trying to find a time that didn&#x2019;t clash with other events), <strong><em>we locked it on 26-27 February (UTC Time) running three different event streams starting at times that are more suitable for the three main time zone areas- APAC, EMEA and America</em></strong>s.</p>
+
+
+
+<p>But for that to fly we need sessions and people ready to present right? <strong><em>So the Call for Papers process is now open. We are catering for both lightning talks (15 minutes) and  breakout sessions (30-45 minutes) and any level (from introductory to advanced)</em></strong>, so if you are interested in Microsoft Cloud and Hybrid Integration and would like to present in one of those time zones, please submit a session -or 3. The link for the CFP page is:</p>
+
+
+
+<ul><li><a href="https://sessionize.com/gib-2021-virtual/?ref=localhost" data-type="URL" data-id="https://sessionize.com/gib-2021-virtual/">https://sessionize.com/gib-2021-virtual/</a></li></ul>
+
+
+
+<p>Submissions end on 5 February, so get your thinking caps on, or dust off that classic session you would like to revisit and send it our way!</p>
+
+
+
+<p>Also, make sure you keep an eye on the event website (<a href="https://integrationbootcamp.com/?ref=localhost">https://integrationbootcamp.com/ </a>) as we will be adding more information about the format and the links for the streaming pages, closer to the event.</p>
+
+
+
+<h2>In Summary</h2>
+
+
+
+<ul><li>Global Integration Bootcamp is back on 26-27 February 2021</li><li>The event will cover most of the globe catering for time zones in APAC, EMEA and Americas</li><li>CFP is now open at <a href="https://sessionize.com/gib-2021-virtual/?ref=localhost">https://sessionize.com/gib-2021-virtual/</a>. </li><li>CFP closes on 5<sup>th</sup> February.</li><li>Make sure you keep an eye on <a href="https://integrationbootcamp.com/?ref=localhost">https://integrationbootcamp.com/</a> for more info.</li></ul>
+<!--kg-card-end: html-->]]></content:encoded></item><item><title><![CDATA[Azure Functions with a Static Outbound IP Address]]></title><description><![CDATA[<!--kg-card-begin: html-->
+<p>&#x201C;So to complete our configuration we just need your outbound static IP&#x2026;&#x201D; This is something that pops up again and again, specially if you work integrating legacy systems, like banks, government agencies or other older systems that requires a static IP Address to add to firewall inbound</p>]]></description><link>http://localhost:2368/azure-functions-with-a-static-outbound-ip-address/</link><guid isPermaLink="false">657ebb613b57be75e033ecd1</guid><category><![CDATA[azure functions]]></category><category><![CDATA[hybrid integration]]></category><category><![CDATA[logic apps]]></category><category><![CDATA[nat gateway]]></category><category><![CDATA[networking]]></category><dc:creator><![CDATA[wsilveiranz]]></dc:creator><pubDate>Sat, 21 Nov 2020 07:37:20 GMT</pubDate><media:content url="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: html-->
+<img src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg" alt="Azure Functions with a Static Outbound IP Address"><p>&#x201C;So to complete our configuration we just need your outbound static IP&#x2026;&#x201D; This is something that pops up again and again, specially if you work integrating legacy systems, like banks, government agencies or other older systems that requires a static IP Address to add to firewall inbound rules.</p>
+
+
+
+<p>In the past I had to use on of the subscription tiers from Azure API Management or in some cases deploy the code within a self hosted service in a Virtual Machine. And both of them are valid options if you already have one of those components in place. But in a couple of my last projects, Not only I needed to implement a new component (in this case API Management) just to fulfil this requirement. I also had to change my design a bit, because API Management didn&#x2019;t support one of the streaming requirements I had (but that is a story for another post).</p>
+
+
+
+<p>But I wouldn&#x2019;t be writing a post just to complain about this (not that this has never happened before) &#x2013; I actually found another solution &#x2013; one that I&#x2019;ve tried and discarded earlier this year, but thanks to some good work from the App Services Engineering team, is finally a viable solution: Azure Functions + VNET Integration + NAT Gateways!</p>
+
+
+
+<!--more-->
+
+
+
+<h2>How does it work?</h2>
+
+
+
+<p>According to Microsoft Docs:</p>
+
+
+
+<blockquote class="wp-block-quote"><p>&#x201C;NAT gateway resources are part of&#xA0;<a href="https://docs.microsoft.com/en-us/azure/virtual-network/nat-overview?WT.mc_id=AZ-MVP-5002438&amp;ref=localhost" target="_blank" rel="noreferrer noopener">Virtual Network NAT</a>&#xA0;and provide outbound Internet connectivity for one or more subnets of a virtual network. The subnet of the virtual network states which NAT gateway will be used. NAT provides source network address translation (SNAT) for a subnet. NAT gateway resources specify which static IP addresses virtual machines use when creating outbound flows.&#x201D;</p><cite><a href="https://docs.microsoft.com/en-us/azure/virtual-network/nat-gateway-resource?WT.mc_id=AZ-MVP-5002438&amp;ref=localhost" target="_blank" rel="noreferrer noopener">Designing virtual networks with NAT gateway resources</a></cite></blockquote>
+
+
+
+<p>So, the NAT Gateways provides a way to specify a static IP addresses to be used as outbound address to any outbound traffic that is leaving a subnet towards the internet. Sounds like something we would like to do right?</p>
+
+
+
+<p>When I first learned about this resource around the end of 2019, I&#x2019;ve tried to configure the following scenario:</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/11/image.png" alt="Azure Functions with a Static Outbound IP Address" class="wp-image-3112" width="591" height="208" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/11/image.png 788w, http://localhost:2368/content/images/wordpress/2020/11/image-300x105.png 300w, http://localhost:2368/content/images/wordpress/2020/11/image-768x270.png 768w" sizes="(max-width: 591px) 85vw, 591px"></figure>
+
+
+
+<p>But I got stuck on an issue &#x2013; NAT Gateway were not compatible with the App Service Plans for either Azure Function Consumption Premium or Dedicated plans. Doing some research I found that the NAT Gateway at that point was not compatible with the basic load balancer and any products that used basic load balancer.</p>
+
+
+
+<p>But just this week, the App Services team provided us with some good news:</p>
+
+
+
+<figure class="wp-block-embed-twitter wp-block-embed is-type-rich is-provider-twitter"><div class="wp-block-embed__wrapper">
+<blockquote class="twitter-tweet" data-width="550" data-dnt="true"><p lang="en" dir="ltr"><a href="https://twitter.com/hashtag/AzureAppService?src=hash&amp;ref_src=twsrc%5Etfw&amp;ref=localhost">#AzureAppService</a> Want a dedicated outbound address to the internet? Want to escape SNAT port restrictions? Now you can. Use a NAT Gateway with your app. To set it up, use VNet Integration, set integration subnet as subnet used with NAT Gateway, then enjoy. <a href="https://t.co/I69hFGg2kz?ref=localhost">https://t.co/I69hFGg2kz</a></p>&#x2014; Christina Compy (@ccompy) <a href="https://twitter.com/ccompy/status/1329199536846249984?ref_src=twsrc%5Etfw&amp;ref=localhost">November 18, 2020</a></blockquote><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div></figure>
+
+
+
+<p>You can read their <a rel="noreferrer noopener" href="https://azure.github.io/AppService/2020/11/15/web-app-nat-gateway.html?ref=localhost" target="_blank">blog post</a> here. So whatever incompatibility between the NAT Gateway and the App service plans are now solved! So let&#x2019;s try to get it working&#x2026;</p>
+
+
+
+<h2>Pre-requisites</h2>
+
+
+
+<p>In order to implement this you will need the following items:</p>
+
+
+
+<ul><li>An Azure Function configured with an App Service plan that supports VNET integration (Premium Consumption, or one of the following dedicated plans: Standard, Premium V2 or Premium V3),</li><li>A Virtual Network with at least one available subnet,</li><li>A standard IP Address and</li><li>A NAT Gateway.</li></ul>
+
+
+
+<p>You can find more information about how to configure the NAT Gateway and associate it to a subnet <a rel="noreferrer noopener" href="https://docs.microsoft.com/en-us/azure/virtual-network/nat-gateway-resource?ref=localhost#how-to-deploy-nat?WT.mc_id=AZ-MVP-5002438" target="_blank">here</a>. The configuration is pretty simple &#x2013; just requires the standard IP address and the VNET/Subnet associated.</p>
+
+
+
+<div class="wp-block-media-text alignwide is-stacked-on-mobile is-vertically-aligned-top" style="grid-template-columns:15% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt="Azure Functions with a Static Outbound IP Address" class="wp-image-1214" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p class="has-normal-font-size"><em>Notice that a single NAT Gateway can be connected to multiple subnets. So as long as applications requires the same outbound IP addresses, they can be integrated to subnets connected to the same NAT Gateway.</em></p>
+</div></div>
+
+
+
+<h2>Azure Function Configuration</h2>
+
+
+
+<p>The configuration for Azure Functions is quite straightforward. First you need to go to Networking (1) and select configuration (2).</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/11/image-1-1024x448.png" alt="Azure Functions with a Static Outbound IP Address" class="wp-image-3120" width="628" height="275" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/11/image-1-1024x448.png 1024w, http://localhost:2368/content/images/wordpress/2020/11/image-1-300x131.png 300w, http://localhost:2368/content/images/wordpress/2020/11/image-1-768x336.png 768w, http://localhost:2368/content/images/wordpress/2020/11/image-1-1200x525.png 1200w, http://localhost:2368/content/images/wordpress/2020/11/image-1.png 1313w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p>After that you need to click on + Add Vnet (1), then select an existing Virtual Network (2), click on select existing (3) and choose one of the available subnets (4) and finally click Ok (5). </p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/11/image-2-1024x424.png" alt="Azure Functions with a Static Outbound IP Address" class="wp-image-3121" width="623" height="258" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/11/image-2-1024x424.png 1024w, http://localhost:2368/content/images/wordpress/2020/11/image-2-300x124.png 300w, http://localhost:2368/content/images/wordpress/2020/11/image-2-768x318.png 768w, http://localhost:2368/content/images/wordpress/2020/11/image-2-1536x636.png 1536w, http://localhost:2368/content/images/wordpress/2020/11/image-2-1200x497.png 1200w, http://localhost:2368http://localhost:2368/content/images/wordpress/2020/11/image-2.png 1892w, http://localhost:2368http://localhost:2368/content/images/wordpress/2020/11/image-2.png 1680w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p>Once the VNET configuration is completed, it should look like this:</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/11/image-4-1024x830.png" alt="Azure Functions with a Static Outbound IP Address" class="wp-image-3124" width="625" height="507" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/11/image-4-1024x830.png 1024w, http://localhost:2368/content/images/wordpress/2020/11/image-4-300x243.png 300w, http://localhost:2368/content/images/wordpress/2020/11/image-4-768x622.png 768w, http://localhost:2368/content/images/wordpress/2020/11/image-4-1200x973.png 1200w, http://localhost:2368/content/images/wordpress/2020/11/image-4.png 1356w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p><em>To confirm that the subnet is configured to connect to the NAT Gate</em>way, you can click on the subnet name, which will bring you to the subnet configuration page. Here, you can confirm that the NAT Gateway is assigned to that subnet.</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/11/image-5.png" alt="Azure Functions with a Static Outbound IP Address" class="wp-image-3125" width="620" height="461" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/11/image-5.png 935w, http://localhost:2368/content/images/wordpress/2020/11/image-5-300x223.png 300w, http://localhost:2368/content/images/wordpress/2020/11/image-5-768x570.png 768w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<div class="wp-block-media-text alignwide is-stacked-on-mobile is-vertically-aligned-top" style="grid-template-columns:15% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt="Azure Functions with a Static Outbound IP Address" class="wp-image-1214" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p class="has-normal-font-size"><em>I&#x2019;ve noticed (and some other people also noticed) that when you add the VNET integration to the Azure Function (or web app), sometimes the NAT Gateway configuration is removed. I am not sure if that happens all the time, as I couldn&#x2019;t reproduce it every time. But just bear that in mind &#x2013; go back to the configuration of the subnet and make sure that it is associated to the NAT Gateway as a precaution. Thanks J.V. for highlighting this in the comments!  </em></p>
+</div></div>
+
+
+
+<p>Once the configuration is completed in the VNET side, you will need to force all outgoing traffic to go through the VNET &#x2013; this will force the traffic going to the internet to be routed through public IP address associated to the NAT Gateway. This can be achieved by including a new app setting entry on your configuration. You must include the following entry:</p>
+
+
+
+<ul><li>WEBSITE_VNET_ROUTE_ALL = 1</li></ul>
+
+
+
+<p>To do this, search for Configuration on your side blade (1), click on Configuration (2), click on add to include a new value (3), add WEBSITE_VNET_ROUTE_ALL as the Name and 1 as the Value, then click OK (4). Don&#x2019;t forget to click save (5) to persist your changes</p>
+
+
+
+<figure class="wp-block-image size-large is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/12/website-vnet-route-all-config-1024x764.png" alt="Azure Functions with a Static Outbound IP Address" class="wp-image-3138" width="631" height="471" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/12/website-vnet-route-all-config-1024x764.png 1024w, http://localhost:2368/content/images/wordpress/2020/12/website-vnet-route-all-config-300x224.png 300w, http://localhost:2368/content/images/wordpress/2020/12/website-vnet-route-all-config-768x573.png 768w, http://localhost:2368/content/images/wordpress/2020/12/website-vnet-route-all-config-1200x896.png 1200w, http://localhost:2368/content/images/wordpress/2020/12/website-vnet-route-all-config.png 1467w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<h2>Testing your configuration</h2>
+
+
+
+<p>A simple way to test your configuration is to make a http request to a website that would return the IP address of the caller. I&#x2019;ve used a PowerShell script to do that, taking the advantage of Azure Function support for PowerShell Core. You can find the code in the gist below:</p>
+
+
+
+<script src="https://gist.github.com/wsilveiranz/19f558a945305bfd185f9f13d3fb1115.js"></script>
+
+
+
+<h2>A whole new world&#x2026;</h2>
+
+
+
+<p>The ability to have Azure Functions and Web Apps having a static outbound IP is a feature that have been requested for some time now. This will open up a number of scenarios that were not possible today with pure serverless and will simplify a lot the integration with other systems, in special legacy and on-premises systems that still depend on a static IP address to configure inbound access.</p>
+
+
+
+<p>That alone would already be fantastic news! But another recent announcement from the Enterprise Integration team combined with this makes those news even more exciting&#x2026; <strong><em>The new Logic Apps runtime, which is an extension of Azure Functions Runtime, can also leverage from this configuration</em></strong>. So not only core Azure Functions implementations can take advantage of this implementation, but Logic Apps will soon be able to leverage from that as well.<strong><em> Actually, I&#x2019;ve tested the same configuration on a logic apps (preview) resource and it behave as expected!</em></strong></p>
+
+
+
+<div class="wp-block-media-text alignwide is-stacked-on-mobile is-vertically-aligned-top" style="grid-template-columns:15% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt="Azure Functions with a Static Outbound IP Address" class="wp-image-1214" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p class="has-normal-font-size"><em>I&#x2019;ve been doing a bit more research on the Logic Apps (preview) and what I found so far is that the managed connectors are still using their own IP addresses. For example, I&#x2019;ve tried to connect to the an FTP server using the SFTP-SSH connector and it presented an IP from the managed connector in Australia East region. Hopefully this is something that will be addressed as the preview moves close to GA. Otherwise we will have to replace connector functionality with Azure Functions (still better than the original situation, but not ideal).</em></p>
+</div></div>
+
+
+
+<p></p>
+
+
+
+<h2>In Summary</h2>
+
+
+
+<ul><li>App Services can now leverage from the NAT Gateway functionality to expose a static outbound IP address to the internet.</li><li>Azure Function with either a Premium Consumption or Dedicated app service plan can also leverage from the same functionality.</li><li>Logic Apps (preview), which are based on the Azure Functions runtime will also benefit from the same type of configuration.</li><li>This will open up a number of scenarios that were not easily implemented before &#x2013; in special when integrating with on-premises or legacy systems.</li></ul>
+<!--kg-card-end: html-->]]></content:encoded></item><item><title><![CDATA[Recapping Integrate 2020]]></title><description><![CDATA[<!--kg-card-begin: html-->
+<p>Last week I&#x2019;ve attended the Integrate conference once again. It was my 5th time attending the conference, and the 4th time I&#x2019;ve participate as a speaker.</p>
+
+
+
+<p>But Integrate 2020&#xA0; was quite a different experience from the last years. Dubbed Integrate 2020 Remote, to reflect the</p>]]></description><link>http://localhost:2368/recapping-integrate-2020/</link><guid isPermaLink="false">657ebb613b57be75e033eccf</guid><category><![CDATA[biztalk server]]></category><category><![CDATA[event driven integration]]></category><category><![CDATA[hybrid integration]]></category><category><![CDATA[integrate2020]]></category><category><![CDATA[logic apps]]></category><category><![CDATA[service bus]]></category><dc:creator><![CDATA[wsilveiranz]]></dc:creator><pubDate>Thu, 11 Jun 2020 12:44:48 GMT</pubDate><media:content url="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/06/integrate2020-remote.png" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: html-->
+<img src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/06/integrate2020-remote.png" alt="Recapping Integrate 2020"><p>Last week I&#x2019;ve attended the Integrate conference once again. It was my 5th time attending the conference, and the 4th time I&#x2019;ve participate as a speaker.</p>
+
+
+
+<p>But Integrate 2020&#xA0; was quite a different experience from the last years. Dubbed Integrate 2020 Remote, to reflect the fact that was yet another event that had to adapt to the pandemic reality that assaulted the planet since the end of last year. Kovai, the company formerly know as BizTalk 360, and the event organizer since its inception in 2012, took some time to decide that the event would go ahead, but when decided that it would be in a new format, didn&#x2019;t pull any stops to get it running. With almost 1000 online attendees &#x2013; which is impressive for a paid event, Integrate 2020 had 28 speakers, between Microsoft Program Managers and Microsoft MVPs and as many technical sessions distributed across three days.</p>
+
+
+
+<!--more-->
+
+
+
+<h2>Keynote Highlights</h2>
+
+
+
+<p>More than ever, this year&#x2019;s Integrate &#x2013; and in special the keynote by <a href="https://twitter.com/jonfancey?ref=localhost" target="_blank" rel="noreferrer noopener">Jon Fancey</a> &#x2013; give us some good hints on what is the direction that integration capabilities at Microsoft are going. Here are my take on it:</p>
+
+
+
+<h3>Integration anywhere</h3>
+
+
+
+<p>It is quite clear that the Microsoft wants to meet the integration needs of their clients (actually the computing needs in general) independent of where it is needed &#x2013; within the Azure cloud, on-premises, in other public or private clouds or even at the edge devices. This is becoming a reality thanks to the ability to encapsulate the integration resources within containers that can be deployed the same manner independent on the destination. We should expect more and more investments in container technology as we already saw in API Management, in Logic Apps &#x2013; with the new preview of Logic Apps running on Azure functions runtime enabling this possibility &#x2013; and even on Azure Event Grid, which provides a module for edge computing.</p>
+
+
+
+<h3>Integration is for developers too</h3>
+
+
+
+<p>Microsoft is pushing the possibility to use low code technology like Logic Apps closer to developers &#x2013; by enabling development in the tools that developers use daily &#x2013; and providing the ability to consume those components in a easy way &#x2013; by including Logic Apps in the Azure Functions runtime and adding it as a DAPR binding &#x2013; in a bid to really speed up application development. The idea is to make integration tools more pervasive, making it part of the development process instead of an afterthought or needed to be owned by consultants with different skillsets. Where that takes integration developers? For one side it broadens their horizons, allowing them to integrate better in project teams (pun intended) &#x2013; in the other allow them to lead this new wave of integration development by bringing years of experiences with patterns and practices closer to &#x201C;mainstream&#x201D; development. If positioned well this is a win-win situation for us.</p>
+
+
+
+<h3>Integration is a spectrum</h3>
+
+
+
+<div class="wp-block-image"><figure class="alignright size-large is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/06/image-3-1024x575.png" alt="Recapping Integrate 2020" class="wp-image-3074" width="372" height="208" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/06/image-3-1024x575.png 1024w, http://localhost:2368/content/images/wordpress/2020/06/image-3-300x169.png 300w, http://localhost:2368/content/images/wordpress/2020/06/image-3-768x432.png 768w, http://localhost:2368/content/images/wordpress/2020/06/image-3.png 1178w" sizes="(max-width: 372px) 85vw, 372px"></figure></div>
+
+
+
+<p>Long gone are the times where integration only meant very specialized middleware software and arcane standards like EDI, HL7, XML, etc. The world today is so connected, that everyone needs to connect to something. That puts integration in almost every initiative today &#x2013; from the citizen developer applications using Power Apps and Power Automate, to web and mobile applications, with APIs and backend services, to the traditional B2B integrations. That means that today everyone is an integration developer in a way. Understanding the multiple technologies and where they fit in this spectrum is quite important to use the right tool to solve the problem in hand.</p>
+
+
+
+<p>It also quite interesting to see in Jon&#x2019;s session a more &#x201C;holistic&#x201D; view of Azure Integration Services &#x2013; originally, we saw the term &#x2013; which was pretty much an umbrella name to a group of products that enable the PaaS vision for integration in Azure &#x2013; Logic Apps, API Management, Service Bus, Event Grid. But the &#x201C;definition&#x201D; of Azure Integration Services in the diagram above, broadens that vision and presents a more  real life view of what Integration means on the Microsoft Cloud today.</p>
+
+
+
+<figure class="wp-block-image size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/06/image-4-300x168.png" alt="Recapping Integrate 2020" class="wp-image-3075" width="629" height="352" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/06/image-4-300x168.png 300w, http://localhost:2368/content/images/wordpress/2020/06/image-4-1024x575.png 1024w, http://localhost:2368/content/images/wordpress/2020/06/image-4-768x431.png 768w, http://localhost:2368/content/images/wordpress/2020/06/image-4.png 1177w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<h2>Technical Highlights</h2>
+
+
+
+<p>My initial expectation was that Microsoft, which had one of its flagship events &#x2013; MS Build &#x2013; finished just a couple of weeks ago &#x2013; <a href="https://notetoself.tech/2020/05/25/ms-build-recap-the-ais-edition/?ref=localhost" target="_blank" rel="noreferrer noopener">would have pretty much the same announcement</a>. But I was wrong! They kept some interesting items that would be interesting mainly to that audience integration specialist just for that audience, while still showing some extra love for developers. Among the news that were disclosed &#x2013; or discussed in more details &#x2013; on MS Build, the main items were:</p>
+
+
+
+<h3>Logic App Support for DAPR</h3>
+
+
+
+<p>DAPR is a portable event driven framework, based on a &#x201C;plug and play&#x201D; architecture, providing building blocks for the both stateful and stateless applications development, based on standard Open APIs.</p>
+
+
+
+<p><a href="https://cloudblogs.microsoft.com/opensource/2020/05/26/announcing-cloud-native-workflows-dapr-logic-apps/?ref=localhost" target="_blank" rel="noreferrer noopener">DAPR now support cloud native workflows based on Logic Apps</a>, thanks to the Logic App runtime being embedded into Azure Functions. This will open a new possibility for applications to implement business processes workflows within a single solutions while still using the best of breed technologies to do so.</p>
+
+
+
+<p>It feels to me like Logic Apps will start to realize the promise that Windows Workflow Framework tried to fulfil many moons ago.</p>
+
+
+
+<h3>Logic Apps SDK</h3>
+
+
+
+<div class="wp-block-image"><figure class="alignright size-large is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/06/image-1024x549.png" alt="Recapping Integrate 2020" class="wp-image-3069" width="331" height="177" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/06/image-1024x549.png 1024w, http://localhost:2368/content/images/wordpress/2020/06/image-300x161.png 300w, http://localhost:2368/content/images/wordpress/2020/06/image-768x412.png 768w, http://localhost:2368/content/images/wordpress/2020/06/image-1536x824.png 1536w, http://localhost:2368/content/images/wordpress/2020/06/image-1200x644.png 1200w, http://localhost:2368http://localhost:2368/content/images/wordpress/2020/06/image.png 1920w, http://localhost:2368http://localhost:2368/content/images/wordpress/2020/06/image.png 1680w" sizes="(max-width: 331px) 85vw, 331px"></figure></div>
+
+
+
+<p>The Logic App SDK that existed before in .NET is being expanded to allow not only management of the Logic App as a resource, but to programmatically define a new logic app in code. The introduction of operations like AppendTrigger, AppendAction and Run will allow developers to implement logic apps on the fly as part of their native code, instead of having the configuration of the Logic App in a different place.</p>
+
+
+
+<p>I am not sure how I feel about this particular improvement, being a visual developer for so long, but it definitely make it more appealing for someone that works fully on an environment like Visual Studio coding on a programming language of choice full time. And that will definitely increase the reach of the technology.</p>
+
+
+
+<h3>BizTalk Migration Tool</h3>
+
+
+
+<div class="wp-block-image"><figure class="alignleft size-large is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/06/image-1-1024x579.png" alt="Recapping Integrate 2020" class="wp-image-3071" width="294" height="166" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/06/image-1-1024x579.png 1024w, http://localhost:2368/content/images/wordpress/2020/06/image-1-300x170.png 300w, http://localhost:2368/content/images/wordpress/2020/06/image-1-768x434.png 768w, http://localhost:2368/content/images/wordpress/2020/06/image-1.png 1181w" sizes="(max-width: 294px) 85vw, 294px"></figure></div>
+
+
+
+<p>Valerie Robb had a fantastic session on Integrate 2020 discussing the future of BizTalk Server and providing some clarity on what can be expected to BizTalk in the next couple of years. But definitely the highlight of her session was the announcement of the BizTalk Server Migration Tool.</p>
+
+
+
+<p>The BizTalk Migration Tool is currently in development, with a target for autumn US &#x2013; approximately September timeframe &#x2013; will be a an open source command line tools that can be executed against a BizTalk Server Application MSI, which will analyse the application and provide guidance and potentially templates for migration</p>
+
+
+
+<h3>Azure Service Bus JMS 2.0 Support</h3>
+
+
+
+<p>The biggest announcement on Azure Service Bus was the unveiling of more details around its JMS 2.0 support. Although Azure Service Bus provide some support for JMS today, this support is not as extensive as other messaging engines like ActiveMQ or RabbitMQ. According to Ashish Chhabris &#x2013; Service Bus Program Management &#x2013; Service Bus today supports about 40% of the JMS features, lacking support for temporary queues, subscribers and queue/topic browsers for example. This will be another features added to Azure Service Bus Premium tier.</p>
+
+
+
+<p>Once the public preview is available later this month, the list of supported features will increase to cover around 80% of the features. Among the new features are:</p>
+
+
+
+<div class="wp-block-image"><figure class="alignright size-large is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/06/image-2-1024x579.png" alt="Recapping Integrate 2020" class="wp-image-3072" width="367" height="208" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/06/image-2-1024x579.png 1024w, http://localhost:2368/content/images/wordpress/2020/06/image-2-300x170.png 300w, http://localhost:2368/content/images/wordpress/2020/06/image-2-768x434.png 768w, http://localhost:2368/content/images/wordpress/2020/06/image-2.png 1182w" sizes="(max-width: 367px) 85vw, 367px"></figure></div>
+
+
+
+<ul><li>&#xA0;auto-creation of entities over AMQP</li><li>Durable and non-durable subscription</li><li>Message Selectors</li><li>Scheduled messages</li><li>Queue and Topic browsers</li></ul>
+
+
+
+<p>Full parity with current JMS implementation can be expected after GA, including features like &#x201C;NoLocal&#x201D; &#x2013; which allow subscribers to ignore messages published by its own connections, RBAC support for JSM clients and link recovery.</p>
+
+
+
+<p>The plan is that the new JMS support will allow clients to simply change the current implementation connection configuration to point to Azure Service Bus, which will help with migration of workload form other JMS 2.0 based engines to Service Bus. This also means that most EAI connectors that exists today will be now compatible with Azure Service Bus.</p>
+
+
+
+<p>Another change that will have a big impact is that in order to honour the maximum message size supported by JMS today, Azure Service Bus Premium tier will have its message size increased to 100 MB, from its current 1 MB limit.</p>
+
+
+
+<h2>In summary</h2>
+
+
+
+<p>We should expect some interesting tools to play with in the coming weeks/months! But most important, we will really soon be able to start having real talks to clients about how to position Azure Integration Services as a integration solution that:</p>
+
+
+
+<ul><li>Meets their needs no matter where it is required &#x2013; be in Azure, other clouds, on-premises or at the edge.</li><li>Can be implemented at the pace the client needs, with investment being proportional to the return and current requirements.</li><li>Can be used by their teams  and cater for the diversity of roles that will be involved in integration within the organisation.</li></ul>
+
+
+
+<p>It feels to me that is a good time to be involved in integration. What do you think?</p>
+<!--kg-card-end: html-->]]></content:encoded></item><item><title><![CDATA[MS Build Recap - The AIS Edition]]></title><description><![CDATA[<!--kg-card-begin: html-->
+<p>This year&#x2019;s MS Build was very different &#x2013; we all know that. But for most of us, me included, was the first opportunity to join the event officially. And what event it was.</p>
+
+
+
+<p>Ran across three time zone, with a mix of live sessions, Teams Live events and</p>]]></description><link>http://localhost:2368/ms-build-recap-the-ais-edition/</link><guid isPermaLink="false">657ebb613b57be75e033ecce</guid><category><![CDATA[api management]]></category><category><![CDATA[azure functions]]></category><category><![CDATA[event grid]]></category><category><![CDATA[logic apps]]></category><category><![CDATA[service bus]]></category><dc:creator><![CDATA[wsilveiranz]]></dc:creator><pubDate>Mon, 25 May 2020 22:59:35 GMT</pubDate><media:content url="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/05/MSBuild-banner.png" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: html-->
+<img src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/05/MSBuild-banner.png" alt="MS Build Recap - The AIS Edition"><p>This year&#x2019;s MS Build was very different &#x2013; we all know that. But for most of us, me included, was the first opportunity to join the event officially. And what event it was.</p>
+
+
+
+<p>Ran across three time zone, with a mix of live sessions, Teams Live events and smaller Teams events, like focus groups, which allowed the attendees to really interact with the product groups and advocates from Microsoft.</p>
+
+
+
+<p>This year there were some interesting announcements around the Azure Integration Services technologies. I&#x2019;ve recently shared those announcements on a Auckland Azure User Group meetup, and thought that, since I already had everything collated, it would be a good idea to just share this with you on the blog as well. So, let&#x2019;s talk about what is now available, or just \around the corner for AIS</p>
+
+
+
+<!--more-->
+
+
+
+<h2>Logic Apps News</h2>
+
+
+
+<p>Logic Apps probably got the most exciting news from the bunch, but at the same time, it is one of the news we will still have to wait a bit more to get our hands on. There were two big news announced:</p>
+
+
+
+<h3>Logic Apps will run on the Azure Functions Runtime</h3>
+
+
+
+<p>Really soon we will see support for logic apps to run on the Azure Functions Runtime! This got everyone really excited and for good reason. The Azure Functions today is probably one of the most versatile applications in the Azure toolbox for developers and integration specialists. Its runtime can be deployed locally, supported by a powerful CLI that allows you to build and run functions on-premises. It also can be deployed on a containers and executed on both Docker and Kubernetes engines. And logic apps will inherit all of that! This will probably be the answer for logic apps to the new push by Microsoft to have technologies running on any cloud, on the cloud and on the edge. It will also finally create new options for executing workflows on-premises, getting closer to have a single solution for hybrid integration workflows &#x2013; a solution that requires the mix of Logic Apps and BizTalk Server today.</p>
+
+
+
+<h3>Logic Apps VS Code Extension improvements</h3>
+
+
+
+<p>Together with the push for Logic Apps to run on Azure Functions Runtime, comes a new VS Code extension, that not only integrates Azure Functions and Logic Apps in a single deployment unit, but also finally enables the Logic Apps Designer surface as a local experience. So you won&#x2019;t need to use Visual Studio connected to the internet, or implement your workflows in the Azure Portal anymore. This will bring Logic App as a technology choice much closer to the developers.</p>
+
+
+
+<p>The product team also promised a better parameterization experience, which will simplify the deployment of the logic apps in the future &#x2013; hopefully this will indicate a better way to define connections, decoupling their definitions.</p>
+
+
+
+<h3>Logic Apps Stateless option</h3>
+
+
+
+<p>After I&#x2019;ve published this, <a rel="noreferrer noopener" href="https://twitter.com/pacodelacruz?ref=localhost" target="_blank">Paco de La Cruz</a> reminded me that I forgot one important aspect on the announcements for Logic Apps:</p>
+
+
+
+<figure class="wp-block-embed-twitter wp-block-embed is-type-rich is-provider-twitter"><div class="wp-block-embed__wrapper">
+<blockquote class="twitter-tweet" data-width="550" data-dnt="true"><p lang="en" dir="ltr">Nice recap <a href="https://twitter.com/WSilveiraNZ?ref_src=twsrc%5Etfw&amp;ref=localhost">@WSilveiraNZ</a>!. I&apos;d add the plans to make Logic Apps workflows stateless to reduce latency</p>&#x2014; Paco de la Cruz (@pacodelacruz) <a href="https://twitter.com/pacodelacruz/status/1265039884521103360?ref_src=twsrc%5Etfw&amp;ref=localhost">May 25, 2020</a></blockquote><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div></figure>
+
+
+
+<p>And he was right (thanks, mate)! Another area where the team is doing some research for improvements is in the performance of the Logic Apps execution- today, the full auditing capability available in Logic Apps (inputs and outputs of all actions) end up impacting the performance of the workflow execution. In some cases, you will might want to sacrifice that information for better latency. And this is what the Stateless Logic Apps will provide. There is not much info about how it will work in the end, but at this stage, what the product team presented was the ability to create Stateless Logic Apps (versus what we have today marked as Stateful). Don&#x2019;t get confused by the name (I know I did in the beginning) &#x2013; state in this case means the logging the inputs and outputs of each action instead of keeping state between executions. Maybe the name needs some work, but it will be an interesting choice to have available.</p>
+
+
+
+<blockquote class="wp-block-quote"><p>All in all, those are very exciting news to Logic Apps developers &#x2013; and the development community in general. Unfortunately those items are still a couple of weeks away at least from private preview. I would expect more news coming from Integrate 2020, which is less than 10 days away.</p></blockquote>
+
+
+
+<h2>API Management News</h2>
+
+
+
+<p>The news from API Management didn&#x2019;t come from Build directly, but was the center of their presentations anyway. There were two main items that dominated the API Management presentations:</p>
+
+
+
+<h3>APIM self-hosted gateways are now GA</h3>
+
+
+
+<p>If you follow this blog, you will remember that I was quite excited about the new possibilities from API Management with the new <a rel="noreferrer noopener" href="https://notetoself.tech/2019/11/17/api-management-arc-enabled/?ref=localhost" target="_blank">self-hosted API Gateway </a>(which I called Arc enabled at the time). The component is now GA and available on the Development and Premium tiers for API Management.</p>
+
+
+
+<blockquote class="wp-block-quote"><p>This is another push from the Azure Integration Service team to enable a continuous story between cloud and on-premises.</p></blockquote>
+
+
+
+<h3>APIM extension for Visual Studio Code improvements</h3>
+
+
+
+<p>API Management have been investing on integration with Visual Studio Code for some time to improve the life cycle of API developers that need to publish APIs through the platform.</p>
+
+
+
+<p>The latest incarnation of the tool brings this integration to the next level, enabling the majority of the activities required by an API to be implemented within the VS Code interface. The extension connects directly to a API Management instance in the cloud, and presents an hierarchical view of all the components that exists in APIM. </p>
+
+
+
+<figure class="wp-block-image size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/05/image-300x156.png" alt="MS Build Recap - The AIS Edition" class="wp-image-3047" width="641" height="333" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/05/image-300x156.png 300w, http://localhost:2368/content/images/wordpress/2020/05/image-1024x533.png 1024w, http://localhost:2368/content/images/wordpress/2020/05/image-768x399.png 768w, http://localhost:2368/content/images/wordpress/2020/05/image-1536x799.png 1536w, http://localhost:2368/content/images/wordpress/2020/05/image-1200x624.png 1200w, http://localhost:2368http://localhost:2368/content/images/wordpress/2020/05/image.png 1919w, http://localhost:2368http://localhost:2368/content/images/wordpress/2020/05/image.png 1680w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p>There are some key features in this version of the extension that improves the development experience:</p>
+
+
+
+<ul><li><strong>Direct editing access to policies at all levels (global, product, API and operations)</strong>, with intelisense and with the same level of validation you get from the portal experience. This allow developers to implement policies, which is one of the most common activities during development from an IDE that it might be familiar with, although an internet connection is still required. </li><li><strong>API testing running directly from the IDE</strong>, a right click away. You can now choose any of the API operations and select <strong><em>Test&#x2026;</em></strong> from the context menu. That will generate a page that uses the Rest Client extension to execute a call to the API Management instance, with all the hints required, including an integration with Name Values, allowing you to store the API Keys in name values and inject them from there. </li><li><strong>Import or creation of APIs from the IDE</strong>. You can now import APIs from an Open API file or URL, or import it from a Function or API App. At this stage there is no support yet for either Logic Apps yet, WSDL or WADL.</li><li><strong>Export APIS from the IDE</strong>. This feature integrates the APIM DevOps Kit directly into the IDE allowing you to export the ARM template associated to an API definition. The package includes all the required components, including Name Values, Backend Services, among others.</li></ul>
+
+
+
+<div class="wp-block-media-text alignwide is-stacked-on-mobile is-vertically-aligned-center" style="grid-template-columns:16% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt="MS Build Recap - The AIS Edition" class="wp-image-1214" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p class="has-normal-font-size"><em>Be careful while using the Export API &#x2013; while I was using it, I&#x2019;ve noticed that it exports ALL named values and ALL backend services, even if they are not connected to the API. Named values can be particularly troublesome in this case, because the values will be exported in clear text, even if the item is marked as a secret.  </em></p>
+</div></div>
+
+
+
+<p>One of the items that are not available yet but have been demoed and will be available in preview soon, is the ability to debug a policy. This will be extremely valuable, since now the only way to debug a policy is by enabling tracing and reading all the traced information &#x2013; which can be quite verbose, specially when you are dealing with a complex policy which includes policy expressions in C#.</p>
+
+
+
+<h2>Service Bus News</h2>
+
+
+
+<p>The biggest news on Service Bus is the preview of the Service Bus Explorer. If the name is familira, is because a <a rel="noreferrer noopener" href="https://github.com/paolosalvatori/ServiceBusExplorer?ref=localhost" target="_blank">companion application </a>with the same name, created by <a rel="noreferrer noopener" href="https://twitter.com/babosbird?ref=localhost" target="_blank">Paolo Salvatori</a>, is probably the most used application to manage Service Bus queues, topics and subscriptions.</p>
+
+
+
+<figure class="wp-block-image size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/05/image-2-300x141.png" alt="MS Build Recap - The AIS Edition" class="wp-image-3052" width="633" height="298" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/05/image-2-300x141.png 300w, http://localhost:2368/content/images/wordpress/2020/05/image-2-1024x481.png 1024w, http://localhost:2368/content/images/wordpress/2020/05/image-2-768x361.png 768w, http://localhost:2368/content/images/wordpress/2020/05/image-2-1200x564.png 1200w, http://localhost:2368/content/images/wordpress/2020/05/image-2.png 1509w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p>Most of the core functionality of the application can be found now directly on the Azure Portal.</p>
+
+
+
+<p>To access this new functionality you need to go to the queue or topic you want to connect, and then select Service Bus Explorer (preview). From there you will be able to send, receive and peek the messages.</p>
+
+
+
+<div class="wp-block-media-text alignwide is-stacked-on-mobile" style="grid-template-columns:15% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt="MS Build Recap - The AIS Edition" class="wp-image-1214" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p class="has-normal-font-size"><em>Be quite careful when using receive. This command works just like the auto-complete trigger in Logic App or the auto-complete mode in the SDK.</em> <em>Using this command will remove the message from the queue permanently.</em></p>
+</div></div>
+
+
+
+<p>For me in special, the ability to not only see the details of a subscriptions but also add or edit filters associated to it, was the highlight of that functionality.</p>
+
+
+
+<figure class="wp-block-image size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/05/image-3-300x125.png" alt="MS Build Recap - The AIS Edition" class="wp-image-3054" width="636" height="265" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/05/image-3-300x125.png 300w, http://localhost:2368/content/images/wordpress/2020/05/image-3-1024x426.png 1024w, http://localhost:2368/content/images/wordpress/2020/05/image-3-768x320.png 768w, http://localhost:2368/content/images/wordpress/2020/05/image-3-1536x639.png 1536w, http://localhost:2368/content/images/wordpress/2020/05/image-3-1200x499.png 1200w, http://localhost:2368http://localhost:2368/content/images/wordpress/2020/05/image-3.png 1884w, http://localhost:2368http://localhost:2368/content/images/wordpress/2020/05/image-3.png 1680w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<h2>Event Grid News</h2>
+
+
+
+<p>Event Grid Partner Topics dominated the news on Event Grid. According to Microsoft, <em>&#x201C;Partner Topics allow you to connect third-party event sources directly to Event Grid. This integration allows you to subscribe to events from partners in the same way you subscribe to events from Azure services&#x201D;</em>.</p>
+
+
+
+<p>The first partner to have events enabled at time of MSBuild was Auth0 &#x2013; allowing applications to receive a comprehensive list of events on both administration and user events.</p>
+
+
+
+<p>While in preview, Partner Topics will be subjected to the same limits and pricing that we have today for system and custom topics.</p>
+
+
+
+<div class="wp-block-media-text alignwide is-stacked-on-mobile" style="grid-template-columns:15% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt="MS Build Recap - The AIS Edition" class="wp-image-1214" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p class="has-normal-font-size"><em>Although this is not an MS Build news, Event Grid also have a on-premises capabilty, of sorts. As part of the IoT on edge push from Microsoft, Event Grid provides an edge container that can be used to create custom topics and event driven applications on an edge device.</em></p>
+</div></div>
+
+
+
+<h2>How to find more</h2>
+
+
+
+<p>If you are interested in more information about those news, you can look for the following sessions on MS Build.</p>
+
+
+
+<ul><li><a href="https://channel9.msdn.com/Events/Build/2020/BOD127?ref=localhost">BOD127 &#x2013; Build scalable hybrid integration applications that run anywhere with Azure Logic Apps and API&#xA0;Management</a></li><li><a rel="noreferrer noopener" href="https://mybuild.microsoft.com/sessions/f09bd9bc-76ec-41a5-98a5-ce1bd0d84daa?ref=localhost" target="_blank">INT161 &#x2013; Build messaging and integration apps on Azure</a></li><li><a rel="noreferrer noopener" href="https://mybuild.microsoft.com/sessions/de47ddf3-56ef-441b-a2dd-6ac9ca747f85?ref=localhost" target="_blank">INT174 &#x2013; Build messaging and integration apps on Azure</a></li></ul>
+
+
+
+<h2>Summary</h2>
+
+
+
+<p>MS Build brought Integration developers quite interesting developments (pun intended)! Finally the Roadmap vision of an integration capability that can be implemented on your terms and where is needed, be it in the cloud, on-premises on on the edge is starting to form.</p>
+
+
+
+<p>The next months will probably quite exciting as some of those items start to hit both private and public preview. So stay tuned on MS News and here, as I will make sure I will try to get my hands on them as soon as they are publicly available!</p>
+<!--kg-card-end: html-->]]></content:encoded></item><item><title><![CDATA[API Management - Restrict Operation Access per Product]]></title><description><![CDATA[<!--kg-card-begin: html-->
+<p>Last week I had an interesting request from a client. They have been creating generic APIs, using a variety of different backend systems (on-prem APIs, Azure Functions, Logic Apps, cloud APIs). Those APIs were grouped by product but even within a product they would like to restrict access to only</p>]]></description><link>http://localhost:2368/api-management-restrict-operation-access-per-product/</link><guid isPermaLink="false">657ebb613b57be75e033eccd</guid><category><![CDATA[api management]]></category><category><![CDATA[policy]]></category><category><![CDATA[security]]></category><dc:creator><![CDATA[wsilveiranz]]></dc:creator><pubDate>Mon, 13 Apr 2020 13:52:59 GMT</pubDate><media:content url="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: html-->
+<img src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg" alt="API Management - Restrict Operation Access per Product"><p>Last week I had an interesting request from a client. They have been creating generic APIs, using a variety of different backend systems (on-prem APIs, Azure Functions, Logic Apps, cloud APIs). Those APIs were grouped by product but even within a product they would like to restrict access to only some operations, so product A would have access to a group of operations, while product B would have access to different group. Initially I thought that role based access driven by claims, but the issue was that we didn&#x2019;t have control of the identity providers, or the back end services. In the end we would have to find a solution within API Management to create this ACL like style.</p>
+
+
+
+<p>Initally I didn&#x2019;t like the idea to create our own access controls in APIM, but faced with the other constraints, I slowly warmed up to the idea and learned a couple of things about policies along the way.</p>
+
+
+
+<!--more-->
+
+
+
+<h2>The control policy</h2>
+
+
+
+<h3>Initial setup</h3>
+
+
+
+<p>To make sure that only certain operations in a policy where accessible for a given product, I&#x2019;ve created a mapping document (formatted as JSON) using the following convention &#x2013;  &#x201C;operation-name&#x201D;: &#x201C;All&#x201D; or &#x201C;Product 1|Product 2&#x2026;&#x201D;. For example, I&#x2019;ve created a &#x201C;Privileged API&#x201D; example, with three operations:</p>
+
+
+
+<ul><li>All Access Operation</li><li>Low Privilege Operation</li><li>High Privilege Operation</li><li>Unregistered Operation</li></ul>
+
+
+
+<p>And with two Products:</p>
+
+
+
+<ul><li>Low Privileged Product</li><li>High Privileged Product</li></ul>
+
+
+
+<p>The mapping document in this case looks like this &#x2013; stored in a name-value entry called {{privileged-api-roles}}:</p>
+
+
+
+<pre class="wp-block-code"><code lang="json" class="language-json">{
+  &quot;all-access-operation&quot;: &quot;All&quot;,
+  &quot;low-privilege-operation&quot;: &quot;low-privileged-product|high-privileged-product&quot;,
+  &quot;high-privilege-operation&quot;: &quot;high-privileged-product&quot;
+}</code></pre>
+
+
+
+<div class="wp-block-media-text alignwide is-stacked-on-mobile is-vertically-aligned-center" style="grid-template-columns:18% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt="API Management - Restrict Operation Access per Product" class="wp-image-1214" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p><em>Notice that both the name of the operations and the products are using the some-name format. This is how the &#x201C;Name&#x201D; of the operations and products are defined when you are create them in API Management &#x2013; I choose this option to remove the guess work when defining the mapping documents (upper x lower case, spaces, etc). Those items are represented in the context object as <strong>context.Operation.Id</strong> and <strong>context.Product.Id</strong> respectively.</em></p>
+</div></div>
+
+
+
+<p> To enforce the mapping, I&#x2019;ve implemented the following custom policy at the API level (you can find the API definition, including the sample code below <a href="https://github.com/wsilveiranz/apim-product-operation-access?ref=localhost" target="_blank" rel="noreferrer noopener">here</a>):</p>
+
+
+
+<pre class="wp-block-code"><code lang="xml" class="language-xml">&lt;policies&gt;
+	&lt;inbound&gt;
+		&lt;base /&gt;
+		&lt;set-header name=&quot;Ocp-Apim-Subscription-Key&quot; exists-action=&quot;delete&quot; /&gt;
+		&lt;set-variable name=&quot;operationroles&quot; value=&quot;{{privileged-api-roles}}&quot; /&gt;
+		&lt;set-variable name=&quot;operationallowed&quot; value=&quot;@{
+            var responseMessage = &quot;notallowed&quot;;
+            var product = context.Product.Id;
+            var operation = context.Operation.Id;
+            JObject roles = JObject.Parse(context.Variables.GetValueOrDefault&lt;string&gt;(&quot;operationroles&quot;));
+
+            if (roles.ContainsKey(operation))
+            {
+                string evaluationRole = roles.SelectToken(operation).ToString();
+                List&lt;string&gt; evaluationRoleList = new List&lt;string&gt;();
+                evaluationRoleList.AddRange(evaluationRole.Split(&apos;|&apos;));
+                if (evaluationRoleList.Contains(product) || evaluationRoleList.Contains(&quot;All&quot;))
+                {
+                    responseMessage = &quot;allowed&quot;;
+                }
+            }
+
+            return responseMessage;
+		
+		}&quot; /&gt;
+		&lt;choose&gt;
+			&lt;when condition=&quot;@(context.Variables.[&quot;operationallowed&quot;] == &quot;notallowed&quot;)&quot;&gt;
+				&lt;return-response&gt;
+					&lt;set-status code=&quot;403&quot; reason=&quot;Operation not allowed for this product&quot; /&gt;
+				&lt;/return-response&gt;
+			&lt;/when&gt;
+		&lt;/choose&gt;
+	&lt;/inbound&gt;
+	&lt;backend&gt;
+		&lt;base /&gt;
+	&lt;/backend&gt;
+	&lt;outbound&gt;
+		&lt;base /&gt;
+	&lt;/outbound&gt;
+	&lt;on-error&gt;
+		&lt;base /&gt;
+	&lt;/on-error&gt;
+&lt;/policies&gt;</code></pre>
+
+
+
+<h3>How the policy works</h3>
+
+
+
+<ol><li>a variable called operationroles is populated with the mapping document, stored in {{privileged-api-roles}}</li><li>In a new operationallowed variable, some C# code execute the following actions:<ul><li>initialize the responseMessage to &#x201C;notallowed&#x201D;</li><li>load the name of the current product from the context</li><li>load the name of the operation to be executed from the context</li><li>load the mapping document into a JObject called roles</li><li>look for a token containing the current operation. If exists:<ul><li>break the value of the operation mapping into sub items (split on &#x201C;|&#x201D;).</li><li>verify if the list of items contains either &#x201C;All&#x201D; or the product name. If it contains:<ul><li>set responseMessage to &#x201C;allowed&#x201D;</li></ul></li></ul></li><li>Return responseMessage</li></ul></li><li>Evaluate the responseMessage value. If it equals to not allowed<ol><li>Return 403 with a message that &#x201C;Operation is not allowed for this product&#x201D;.</li><li>If allowed, continue policy evaluation.</li></ol></li></ol>
+
+
+
+<p>Since this policy is implemented at the API level, it will be included in the effective policy of all operations. As long as your operation specific policy is defined after the &lt;base/&gt; element in the operation inbound policy, the API policy will be executed before the operation policy.</p>
+
+
+
+<h2>Unregistered  Operations</h2>
+
+
+
+<p>Since the first thing the code snippet does is to find if the mapping document has a token for the operation name, adding operations to the API will make it inaccessible to ANY product, until the map is amended to include either &#x201C;All&#x201D; or one or more product names.</p>
+
+
+
+<p>In the example defined before, the Unregistered Operation will return 403 for any product that request it.</p>
+
+
+
+<h2>What I learned</h2>
+
+
+
+<p>Initially, I thought that I would have to replicate this snippet in every operation, which would be a nightmare. But trying to understand better, I realized that the policies are bundled together at the operation level and executed once (as a group) when the operation is requested. Once I realized that, it was simply the case of applying the operation at the right level (in my case the API) and at that level I still had access to both the product name and the operation names. </p>
+
+
+
+<p>One last thing I wanted to do to make sure the policy was really generic, was to programmatically access the name-value element from the code to retrieve the right map on the fly. Unfortunately, this is not how the name-value elements work. Those values are injected in the policy when it is generated for evaluation, so seems like there is no way to do what I was after.</p>
+
+
+
+<h2>In summary</h2>
+
+
+
+<p>API Management Policies are a very powerful engine that allow you to inject policies at various levels of the API composition framework it provides. Policies will help you to enhance your API definition including more security controls, caching capabilities, message transformation, among other things.</p>
+
+
+
+<p>In this particular example I&#x2019;ve showed you how to extend an API policy to create some kind of operation level ACL, only allowing certain products to have access to the operation.</p>
+
+
+
+<p>See you next time!</p>
+<!--kg-card-end: html-->]]></content:encoded></item><item><title><![CDATA[Upgrading BizTalk 2013 to BizTalk 2020]]></title><description><![CDATA[<!--kg-card-begin: html-->
+<p>Wow, it has been a long while since I wrote a post about good old BizTalk! But we had some interesting findings this week trying to run an in-place upgrade from BizTalk Server 2013 to BizTalk Server 2020.</p>
+
+
+
+<p>I know that in-place upgrade is one of the cardinal sins of</p>]]></description><link>http://localhost:2368/upgrading-biztalk-2013-to-biztalk-2020/</link><guid isPermaLink="false">657ebb613b57be75e033eccb</guid><category><![CDATA[biztalk server]]></category><category><![CDATA[in-place upgrade]]></category><category><![CDATA[migration]]></category><category><![CDATA[sql server]]></category><category><![CDATA[upgrade]]></category><dc:creator><![CDATA[wsilveiranz]]></dc:creator><pubDate>Fri, 28 Feb 2020 21:09:32 GMT</pubDate><media:content url="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/field-notes-wide-e1515541406829.jpg" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: html-->
+<img src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/field-notes-wide-e1515541406829.jpg" alt="Upgrading BizTalk 2013 to BizTalk 2020"><p>Wow, it has been a long while since I wrote a post about good old BizTalk! But we had some interesting findings this week trying to run an in-place upgrade from BizTalk Server 2013 to BizTalk Server 2020.</p>
+
+
+
+<p>I know that in-place upgrade is one of the cardinal sins of BizTalk, together with not running the BizTalk database jobs or having a single host to rule them all! But before you take my BizTalk fan club membership card, just understand that we had 5 different environments and so much red tape and reconfiguration for a side by side upgrade, that it was worth taking the risk.</p>
+
+
+
+<p>And here is what we found during this process. I say we because although I helped troubleshooting, one of the best consultants from my team, Peter Kenyon, had the pleasure of experience this particular kind of hell &#x2013; I am pretty sure I owing lunch after all of that&#x2026;</p>
+
+
+
+<!--more-->
+
+
+
+<h2>What did we find&#x2026;</h2>
+
+
+
+<h3>Before you start&#x2026; Operational System Upgrade</h3>
+
+
+
+<p>We had a small gotcha when trying to upgrade the OS. The client decided that they would be using Windows Server 2016 and SQL Server 2016, which would match the other servers currently installed. The environment where we were doing the proof of concept was an Azure environment, which we use for system testing &#x2013; we wanted to find all the gotchas on an environment that would be easy enough to back up and roll back, but also use an environment matched as close as possible their production environment (at least from a configuration and installed applications).</p>
+
+
+
+<p>One thing that we didn&#x2019;t realized until we actually tried is that not all versions of Widows Server are supported by Windows Azure VM. So the upgrade from Windows Server 2012 to Windows Server 2016 failed miserably. We&#x2019;ve managed to get a machine that would support BizTalk, by upgrading the OS to Windows Server 2019 instead.</p>
+
+
+
+<h3>No direct path from 2013 to 2020</h3>
+
+
+
+<p>After our little adventure upgrading the OS, we also found that that there was no direct path from BizTalk Server 2013 to BizTalk Server 2020. The steps for installation must be 2013 &gt; 2016 &gt; 2020.</p>
+
+
+
+<p>So make sure that if you are in the same situation as we were, you have both the ISOs handy (2016 and 2020).</p>
+
+
+
+<div class="wp-block-media-text alignwide is-vertically-aligned-top" style="grid-template-columns:19% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt="Upgrading BizTalk 2013 to BizTalk 2020" class="wp-image-1214" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p class="has-normal-font-size"><em>While we are talking about BizTalk Server 2016, it is worth mentioned that the version of BTDF that runs on BizTalk Server 2013 is not supported on BizTalk Server 2016. So also make sure that as a post implementation step, you install the BTDF version compatible with BizTalk Server 2016. In our case we had a dependency on a SSO reader component that was complained until we updated the reference on GAC</em>. <em>It is important here to notice that although the BTDF SSO component still worked at runtime for BizTalk 2020 &#x2013; after all it is just a .NET component in a supported framework, we didn&#x2019;t try to compile new solutions using the existing BTDF framework.</em></p>
+</div></div>
+
+
+
+<h3>SQL Server 2016 was installed but not recognized</h3>
+
+
+
+<p>That was probably the most strange (and in a way annoying) of all the little issues we had. Once we&#x2019;ve completed BizTalk Server 2016 upgrade, installed with SQL Server 2016 SP2, when trying to install BizTalk Server 2020, we received repeatedly the following error:</p>
+
+
+
+<div class="wp-block-image"><figure class="aligncenter size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/02/biztalk_upgrade_fail-300x239.jpg" alt="Upgrading BizTalk 2013 to BizTalk 2020" class="wp-image-2998" width="464" height="370" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/02/biztalk_upgrade_fail-300x239.jpg 300w, http://localhost:2368/content/images/wordpress/2020/02/biztalk_upgrade_fail.jpg 557w" sizes="(max-width: 464px) 85vw, 464px"></figure></div>
+
+
+
+<p>After a couple of restarts, opening a support ticket and contacting the product group, we&#x2019;ve decided to try to install the latest cumulative updates. After installing SQL Server 2016 CU 12, the installation worked as expected. We wondered if the installer was looking to a minimum version number which didn&#x2019;t match SQL Server 2016, or SQL Server 2016 SP2, but matched Cumulative Update 12.</p>
+
+
+
+<h2>Summary</h2>
+
+
+
+<p>So there we go. If you ever is backed to a corner where you need to do a in-place upgrade from BizTalk Server 2013 to BizTalk Server 2020, those are the things you will need to keep in mind:</p>
+
+
+
+<ul><li>If doing that on Azure, make sure that the OS you choose to upgrade to is supported by Azure</li><li>Have the ISOs handy for both BizTalk Server 2016 and BizTalk Server 2020</li><li>If you are using BTDF components during runtime, make sure you also upgrade BTDF</li><li>If you are using a version of SQL Server that is not the latest supported, install the latest Cumulative Updates just in case.</li></ul>
+
+
+
+<p>As a last note, I really hope you don&#x2019;t need to use this post&#x2026; Ever.  &#x1F609;</p>
+<!--kg-card-end: html-->]]></content:encoded></item><item><title><![CDATA[2019 - A year in review]]></title><description><![CDATA[<!--kg-card-begin: html-->
+<p>Well, it is <s>31 December</s> 03 January 2020, so it is the official time for a stock take of 2019. I&#x2019;ve acomplished a lot of things I wanted to do this year, while couldn&#x2019;t carve time for some other things I would like to do, which</p>]]></description><link>http://localhost:2368/2019-a-year-in-review/</link><guid isPermaLink="false">657ebb613b57be75e033ecca</guid><category><![CDATA[new year]]></category><category><![CDATA[reflection]]></category><dc:creator><![CDATA[wsilveiranz]]></dc:creator><pubDate>Fri, 03 Jan 2020 11:58:17 GMT</pubDate><media:content url="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/01/busy_bee.jpg" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: html-->
+<img src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/01/busy_bee.jpg" alt="2019 - A year in review"><p>Well, it is <s>31 December</s> 03 January 2020, so it is the official time for a stock take of 2019. I&#x2019;ve acomplished a lot of things I wanted to do this year, while couldn&#x2019;t carve time for some other things I would like to do, which I will have to prioritize in 2020. So instead of a long post, here is a list of things I am really proud and things I want to concentrate more:</p>
+
+
+
+<!--more-->
+
+
+
+<h2>Things I achieved in 2019 (or my yay moments)</h2>
+
+
+
+<figure class="wp-block-image size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/01/bullseye_banner-300x89.jpg" alt="2019 - A year in review" class="wp-image-2971" width="618" height="183" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/01/bullseye_banner-300x89.jpg 300w, http://localhost:2368/content/images/wordpress/2020/01/bullseye_banner-1024x305.jpg 1024w, http://localhost:2368/content/images/wordpress/2020/01/bullseye_banner-768x228.jpg 768w, http://localhost:2368/content/images/wordpress/2020/01/bullseye_banner-1536x457.jpg 1536w, http://localhost:2368/content/images/wordpress/2020/01/bullseye_banner-1200x357.jpg 1200w, http://localhost:2368http://localhost:2368/content/images/wordpress/2020/01/bullseye_banner.jpg 1920w, http://localhost:2368http://localhost:2368/content/images/wordpress/2020/01/bullseye_banner.jpg 1680w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p>There are some things I am really proud this year:</p>
+
+
+
+<ul><li> <strong>Re-awarded Azure MVP</strong> &#x2013; the culmination of all work done in 2018 and beggining of 2019 was being awarded Azure MVP for another year. Being part of this awesome group of community leaders is always one of the biggest moments of the year.</li><li><strong>More international speaking opportunities</strong> &#x2013; This year, the total number of sessions I&#x2019;ve presented (or co-presented) increased from 3 to 6, with two sessions on <strong>Directions Asia 2019</strong>, one session on <strong>Integrate 2019</strong> and 3 sessions in <strong>Directions EMEA 2019</strong>. It was also the first time me and Tharanga were invited to present at Directions EMEA, which is a great achievement.</li><li><strong>Spread my contributions accross different areas</strong> &#x2013; My contributions this year although still quite centered in Azure Integration are in many cases on the crossroad with another area. Directions and D365 Saturday sessions co-presented with <a rel="noreferrer noopener" aria-label="Tharanga Chandrasekara (opens in a new tab)" href="https://twitter.com/tharanganc?ref=localhost" target="_blank">Tharanga Chandrasekara</a> are based on <strong><em>integration concepts and patterns applied to D365 technologies </em></strong>and the comparison between <strong><em>enterprise integration x power platform integration capabilities</em></strong>. I&#x2019;ve also presented this year again on Global AI Bootcamp, helping to <strong><em>demystify the Azure Cognitive Services offering</em></strong>. </li><li><strong>Global Integration Bootcamp Committee member</strong> &#x2013; I&#x2019;ve joined the committee of the Global Integration Bootcamp in late 2018. I am really proud of the work we do organizing GIB and will try to make it even better in 2020.</li><li><strong>Integration Downunder Committee member</strong> -Integration Downunder, which was created in February 2018 and grow to a collection of 21 webcasts. Quite proud of the team organizing this webcast, and in special of the dedication of <a rel="noreferrer noopener" aria-label="Bill Chesnut (opens in a new tab)" href="https://twitter.com/biztalkbill?ref=localhost" target="_blank">Bill Chesnut</a>, which keeps pushing us to add more material every year.</li><li><strong>Hour of Code</strong> <strong>2019</strong> &#x2013; I&#x2019;ve organized the Hour of Code 2019 again at Arahoe School. This time with two co-organizers: <a rel="noreferrer noopener" aria-label="Blanca Mansfield (opens in a new tab)" href="https://www.linkedin.com/in/blanca-mansfield-919994196/?ref=localhost" target="_blank">Blanca Mansfield</a> and <a rel="noreferrer noopener" aria-label="Monica Silveira (opens in a new tab)" href="https://www.linkedin.com/in/monica-silveira-681a093/?ref=localhost" target="_blank">Monica Silveira</a>. A total of 17 classes with 25 to 30 children in each class &#x2013; it was two days of fun and being the third year that we run the event, some of the kids now are quite aware of what it is and were quite excited when we got in the room. </li></ul>
+
+
+
+<h2>Things I didn&#x2019;t achieve in 2019 (or my wish list for 2020)</h2>
+
+
+
+<figure class="wp-block-image size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/01/stuck_banner-300x89.jpg" alt="2019 - A year in review" class="wp-image-2972" width="608" height="180" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/01/stuck_banner-300x89.jpg 300w, http://localhost:2368/content/images/wordpress/2020/01/stuck_banner-1024x305.jpg 1024w, http://localhost:2368/content/images/wordpress/2020/01/stuck_banner-768x228.jpg 768w, http://localhost:2368/content/images/wordpress/2020/01/stuck_banner-1536x457.jpg 1536w, http://localhost:2368/content/images/wordpress/2020/01/stuck_banner-1200x357.jpg 1200w, http://localhost:2368http://localhost:2368/content/images/wordpress/2020/01/stuck_banner.jpg 1920w, http://localhost:2368http://localhost:2368/content/images/wordpress/2020/01/stuck_banner.jpg 1680w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p>There are some things I want to improve in 2020, which I kind of lost focus because of how busy 2019 end up being:</p>
+
+
+
+<ul><li><strong>Improve the pace of sessions on ACSUG</strong> &#x2013; The whole team of ACSUG was extremely busy this year on their day jobs, which impacted the pace of sessions we&#x2019;ve organized. But we&#x2019;ve recognized the fact that we need young blood to keep this user group strong and added <a rel="noreferrer noopener" aria-label="Alessandro Moura  (opens in a new tab)" href="https://twitter.com/alessandromoura?ref=localhost" target="_blank">Alessandro Moura </a>to the organization. Our aim is to bring regular meetups again for this year.</li><li><strong>Expand the activities of Global Integration Bootcamp</strong> &#x2013; just like ACSUG, the Global Integration Bootcamp committee was quite busy on their lives this year, so some of the ideas we had to improve the content and format of the bootcamp couldn&#x2019;t be implemented this year. We will focus on this in 2020.</li><li><strong>Mentoring new speakers and community leaders</strong> &#x2013; This was one of the things that was high on my list to start in 2019, even having quite a good brainstorm on how to start this with Shiva Ford, but couldn&#x2019;t get myself organized to start it in 2019. So this is back on my list of things to do in 2020.</li><li><strong>Found more time to volunteer at the kids school</strong> &#x2013; 2019 was hectic, so I didn&#x2019;t get as involved as in previous years at the kids school. One of the things I always wanted to do but never found the time to do it. <a href="https://twitter.com/bcnzer?ref=localhost" target="_blank" rel="noreferrer noopener" aria-label="Ben Chartrand  (opens in a new tab)">Ben Chartrand </a>is a big inspiration for that &#x2013; his tweets about his Code Club is always a delight to read!</li></ul>
+
+
+
+<h2>I get by with a little help from my&#x2026;</h2>
+
+
+
+<figure class="wp-block-image size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/01/friends_banner-300x89.jpg" alt="2019 - A year in review" class="wp-image-2974" width="610" height="181" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2020/01/friends_banner-300x89.jpg 300w, http://localhost:2368/content/images/wordpress/2020/01/friends_banner-1024x305.jpg 1024w, http://localhost:2368/content/images/wordpress/2020/01/friends_banner-768x228.jpg 768w, http://localhost:2368/content/images/wordpress/2020/01/friends_banner-1536x457.jpg 1536w, http://localhost:2368/content/images/wordpress/2020/01/friends_banner-1200x357.jpg 1200w, http://localhost:2368http://localhost:2368/content/images/wordpress/2020/01/friends_banner.jpg 1920w, http://localhost:2368http://localhost:2368/content/images/wordpress/2020/01/friends_banner.jpg 1680w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p>It is actually a lot of help, but you can&#x2019;t mess with a classic like that, right? But anyway, there was no way I could achieve that much, in special with the travels and time invested in meetings, user groups and other events, without a bit supporting network. The list is much bigger than this one, but those for people/groups had the biggest impact on my achievements this year:</p>
+
+
+
+<ul><li>First and foremost my <strong>family</strong>! My wife and kids are not just proud of what I do for the community, they have my back 100%. They endure me away from home sometimes for almost two weeks in a row, travelling or taking time for sessions on weekends and having to organize my time around conference calls and other things. I am really blessed to have a family that understands how important giving back to your community is. Monica is my inspiration as a community leader with all the work she does as the leader of <a rel="noreferrer noopener" aria-label="Brasileirinho NZ (opens in a new tab)" href="http://brasileirinho.org.nz/?ref=localhost" target="_blank">Brasileirinho NZ</a> &#x2013; a community group that keeps Brazilian language and culture alive for the families of ex-pats living in NZ. </li><li>But I wouldn&#x2019;t go too far without support from work. Thankfully, giving back to community is a core part of <a rel="noreferrer noopener" aria-label="Theta&apos;s (opens in a new tab)" href="https://www.theta.co.nz/?ref=localhost" target="_blank">Theta&#x2019;s</a> DNA, so they also support me on my sometimes &#x201C;globetrotting&#x201D; agenda. A special thanks to <a rel="noreferrer noopener" aria-label="Andrew Taylor (opens in a new tab)" href="https://twitter.com/thetrickyt?ref=localhost" target="_blank">Andrew Taylor</a>, my manager &#x2013; he is the guy that always have my back even when it is a hard ask.</li><li>My partner in travels Tharanga! We&#x2019;ve traveled a lot again this year and presented some amazing sessions going as far as Vienna to present for the first time on Directions EMEA! Co-present is a unique experience and seems like we starting to get quite comfortable with that. Thanks mate!</li><li>Last but not least The <a rel="noreferrer noopener" aria-label="MVP Award program (opens in a new tab)" href="https://mvp.microsoft.com/?ref=localhost" target="_blank">MVP Award program</a> and in special <a rel="noreferrer noopener" aria-label="Shiva Ford (opens in a new tab)" href="https://twitter.com/shivafordtweets?ref=localhost" target="_blank">Shiva Ford</a>, our Community Program Manager, which always push us to be not just great technology experts but also good role models and community leaders. </li></ul>
+
+
+
+<h2>In Summary</h2>
+
+
+
+<p>This year was crazy busy! I am quite proud of what I&#x2019;ve achieved in 2019, but I set a lot of goals at the beginning of the year that I was not able to work on. So this post was a good chance to put everything in perspective and make sure that I don&#x2019;t lose sight of those goals.</p>
+
+
+
+<p><strong><em>But most important was a way to acknowledge publicly all the support network I have that allows me to do all this community work. To them, my heartfelt &#x201C;Thank you!&#x201D;.</em></strong></p>
+<!--kg-card-end: html-->]]></content:encoded></item><item><title><![CDATA[Event Grid Advanced Filtering on Logic Apps]]></title><description><![CDATA[<!--kg-card-begin: html-->
+<p>&#x201C;It was the week before Christmas, and&#x2026;&#x201D; and I was actually super busy! One of my main tasks on that week was to implement notifications when a legacy Dynamics AX, still running on-premises, had orders ready to delivery.</p>
+
+
+
+<p>My solution was relatively simple (although needed to be</p>]]></description><link>http://localhost:2368/event-grid-advanced-filtering-on-logic-apps/</link><guid isPermaLink="false">657ebb613b57be75e033ecc9</guid><category><![CDATA[event driven integration]]></category><category><![CDATA[event grid]]></category><category><![CDATA[logic apps]]></category><category><![CDATA[workaround]]></category><dc:creator><![CDATA[wsilveiranz]]></dc:creator><pubDate>Fri, 27 Dec 2019 11:47:37 GMT</pubDate><media:content url="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: html-->
+<img src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg" alt="Event Grid Advanced Filtering on Logic Apps"><p>&#x201C;It was the week before Christmas, and&#x2026;&#x201D; and I was actually super busy! One of my main tasks on that week was to implement notifications when a legacy Dynamics AX, still running on-premises, had orders ready to delivery.</p>
+
+
+
+<p>My solution was relatively simple (although needed to be generic enough to include other notifications later):</p>
+
+
+
+<figure class="wp-block-image size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/12/eventgridblog_01-300x199.png" alt="Event Grid Advanced Filtering on Logic Apps" class="wp-image-2952" width="608" height="403" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/12/eventgridblog_01-300x199.png 300w, http://localhost:2368/content/images/wordpress/2019/12/eventgridblog_01-1024x680.png 1024w, http://localhost:2368/content/images/wordpress/2019/12/eventgridblog_01-768x510.png 768w, http://localhost:2368/content/images/wordpress/2019/12/eventgridblog_01-1200x797.png 1200w, http://localhost:2368/content/images/wordpress/2019/12/eventgridblog_01.png 1361w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"><figcaption>Solution diagram</figcaption></figure>
+
+
+
+<p>I had a very simple event data being provided by the notification repository:</p>
+
+
+
+<pre class="wp-block-code"><code>{
+  &quot;NotificationId&quot;: &quot;NOT-00001&quot;,
+  &quot;NotificationType&quot;: &quot;SalesOrder.Delivery&quot;,
+  &quot;CustomerId&quot;: &quot;CUST-001&quot;,
+  &quot;Status&quot;: &quot;New&quot;,
+  &quot;LastModifiedDateTime&quot;: &quot;2019-12-20T11:02:28.13&quot;
+}</code></pre>
+
+
+
+<p>I thought that it was quite an easy setup, but I got stuck for a while setting up the Event Grid Logic App trigger. Why? I was expecting that the trigger would support advanced filters out of the box, on the designer experience, but that&#x2019;s not the case.</p>
+
+
+
+<!--more-->
+
+
+
+<p>Looking at the Event Grid trigger (When a resource event occurs), you will find the following options:</p>
+
+
+
+<div class="wp-block-image"><figure class="aligncenter size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/12/eventgridblog_02-300x196.png" alt="Event Grid Advanced Filtering on Logic Apps" class="wp-image-2955" width="472" height="308" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/12/eventgridblog_02-300x196.png 300w, http://localhost:2368/content/images/wordpress/2019/12/eventgridblog_02-768x502.png 768w, http://localhost:2368/content/images/wordpress/2019/12/eventgridblog_02.png 850w" sizes="(max-width: 472px) 85vw, 472px"><figcaption>Logic App Event Grid Trigger (subscription) with all the optional parameters</figcaption></figure></div>
+
+
+
+<p>You can define one or more Event Types to deploy and you can filter by prefix or sufix of the subject. But there is no advanced filter&#x2026;</p>
+
+
+
+<p>Initially I thought it was just a case of adding advanced filters on the code view &#x2013; like I saw so many times in the pas, but this time this didn&#x2019;t work. Or at least I couldn&#x2019;t find a way to include the advancedFilters element as an input parameter. The problem was that, although the logic app would save the workflow with no errors (and then include the whole filter as a <em>property</em> custom filter in the trigger, no subscription would be created in the event grid topic.</p>
+
+
+
+<div class="wp-block-media-text alignwide" style="grid-template-columns:20% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt="Event Grid Advanced Filtering on Logic Apps" class="wp-image-1214" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p class="has-normal-font-size"><em>One thing I found exploring the extra parameters, was that there is a Subscription Name optional parameter. Defining the Subscription Name that will be created in the event grid topic will help you to identify it easier in the topic blade. That ended up being quite useful in the long run, when I was debugging the subscription problem.</em></p>
+</div></div>
+
+
+
+<p>So, to debug, I created a simpler subscription, including only the event type &#x2013; which by the way needs to be included as a custom value, since this is a custom event topic.</p>
+
+
+
+<figure class="wp-block-image size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/12/eventgridblog_03-300x190.png" alt="Event Grid Advanced Filtering on Logic Apps" class="wp-image-2958" width="604" height="383" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/12/eventgridblog_03-300x190.png 300w, http://localhost:2368/content/images/wordpress/2019/12/eventgridblog_03-768x486.png 768w, http://localhost:2368/content/images/wordpress/2019/12/eventgridblog_03.png 847w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"><figcaption>Creating a custom event type subscription</figcaption></figure>
+
+
+
+<p>That created the subscription in the Event Grid Topic. Since I had not luck adding the advanced filter on the logic app side, I thought that I could try to update the subscription on the event grid side.</p>
+
+
+
+<p>First, I found the subscription on the event grid topic (and this is where the customized subscription name comes in handy &#x2013; you can identify it straight away instead of trying to hunt it based on the webhook created):</p>
+
+
+
+<figure class="wp-block-image size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/12/eventgridblog_04-300x128.png" alt="Event Grid Advanced Filtering on Logic Apps" class="wp-image-2959" width="608" height="259" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/12/eventgridblog_04-300x128.png 300w, http://localhost:2368/content/images/wordpress/2019/12/eventgridblog_04-1024x435.png 1024w, http://localhost:2368/content/images/wordpress/2019/12/eventgridblog_04-768x326.png 768w, http://localhost:2368/content/images/wordpress/2019/12/eventgridblog_04-1536x653.png 1536w, http://localhost:2368/content/images/wordpress/2019/12/eventgridblog_04-1200x510.png 1200w, http://localhost:2368http://localhost:2368/content/images/wordpress/2019/12/eventgridblog_04.png 1875w, http://localhost:2368http://localhost:2368/content/images/wordpress/2019/12/eventgridblog_04.png 1680w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"><figcaption>Event grid subscriptions list</figcaption></figure>
+
+
+
+<p>Once I found the event grid subscription, I clicked on it which takes me to the overview page. In there I could click on Filters (1) and amend the subscription filter, by adding a new advanced filter (2). In my case:</p>
+
+
+
+<ol><li> I choose the information in the Data section (which uses the format Data.&lt;Property&gt;). </li><li>Since I wanted it to match to a string value I used <strong>String is in</strong> operator, which allows me to match the value to a list of values.</li><li>Selected the value I wanted to match &#x2013; Order.Delivery</li></ol>
+
+
+
+<p>Finally, when the subscription has been updated to my liking, I simply saved it (3).</p>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" width="1024" height="873" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/12/eventgridblog_05-1024x873.png" alt="Event Grid Advanced Filtering on Logic Apps" class="wp-image-2960" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/12/eventgridblog_05-1024x873.png 1024w, http://localhost:2368/content/images/wordpress/2019/12/eventgridblog_05-300x256.png 300w, http://localhost:2368/content/images/wordpress/2019/12/eventgridblog_05-768x655.png 768w, http://localhost:2368/content/images/wordpress/2019/12/eventgridblog_05-1200x1023.png 1200w, http://localhost:2368/content/images/wordpress/2019/12/eventgridblog_05.png 1235w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 1362px) 62vw, 840px"><figcaption>Updating an existing event subscription with Advanced Filters.</figcaption></figure>
+
+
+
+<p>There are a lot of other options for the Advanced Filtering both for the keys you can use and the operators. You can find more information about it <a rel="noreferrer noopener" aria-label="here (opens in a new tab)" href="https://docs.microsoft.com/en-us/azure/event-grid/event-filtering?ref=localhost" target="_blank">here</a>.</p>
+
+
+
+<p>After that, the subscription started to be triggered correctly. So far this is where I got to. Next step is how to replicate so I can move the subscription configuration across other environments.</p>
+
+
+
+<div class="wp-block-media-text alignwide is-vertically-aligned-center" style="grid-template-columns:20% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt="Event Grid Advanced Filtering on Logic Apps" class="wp-image-1214" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p><em>Unfortunately, there is not much guidance online on how the advancedFiltering property relates to the subscription filters neither in the ARM Template for event subscriptions or on the subscription documentation in Microsoft Docs. Ideally this would be integrated into the Event Grid trigger creation, but feels like there is an underlying gap in the ARM template itself for that. </em></p>
+</div></div>
+
+
+
+<h2>Summary</h2>
+
+
+
+<p>Event grid advance filtering is not available out of the box from Logic Apps, but with some manual workaround you will be able to implement this feature in your workflows. Unfortunately seems like a purely manual step at this stage, at least from a ARM template automation point of view. I am pretty sure I will be able to automate this at a later stage using Azure CLI, but since most of my automation is ARM based, I would really like to have an ARM solution for this problem. I reckon I will be discussing this with the product group in the New Year&#x2026;</p>
+<!--kg-card-end: html-->]]></content:encoded></item><item><title><![CDATA[API Management - Arc Enabled]]></title><description><![CDATA[<!--kg-card-begin: html-->
+<p>API Management what enabled? If you haven&#x2019;t keeping up with the news from MS Ignite 2019, the title might be a bit confusing. Arc (not A.R.C as I read it initially) is a new Service in Azure that allow customer to deploy and manage Azure Services</p>]]></description><link>http://localhost:2368/api-management-arc-enabled/</link><guid isPermaLink="false">657ebb613b57be75e033ecc8</guid><category><![CDATA[api management]]></category><category><![CDATA[arc]]></category><category><![CDATA[azure]]></category><category><![CDATA[containers]]></category><dc:creator><![CDATA[wsilveiranz]]></dc:creator><pubDate>Sun, 17 Nov 2019 22:50:35 GMT</pubDate><media:content url="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: html-->
+<img src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg" alt="API Management - Arc Enabled"><p>API Management what enabled? If you haven&#x2019;t keeping up with the news from MS Ignite 2019, the title might be a bit confusing. Arc (not A.R.C as I read it initially) is a new Service in Azure that allow customer to deploy and manage Azure Services anywhere &#x2013; and anywhere in this case means any cloud, on-premises infrastructure and at the edge. You can find more about that service <a rel="noreferrer noopener" aria-label="here (opens in a new tab)" href="https://azure.microsoft.com/en-us/blog/azure-services-now-run-anywhere-with-new-hybrid-capabilities-announcing-azure-arc/?ref=localhost" target="_blank">here</a>.</p>
+
+
+
+<p>During MS Ignite, the API Management team launched the public preview of a new feature, that takes advantage of the Arc technology to deploy API Management gateways anywhere. So let&#x2019;s take a look of what that looks like.</p>
+
+
+
+<!--more-->
+
+
+
+<h2>What is API Management Arc Enabled?</h2>
+
+
+
+<p>API Management takes advantage of the Arc service to deploy self-hosted API Gateway, which contains either all or a subset of the APIs deployed into an API Management instance,  to any cloud or to an on-premises service.</p>
+
+
+
+<p>The Gateway is deployed as a container which can be executed within a Kubernetes cluster or self hosted using docker.</p>
+
+
+
+<p>The original instance acts as a control plane for the self-hosted gateway, monitoring its health (e.g. how many nodes are running) and making sure that any changes in the APIs that are deployed to the container are updated into that node. Although the original instance is central configuration location, the container is autonomous and connects to the cloud instance to report its health and download configuration changes, but in cases where the connectivity to the cloud instance is lost, the gateway continues to run independently.</p>
+
+
+
+<h2>Creating your first Gateway</h2>
+
+
+
+<div class="wp-block-media-text alignwide has-media-on-the-right" style="grid-template-columns:auto 27%"><figure class="wp-block-media-text__media"><img loading="lazy" width="332" height="618" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/11/apigateway_img01.png" alt="API Management - Arc Enabled" class="wp-image-2918" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/11/apigateway_img01.png 332w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img01-161x300.png 161w" sizes="(max-width: 332px) 85vw, 332px"></figure><div class="wp-block-media-text__content">
+<p>To create your first gateway, you need to go to your Api Management Instance, and go to the <strong>settings </strong>section of the configuration side blade. Under that section you will find a new item, called <strong>Gateways (preview)</strong>. Click on it to take you to the gateways management area.</p>
+</div></div>
+
+
+
+<div class="wp-block-media-text alignwide" style="grid-template-columns:14% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt="API Management - Arc Enabled" class="wp-image-1214" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p class="has-medium-font-size">At this stage, Gateways (preview) is only available on Development and Premium tiers.</p>
+</div></div>
+
+
+
+<figure class="wp-block-image is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/11/apigateway_img02-300x47.png" alt="API Management - Arc Enabled" class="wp-image-2920" width="604" height="95" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/11/apigateway_img02-300x47.png 300w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img02-768x120.png 768w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img02-1024x160.png 1024w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img02-1200x187.png 1200w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img02.png 1274w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p>When you click in the Gateways (preview), you will be taken to the gateways management area. In there you will find all the gateways already deployed. To add a new Gateway, you just need to click on the <strong>+Add</strong> button at the top.</p>
+
+
+
+<figure class="wp-block-image is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/11/apigateway_img03-1-300x201.png" alt="API Management - Arc Enabled" class="wp-image-2922" width="607" height="407" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/11/apigateway_img03-1-300x201.png 300w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img03-1-768x515.png 768w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img03-1-1024x687.png 1024w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img03-1.png 1174w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p>To create a new gateway you need to provide a name (1) and a region (2), and optionally a description (3) and which APIs will be deployed with the Gateway (4).</p>
+
+
+
+<p>From those items, one that got me confused initially was the Region &#x2013; since this is a free text, you can create your own definition of region (location, datacenter) &#x2013; anything that help you to identify where the gateway is being deployed. This property will be useful later to create conditional policies.</p>
+
+
+
+<p>Once those items are defined, you just need to click <strong>Add</strong> to create the new gateway.</p>
+
+
+
+<div class="wp-block-media-text alignwide" style="grid-template-columns:14% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt="API Management - Arc Enabled" class="wp-image-1214" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p>At the time of this writing, the Add APIs option is a bit flaky &#x2013; what was supposed to be a dropdown list was not working well. But once the gateway is created you can edit and add the APIs. The interface on the edit section is working fine.</p>
+</div></div>
+
+
+
+<p>Once a new gateway is created, you can manage it by clicking on its name. That will show a new blade:</p>
+
+
+
+<figure class="wp-block-image is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/11/apigateway_img04-300x207.png" alt="API Management - Arc Enabled" class="wp-image-2924" width="607" height="418" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/11/apigateway_img04-300x207.png 300w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img04-768x530.png 768w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img04-1024x707.png 1024w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img04.png 1162w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p>On the management blade you can find the <strong>Deployment </strong>configuration, the list of configured <strong>APIs</strong>, the list of configured <strong>Hostnames </strong>and the access <strong>Keys</strong>.</p>
+
+
+
+<p>Like in the main overview area, you can find  the basic analytics for the Gateway, how many nodes are deployed and running. You can also <strong>Edit </strong>the Gateway. Editing a gateway will basically change the name and the region that you define for your gateway.</p>
+
+
+
+<h2>Gateway APIs</h2>
+
+
+
+<p>Clicking the APIs option allow you to add or remove APIs to the Gateway definition. This way you can pick and choose which APIs are deployed on each Gateway. After that, any changes in the API definition (adding/removing operations, changing policies, association to product) will be synchronized to an gateway node that is online.  Clicking <strong>+Add</strong> allow to choose from existing APIs in the API Management instance to be deployed with the Gateway.  Clicking the elipsis <strong>(&#x2026;)</strong> allow you to remove an API to the Gateway. Online nodes connect to the control plane every 10 seconds to synchronize the list of APIs.</p>
+
+
+
+<figure class="wp-block-image size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/11/apigateway_img05-300x96.png" alt="API Management - Arc Enabled" class="wp-image-2928" width="609" height="195" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/11/apigateway_img05-300x96.png 300w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img05-1024x327.png 1024w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img05-768x245.png 768w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img05.png 1196w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p>The <strong>+ Add</strong> experience is quite straightforward:</p>
+
+
+
+<div class="wp-block-media-text alignwide"><figure class="wp-block-media-text__media"><img loading="lazy" width="534" height="618" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/11/apigateway_img06.png" alt="API Management - Arc Enabled" class="wp-image-2929" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/11/apigateway_img06.png 534w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img06-259x300.png 259w" sizes="(max-width: 534px) 85vw, 534px"></figure><div class="wp-block-media-text__content">
+<p class="has-normal-font-size">Once clicking on Add you can search for an API using either name or description, and tick all the APIs that you want to add.</p>
+
+
+
+<p>Once the APIs are chosen, simply click on <strong>Select</strong> and the APIs will be added to the Gateway</p>
+</div></div>
+
+
+
+<h2>Deploying an API</h2>
+
+
+
+<p>Once the Gateway is all configured for deployment, you configure and acquire the deployment script to the containerized node, ready to be deployed anywhere that have support for docker or kubernetes. For that you just need to click on the <strong>Deployment </strong>(1) section of the configuration side blade.</p>
+
+
+
+<figure class="wp-block-image size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/11/apigateway_img07-1-300x186.png" alt="API Management - Arc Enabled" class="wp-image-2932" width="612" height="379" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/11/apigateway_img07-1-300x186.png 300w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img07-1-1024x634.png 1024w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img07-1-768x476.png 768w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img07-1.png 1177w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p>Within deployment, you can define the access tokens <strong>expiration date/time </strong>(2), then Generate a new token (3). that you define your configuration file.</p>
+
+
+
+<p>You can choose your deployment script (4), depending the technology you choose (Docker or Kubernetes).</p>
+
+
+
+<p>If you choose docker, you can find the docker run command (5). The command is dependent on the configuration, which includes the configuration URL and the access token. Clicking the env.conf (6) will download file. So when access tokens change, you will just need the new env.conf file.</p>
+
+
+
+<figure class="wp-block-image size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/11/apigateway_img08-300x192.png" alt="API Management - Arc Enabled" class="wp-image-2933" width="606" height="388" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/11/apigateway_img08-300x192.png 300w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img08-768x492.png 768w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img08.png 814w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p>If you choose kubernetes, you will find similar guidance. &#x2013; a kubectl command (7), which is dependent on a configuration file called &lt;APIGatewayName&gt;.yaml</p>
+
+
+
+<p>Like the env.conf can also download the &lt;API GatewayName&gt;.yaml by clicking on the link provided.</p>
+
+
+
+<div class="wp-block-media-text alignwide" style="grid-template-columns:15% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt="API Management - Arc Enabled" class="wp-image-1214" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p class="has-normal-font-size">IF you are using Kubernetes and manage your application packages using Helm, you will want to take a look at this <a href="https://github.com/tomkerkhove/azure-api-management-gateway-helm?ref=localhost" target="_blank" rel="noreferrer noopener" aria-label="chart to deploy the API Gateway (opens in a new tab)">chart to deploy the API Gateway</a> created by <a href="https://twitter.com/tomkerkhove?ref=localhost" target="_blank" rel="noreferrer noopener" aria-label="Tom Kerkhove (opens in a new tab)">Tom Kerkhove</a>.</p>
+</div></div>
+
+
+
+<p>Once the configuration files are deployed and the command copied, the Gateway can be deployed anywhere that supports the technologies selected (Docker or Kubernetes).</p>
+
+
+
+<p>To get a node online you just need to execute the script defined. You can find how many nodes are being executed for a given API Gateway on the Gateways area:</p>
+
+
+
+<figure class="wp-block-image size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/11/apigateway_img09-300x90.png" alt="API Management - Arc Enabled" class="wp-image-2936" width="604" height="181" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/11/apigateway_img09-300x90.png 300w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img09-1024x307.png 1024w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img09-768x230.png 768w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img09-1536x460.png 1536w, http://localhost:2368/content/images/wordpress/2019/11/apigateway_img09-1200x360.png 1200w, http://localhost:2368http://localhost:2368/content/images/wordpress/2019/11/apigateway_img09.png 1808w, http://localhost:2368http://localhost:2368/content/images/wordpress/2019/11/apigateway_img09.png 1680w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<h2>Summary</h2>
+
+
+
+<p>The new ARC enabled API Gateway feature in API Management extends the API Management product to more than just the Azure Cloud. Gateways can be configured from a central location in Azure, and will maintain its configuration synchronized by connecting to the control plane (the main API Management Instance) at regular intervals.</p>
+
+
+
+<p>This new feature opens up a number of possibilities &#x2013; from on-premises API Gateway solutions, to multi-cloud configuration.</p>
+<!--kg-card-end: html-->]]></content:encoded></item><item><title><![CDATA[I know what you did on your holiday...]]></title><description><![CDATA[<!--kg-card-begin: html-->
+<p>Today is officially the last day of my holiday in Brazil with the whole family. We spent four weeks between mine and my wife&#x2019;s home city, visited family and friend, visited some places that I haven&#x2019;t before even living in the state most of my life</p>]]></description><link>http://localhost:2368/i-know-what-you-did-on-you-holiday/</link><guid isPermaLink="false">657ebb613b57be75e033ecc7</guid><category><![CDATA[holidays]]></category><category><![CDATA[work-life balance]]></category><dc:creator><![CDATA[wsilveiranz]]></dc:creator><pubDate>Mon, 05 Aug 2019 23:23:48 GMT</pubDate><media:content url="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/01/busy_bee.jpg" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: html-->
+<img src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/01/busy_bee.jpg" alt="I know what you did on your holiday..."><p>Today is officially the last day of my holiday in Brazil with the whole family. We spent four weeks between mine and my wife&#x2019;s home city, visited family and friend, visited some places that I haven&#x2019;t before even living in the state most of my life and showed the kids some of our favorite spots. </p>
+
+
+
+<p>But I also wrote a blog post, submitted five talks to Ignite, participated in to MVP calls, had a couple of meetings with people at work, replied to my work email to prevent projects go the wrong way.</p>
+
+
+
+<p>So, at the end of the trip, I started thinking&#x2026; With so much focus on quality time and really unplugging during your holiday, this days, should I have done that? Did I really enjoyed this trip as much as I should have?</p>
+
+
+
+<!--more-->
+
+
+
+<p>The answer is yes. I would probably be more stressed if I didn&#x2019;t do those things. The blog post was bubbling in my head, almost writing itself, the content submission were a unique opportunity that I would kick myself in the back if I didn&#x2019;t at least tried, and I know that my team would only reach out to me if they really needed. And I still had lots of fun, because I put &#x201C;tools&#x201D; in place before and during the holidays to help me cop with my &#x201C;unplugness&#x201D;. If you are like me you might also struggle with this juggling act, those tips might help. In the end, it is all in the balance.</p>
+
+
+
+<h2>How I managed my emails</h2>
+
+
+
+<p>Before I left, I set some email rules that helped me to cope with the biggest buzzkill for someone like me on a holiday &#x2013; seeing your mailbox grow bigger and bigger. One is in place for a while, the other was an actual agreement with my team:</p>
+
+
+
+<h3>The CC Folder</h3>
+
+
+
+<p>This is an awesome tip that I learned from <a rel="noreferrer noopener" aria-label="Scott Hanselman (opens in a new tab)" href="https://twitter.com/shanselman?ref=localhost" target="_blank">Scott Hanselman</a> a while ago. Have a separate CC folder under your inbox and make sure that messages where you are added to the CC field instead of the to field is sent to that folder. <strong>Do not add that folder to your favorites!</strong> &#x1F606;</p>
+
+
+
+<p>Scott talks about this in his <a rel="noreferrer noopener" aria-label="blog post (opens in a new tab)" href="https://www.hanselman.com/blog/OneEmailRuleHaveASeparateInboxAndAnInboxCCToReduceEmailStressGuaranteed.aspx?ref=localhost" target="_blank">blog post</a> and give you the steps on how to set that up, so check it out. I can&#x2019;t recommend this more, holiday or not.</p>
+
+
+
+<h3>Focused Inbox</h3>
+
+
+
+<p>On top of the CC folder hack, also enable focused inbox, if you haven&#x2019;t yet. It help you to only check the emails that really matter. If you don&#x2019;t have that enable yet &#x2013; I think Outlook is enabling it by default now, but I am not sure, here is <a href="https://support.office.com/en-gb/article/focused-inbox-for-outlook-f445ad7f-02f4-4294-a82e-71d8964e3978?ref=localhost" target="_blank" rel="noreferrer noopener" aria-label="how you can do it (opens in a new tab)">how you can do it</a>.</p>
+
+
+
+<h3>Turn on Out of Office</h3>
+
+
+
+<p>It feels like a safety blanket &#x2013; people know that you will not be replying to emails or reading frequently so you don&#x2019;t feel that guilty about it.</p>
+
+
+
+<p>Now a shameless plug &#x2013; you know I created a Flow Button that can help you to setup out of office, teams and other channels all at once? <a href="https://notetoself.tech/2019/07/15/managing-personal-office-communication-with-ms-flow/?ref=localhost" target="_blank" rel="noreferrer noopener" aria-label="Check it here (opens in a new tab)">Check it here</a>.</p>
+
+
+
+<h3>Rules of engagement on email</h3>
+
+
+
+<p>This is the agreement I had with clients and my own team which helped me to set the ground rules to when I would reply to emails. </p>
+
+
+
+<p>I told all the clients I had an active project on and my own team that I would <strong>not reply</strong> to client emails. But I advised my own team that if they thought that they need my help to solve a problem or if there was a decision that they needed my input to have, they should send me an email themselves with the question and I would answer.</p>
+
+
+
+<p>Doing that, I guaranteed that the clients would not be expecting me to answer emails while I was out, empowered my team to make their own decisions but gave them the tools to engage with me where needed. </p>
+
+
+
+<h2>How I managed my smart phone</h2>
+
+
+
+<p>My phone can be another source of stress&#x2026; lots of red dots in apps? I can&#x2019;t live with that! I need to see what it is, almost like a cat that can&#x2019;t resist the red do of a laser, you know. So what helped me to tame my phone lure was to <strong>turn off the message count and notifications for all apps</strong> &#x2013; Outlook, Twitter, LinkedIn, Facebook&#x2026; you name it. That didn&#x2019;t stopped me from checking them multiple times, but I end up doing this only when I was bored &#x2013; waiting in a line to buy tickets, waiting for a meal while everyone else was playing, etc. It is such a small thing but I helped me. </p>
+
+
+
+<h2>How I managed my priorities</h2>
+
+
+
+<p>The other thing I did to help me conciliate my nerd side &#x2013; that saw a lot of free time to tinker with things, write and do work-that-is-not-work stuff &#x2013; with the real reason why I had so much time &#x2013; being in holiday with my family &#x2013; was to choose the times when I allowed myself to <s>work</s> play with my toys.</p>
+
+
+
+<p>I found that after a day at the beach, or after a whole day at a barbecue with friends, the whole family would crash. Sleep like log. </p>
+
+
+
+<p>So after everyone was sleeping, I I didn&#x2019;t crash as well, then it was time to open the computer and check the emails, write a little bit, etc. It was also when the house was the quietest. Some other time, waking up early would give me the chance to have some quality time with my parents &#x2013; they wake up with the chicken as we say in Brazil &#x2013; have a breakfast cooked by mum and then use the computer a bit until everyone else woke up.</p>
+
+
+
+<p>Same for any meetings. I&#x2019;ve used the timezone difference, which is huge to my advantage and only scheduled meetings after everyone went to sleep. Although that meant some late nights, it was not like I had to wake up to go to work next day, right? &#x1F609;</p>
+
+
+
+<h2>Summary</h2>
+
+
+
+<p>In summary &#x2013; I knew for a while know that I can&#x2019;t fully unplug &#x2013; but I learned during the holidays to create rules for myself that helped me enjoy the holiday fully. Knowing that I allowed myself time to check how things were going at the office and to work on my community contributions without sacrificing the quality time with family and friends, helped me to enjoy the holiday fully and feel quite energized to come back to work next week. Now I just need to survive my road back home.</p>
+<!--kg-card-end: html-->]]></content:encoded></item><item><title><![CDATA[Managing personal office communication with MS Flow]]></title><description><![CDATA[<!--kg-card-begin: html-->
+<p>It&#x2019;s 10:00 am of a Wednesday and I am in my childhood home, having a chat with my dad and spending some time relaxing. As it is raining today, beach is not an option, and cinema is scheduled for later today. </p>
+
+
+
+<p>So what better to pass the</p>]]></description><link>http://localhost:2368/managing-personal-office-communication-with-ms-flow/</link><guid isPermaLink="false">657ebb613b57be75e033ecc6</guid><category><![CDATA[Microsoft Flow]]></category><category><![CDATA[Microsoft Teams]]></category><category><![CDATA[Office 365]]></category><dc:creator><![CDATA[wsilveiranz]]></dc:creator><pubDate>Mon, 15 Jul 2019 13:54:57 GMT</pubDate><media:content url="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: html-->
+<img src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg" alt="Managing personal office communication with MS Flow"><p>It&#x2019;s 10:00 am of a Wednesday and I am in my childhood home, having a chat with my dad and spending some time relaxing. As it is raining today, beach is not an option, and cinema is scheduled for later today. </p>
+
+
+
+<p>So what better to pass the time until later than write a light post? So, instead of focusing on AIS or some &#x201C;enterprise like&#x201D; technology, I decided to talk about something I made to make my life simpler, using Microsoft Flow, Teams and Outlook &#x2013; my ultimate out of office communication.</p>
+
+
+
+<h2>The requirements</h2>
+
+
+
+<p>For a bit of background, at Theta we had a long time tradition to indicate people whereabouts on email using a tag like OUT (out in a client), WFH (working from home), etc. That came from the time where the team was quite small and email was the main method of communication. With the team growing, earlier this year we made a request for people to move that kind of notification to Teams, on Theta&#x2019;s General channel. But then I thought &#x2013; why do I have to connect to teams to do that every time? There should be a better way&#x2026;</p>
+
+
+
+<p>In the end, the better way for me was a Flow button that allowed me to decide exactly what I wanted to do &#x2013; I designed the flow to do the following:</p>
+
+
+
+<ul><li>Choose the type of notification I wanted to send:<ul><li>Out of Office (OUT)</li><li>Working from Home (WFH)</li><li>Sick Leave (SICK)</li><li>Late to Work (LATE)</li></ul></li><li>Have an optional text explaining the reason for the notification</li><li>Send an email to my manager indicating my whereabouts.<ul><li>Optionally, send a copy of the email I send to my manager to a list of people I chose.</li></ul></li><li>Optionally, turn on automatic replies and adjust the text and the duration of the automatic replies.</li></ul>
+
+
+
+<!--more-->
+
+
+
+<h2>Flow Design</h2>
+
+
+
+<figure class="wp-block-image is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/flow-ooo-design-1024x280.png" alt="Managing personal office communication with MS Flow" class="wp-image-2852" width="620" height="170" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/flow-ooo-design-1024x280.png 1024w, http://localhost:2368/content/images/wordpress/2019/07/flow-ooo-design-300x82.png 300w, http://localhost:2368/content/images/wordpress/2019/07/flow-ooo-design-768x210.png 768w, http://localhost:2368/content/images/wordpress/2019/07/flow-ooo-design-1200x328.png 1200w, http://localhost:2368/content/images/wordpress/2019/07/flow-ooo-design.png 1680w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p>The flow is based on a manual input trigger Flow button (1) and perform the following actions:</p>
+
+
+
+<ul><li>Identify the Office 365 profile of the user running the flow (2)</li><li>Identify the Manager associated to that Office 365 profile (3)</li><li>Define the template of the message for MS Teams (4)</li><li>Define the template of the email to the manager (5)</li><li>Define is Automatic replies are required and define its template (6)</li></ul>
+
+
+
+<div class="wp-block-media-text alignwide" style="grid-template-columns:14% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt="Managing personal office communication with MS Flow" class="wp-image-1214" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p>If y<em>ou want to try this Flow yourself, you can get a copy </em><a rel="noreferrer noopener" aria-label="here (opens in a new tab)" href="https://github.com/wsilveiranz/MSFlowsamples/blob/master/OutofOfficeCommunications.zip?ref=localhost" target="_blank"><em>here</em></a><em>. Just import it and tweak it for your own requirements.</em></p>
+</div></div>
+
+
+
+<h3>Flow Button input details</h3>
+
+
+
+<p>My Flow button is defined with the following inputs:</p>
+
+
+
+<figure class="wp-block-image is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/flow-button-trigger..png" alt="Managing personal office communication with MS Flow" class="wp-image-2846" width="593" height="692" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/flow-button-trigger..png 790w, http://localhost:2368/content/images/wordpress/2019/07/flow-button-trigger.-257x300.png 257w, http://localhost:2368/content/images/wordpress/2019/07/flow-button-trigger.-768x897.png 768w" sizes="(max-width: 593px) 85vw, 593px"></figure>
+
+
+
+<ul><li>Notification type (required) &#x2013; a dropdown with the values of notification types, based on the classic acronyms used to prefix the classic email comms at Theta .</li><li>Notification detail (required) &#x2013; a free text for additional information or reason for the notification.</li><li>Return Date (optional) &#x2013; a date field indicating when I am expecting to come back to work.</li><li>Create Out of Office (optional) &#x2013; a boolean field indicating if I want to setup automatic replies (Out of Office) notification in Outlook.</li><li>Additional Notification People (optional) &#x2013; a list of emails for people that I want to cc when sending a an email notification to my manager.</li></ul>
+
+
+
+<div class="wp-block-media-text alignwide" style="grid-template-columns:18% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt="Managing personal office communication with MS Flow" class="wp-image-1214" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p><em>It is interesting to notice how rich the user experience can be when using the flow button. From required x optional field, to a set of different types of input controls, the flow maker have full control of what they are expecting to provide to the end user. That is another feature that differentiates MS Flow from Logic Apps.</em></p>
+</div></div>
+
+
+
+<h3>User Input and Manager Definition</h3>
+
+
+
+<div class="wp-block-image"><figure class="alignleft is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/User-profile.png" alt="Managing personal office communication with MS Flow" class="wp-image-2853" width="225" height="110" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/User-profile.png 945w, http://localhost:2368/content/images/wordpress/2019/07/User-profile-300x147.png 300w, http://localhost:2368/content/images/wordpress/2019/07/User-profile-768x377.png 768w" sizes="(max-width: 225px) 85vw, 225px"></figure></div>
+
+
+
+<p>The actions to define the user and the managers are both provided by Office 365 and are called <strong>Get My Profile</strong> and <strong>Find My Manager</strong>, respectively. While Get My Profile doesn&#x2019;t require any additional input, Find My Manager requires the User Principal Name (UPN), which is a property of Get My Profile. This will be required later, when email messages are sent to the manager.</p>
+
+
+
+<p>Once the user and manager are defined, sending messages to teams, email and Automatic Reply are executed in parallel, so errors in one channel don&#x2019;t impact the execution of the other channels, minimizing the chance of people not receiving my communication.</p>
+
+
+
+<h3>Sending Messages to Teams</h3>
+
+
+
+<figure class="wp-block-image is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/teams-flow-1024x413.png" alt="Managing personal office communication with MS Flow" class="wp-image-2855" width="768" height="310" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/teams-flow-1024x413.png 1024w, http://localhost:2368/content/images/wordpress/2019/07/teams-flow-300x121.png 300w, http://localhost:2368/content/images/wordpress/2019/07/teams-flow-768x310.png 768w, http://localhost:2368/content/images/wordpress/2019/07/teams-flow-1200x484.png 1200w, http://localhost:2368http://localhost:2368/content/images/wordpress/2019/07/teams-flow.png 1680w, http://localhost:2368http://localhost:2368/content/images/wordpress/2019/07/teams-flow.png 2520w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"><figcaption>Message to teams flow</figcaption></figure>
+
+
+
+<p>The flow to send message to teams is based on a switch statement, which setup a variable &#x2013; <strong>teamsmessagedetails</strong> &#x2013; with the message to publish. I decided to make the WFH option &#x2013; which I use the most &#x2013; as the default option, so I end up initializing the variable with that value &#x2013; for Flow it wouldn&#x2019;t make any difference, but in Logic Apps that would make one less action execution, since you have to initialize the variable anyway.</p>
+
+
+
+<p>Each case defines the message I wanted to publish, using the information provided by the flow button. The message is assigned tot the teamsmessagedetail variable.</p>
+
+
+
+<p>To publish the message I am using the <strong>Post Notification in Teams </strong>action, updating 04 of their 5 inputs:</p>
+
+
+
+<figure class="wp-block-image is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/teams-post-notification-1024x452.png" alt="Managing personal office communication with MS Flow" class="wp-image-2856" width="613" height="271" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/teams-post-notification-1024x452.png 1024w, http://localhost:2368/content/images/wordpress/2019/07/teams-post-notification-300x132.png 300w, http://localhost:2368/content/images/wordpress/2019/07/teams-post-notification-768x339.png 768w, http://localhost:2368/content/images/wordpress/2019/07/teams-post-notification.png 1051w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<ol><li>Team &#x2013; the team where the message will be posted. I am hard coding this to the Theta All channel, which is where we defined as the location to publish this type of notification.</li><li>Channel &#x2013; The channel where the message will be posted &#x2013; as the Teams, I am hard coding this to General channel, as per our internal policy.</li><li>Message &#x2013; The message being posted &#x2013; this value is filled with the  value stored in the teamsmessagedetails variable.</li><li>Subject &#x2013; The &#x201C;title&#x201D; of the message &#x2013; I&#x2019;ve decided to use this optional value, with a concatenation of <strong>Notification Type</strong> &#x2013; <strong>Notification Detail</strong> (e.g. WFH &#x2013; Writing a Blog Post).</li></ol>
+
+
+
+<p>You could have created message with rich formatting if you wanted, since  <strong>Post Notification in Teams</strong> action also accept HTML input. In this case, remember to change the <strong>Type</strong> parameter to HTML, instead of the default text.</p>
+
+
+
+<h3>Sending Email to Manager</h3>
+
+
+
+<figure class="wp-block-image is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/email-flow-707x1024.png" alt="Managing personal office communication with MS Flow" class="wp-image-2862" width="597" height="865" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/email-flow-707x1024.png 707w, http://localhost:2368/content/images/wordpress/2019/07/email-flow-207x300.png 207w, http://localhost:2368/content/images/wordpress/2019/07/email-flow-768x1113.png 768w, http://localhost:2368/content/images/wordpress/2019/07/email-flow-1200x1739.png 1200w, http://localhost:2368http://localhost:2368/content/images/wordpress/2019/07/email-flow.png 1680w, http://localhost:2368http://localhost:2368/content/images/wordpress/2019/07/email-flow.png 2520w" sizes="(max-width: 597px) 85vw, 597px"></figure>
+
+
+
+<p>The email to manager flow works just like the Teams flow &#x2013; but I didn&#x2019;t want to bother my manager with email, every time I was a bit late for work. So, like in the Teams flow, the variable <strong>emailmessagedetail</strong> was initialized with the WFH option, and a switch was created for SICK and OUT. In all cases, the email was sent using HTML (including CSS stylesheet for rich formatting).</p>
+
+
+
+<p>To send the email to the my manager, I used the <strong>Send an Email</strong> action of the <strong>Office 365 Outlook </strong>connector.</p>
+
+
+
+<figure class="wp-block-image"><img loading="lazy" width="787" height="645" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/send-email-to-manager-1.png" alt="Managing personal office communication with MS Flow" class="wp-image-2864" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/send-email-to-manager-1.png 787w, http://localhost:2368/content/images/wordpress/2019/07/send-email-to-manager-1-300x246.png 300w, http://localhost:2368/content/images/wordpress/2019/07/send-email-to-manager-1-768x629.png 768w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<ol><li>To &#x2013; this field was populated with the <strong>Mail</strong> property of <strong>Find My Manager</strong> action setup at the top of the flow.</li><li>Subject &#x2013; subject was populated with a concatenation of the <strong>Notification Type</strong> and <strong>Notification Detail</strong>.</li><li>Body &#x2013; the body of the message receives the <strong>emailmessagedetail</strong> variable</li><li>CC &#x2013; the CC field is populated with the list of <strong>Additional Notification</strong> <strong>People</strong> from the flow button.</li></ol>
+
+
+
+<h3>Setup Automatic Replies</h3>
+
+
+
+<figure class="wp-block-image is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/Automatic-Replies-flow-1024x590.png" alt="Managing personal office communication with MS Flow" class="wp-image-2866" width="617" height="356" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/Automatic-Replies-flow-1024x590.png 1024w, http://localhost:2368/content/images/wordpress/2019/07/Automatic-Replies-flow-300x173.png 300w, http://localhost:2368/content/images/wordpress/2019/07/Automatic-Replies-flow-768x443.png 768w, http://localhost:2368/content/images/wordpress/2019/07/Automatic-Replies-flow-1200x692.png 1200w, http://localhost:2368http://localhost:2368/content/images/wordpress/2019/07/Automatic-Replies-flow.png 1757w, http://localhost:2368http://localhost:2368/content/images/wordpress/2019/07/Automatic-Replies-flow.png 1680w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p>Automatic replies differs a little bit from the other two options, because first I needed to decide if I wanted to create one or not &#x2013; that decision was based on a boolean input in the flow button &#x2013; <strong>Create Out of Office</strong>. Since the input was optional, I&#x2019;ve created a boolean variable &#x2013; <strong>createoutofoffice</strong> &#x2013; and initialized it using the following function: <strong>coalesce(triggerBody()?[&#x2018;boolean&#x2019;],false) </strong> &#x2013; where &#x2018;boolean&#x2019; is the name of the flow button input. This guarantee that if the value was not selected, the variable was set to false.</p>
+
+
+
+<p>If the variable evaluates to true, the flow generates an out of office using the same pattern as the other two branches:</p>
+
+
+
+<figure class="wp-block-image is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/Out-of-Office-Flow-1024x382.png" alt="Managing personal office communication with MS Flow" class="wp-image-2867" width="612" height="229" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/Out-of-Office-Flow-1024x382.png 1024w, http://localhost:2368/content/images/wordpress/2019/07/Out-of-Office-Flow-300x112.png 300w, http://localhost:2368/content/images/wordpress/2019/07/Out-of-Office-Flow-768x287.png 768w, http://localhost:2368/content/images/wordpress/2019/07/Out-of-Office-Flow-1200x448.png 1200w, http://localhost:2368/content/images/wordpress/2019/07/Out-of-Office-Flow.png 1726w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<p>As per email to manager this flow initializes the variable <strong>oofemailmessagedetail </strong>with the WFH message, and setup either the SICK or OUT messages within a switch. Finally the flow uses the <strong>Set up Automatic Replies </strong>action from <strong>Office365 Outlook</strong> connector, with the following items:</p>
+
+
+
+<figure class="wp-block-image is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/Setup-Out-of-Office-1024x463.png" alt="Managing personal office communication with MS Flow" class="wp-image-2868" width="610" height="276" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/07/Setup-Out-of-Office-1024x463.png 1024w, http://localhost:2368/content/images/wordpress/2019/07/Setup-Out-of-Office-300x136.png 300w, http://localhost:2368/content/images/wordpress/2019/07/Setup-Out-of-Office-768x347.png 768w, http://localhost:2368/content/images/wordpress/2019/07/Setup-Out-of-Office.png 1053w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<ol><li>Status &#x2013; Set the status to scheduled</li><li>External Audience &#x2013; Set to All (both internal and external)</li><li>Start Time &#x2013;  For start time, I&#x2019;ve used the <strong>utcNow()</strong>.</li><li>End Time &#x2013; <strong> </strong>I&#x2019;ve used the <strong>Return Date</strong> for End Time, which will turn off the Out of Office automatically at the date I&#x2019;ve defined when trigger the flow.</li><li>Internal Reply Message &#x2013; For the internal message I&#x2019;ve used the <strong>oofemailmessagedetail</strong> variable.</li><li>External Reply Message &#x2013; Since I didn&#x2019;t want different messages for internal and external messages, I&#x2019;ve also used the <strong>oofemailmessagedetail</strong> variable as the external message.</li></ol>
+
+
+
+<h2>Summary</h2>
+
+
+
+<p>Voil&#xE1;! With this flow, I can setup my whereabouts in Teams, send an email to my manager and other people that might need to know my whereabouts on any particular day, and setup my automatic reply all in one goal. The Flow button is available from  the Microsoft Flow app for both Android and iPhone, so I have it handy anytime I want. I&#x2019;ve already used it many times since I&#x2019;ve setup the Flow, including during times where I had to be on a client site for a whole day and because of the morning commute I couldn&#x2019;t have all of that communication setup for me. With a minute or so while waiting in the lobby of the client, everything was setup, including the automatic replies, so people would know that I would be late replying to their emails.</p>
+
+
+
+<p>This is an example of personal productivity tool that can be achieved with Microsoft Flow. For sure, Microsoft Flow can do much more than just personal productivity, but for me this is an area where it is unbeatable, because there is no other tool that is as easily accessible and at same time as powerful in this space. </p>
+
+
+
+<p>As a maker, you can create processes that are as simple as notify you when something important happens, to processes as complex as the one I&#x2019;ve showed here that requires rich user input and orchestrate actions among multiple systems.</p>
+<!--kg-card-end: html-->]]></content:encoded></item><item><title><![CDATA[API call with client certificate policy failing to execute due to message size on Azure API Management]]></title><description><![CDATA[<!--kg-card-begin: html-->
+<p>Well, that is a mouthful of a title, but I wanted to capture the exact issue, because I couldn&#x2019;t find any page to help with this specific error and managed to get it fixed thanks to <a rel="noreferrer noopener" aria-label="Vladimir Vinogradsky (opens in a new tab)" href="https://twitter.com/vladvino?ref=localhost" target="_blank">Vladimir Vinogradsky</a> pointing me out to a tip in one of the</p>]]></description><link>http://localhost:2368/api-call-with-client-certificate-policy-failing-to-execute-due-to-message-size-on-azure-api-management/</link><guid isPermaLink="false">657ebb613b57be75e033ecc5</guid><category><![CDATA[api management]]></category><category><![CDATA[error]]></category><category><![CDATA[policiy]]></category><dc:creator><![CDATA[wsilveiranz]]></dc:creator><pubDate>Thu, 13 Jun 2019 15:01:29 GMT</pubDate><media:content url="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/field-notes-wide-e1515541406829.jpg" medium="image"/><content:encoded><![CDATA[<!--kg-card-begin: html-->
+<img src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/field-notes-wide-e1515541406829.jpg" alt="API call with client certificate policy failing to execute due to message size on Azure API Management"><p>Well, that is a mouthful of a title, but I wanted to capture the exact issue, because I couldn&#x2019;t find any page to help with this specific error and managed to get it fixed thanks to <a rel="noreferrer noopener" aria-label="Vladimir Vinogradsky (opens in a new tab)" href="https://twitter.com/vladvino?ref=localhost" target="_blank">Vladimir Vinogradsky</a> pointing me out to a tip in one of the APIM docs.</p>
+
+
+
+<p>So my scenario was this: my team was working on an API that is protected with a client certificate policy &#x2013; quite simple, very straightforward. At the API level it had the following policy:</p>
+
+
+
+<!--more-->
+
+
+
+<pre class="wp-block-preformatted"><policies>
+    <inbound>
+        <choose>
+            <when condition="@(context.Request.Certificate == null || context.Request.Certificate.Issuer != " {{client-cert-issuer}}" || !context.deployment.certificates.any(c> c.Value.Thumbprint == context.Request.Certificate.Thumbprint))&quot;&gt;
+                <return-response>
+                    <set-status code="403" reason="Invalid Client Certificate">
+                </set-status></return-response>
+            </when>
+        </choose>
+        <base>
+    </inbound>
+    <backend>
+        <base>
+    </backend>
+    <outbound>
+        <base>
+    </outbound>
+    <on-error>
+        <base>
+    </on-error>
+</policies></pre>
+
+
+
+<p>So, nothing special, right? And for the most part it worked. Then all of a sudden, the api call would freeze when I try to send a &#x201C;large&#x201D; message! But large compared to the other messages &#x2013; the messages that worked were 10-15 kb, while this one was 32 kb. I didn&#x2019;t return any errors, any response, just failed after a couple of minutes, which was the client timeout.</p>
+
+
+
+<p>What my team found is that removing some of the content &#x2013; the message had a huge number of gps coordinates, so we&#x2019;ve removed almost all of them, cause we only needed the first one &#x2013; it would work.</p>
+
+
+
+<p>To confirm that the problem was not the message itself, but the certificates, we removed the policy and send the full message &#x2013; it worked without a glitch. So everything pointed to a combination of message size and the client certificate. Which proved to be right.</p>
+
+
+
+<p>The root case of that issue is documented <a rel="noreferrer noopener" aria-label="here (opens in a new tab)" href="https://techcommunity.microsoft.com/t5/Networking-Blog/HTTPS-Client-Certificate-Request-freezes-when-the-Server-is/ba-p/339672?ref=localhost" target="_blank">here</a>, and Microsoft have the APIM solution documented <a href="https://docs.microsoft.com/en-us/azure/api-management/api-management-howto-mutual-certificates-for-clients?ref=localhost#checking-a-thumbprint-against-certificates-uploaded-to-api-management">on this page</a>, as a tip. But no internet search I&#x2019;ve made pointed me to that page.</p>
+
+
+
+<p>In the end, the fix was quite simple. What I needed to do was enable <strong><em>negotiate client certificate</em></strong> on the gateway endpoint. To do that you can follow the steps below:</p>
+
+
+
+<ol><li>Within you API Management instance, navigate to <strong><em>Custom domains</em></strong>.</li><li>Under endpoints, click on the Gateway </li><li>Once in the Gateway properties, enable <strong><em>Negotiate client certificate</em></strong></li><li>Click on <strong><em>Update</em></strong></li><li>Finally remember to <strong><em>Save</em></strong> your changes.</li></ol>
+
+
+
+<figure class="wp-block-image is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/06/apim_negotiate_client_cert-1024x922.jpg" alt="API call with client certificate policy failing to execute due to message size on Azure API Management" class="wp-image-2826" width="512" height="461" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2019/06/apim_negotiate_client_cert-1024x922.jpg 1024w, http://localhost:2368/content/images/wordpress/2019/06/apim_negotiate_client_cert-300x270.jpg 300w, http://localhost:2368/content/images/wordpress/2019/06/apim_negotiate_client_cert-768x692.jpg 768w, http://localhost:2368/content/images/wordpress/2019/06/apim_negotiate_client_cert-1200x1081.jpg 1200w, http://localhost:2368/content/images/wordpress/2019/06/apim_negotiate_client_cert.jpg 1287w" sizes="(max-width: 512px) 85vw, 512px"><figcaption>Enabling client certificate negotiation on the Gateway endpoint.</figcaption></figure>
+
+
+
+<p>On my environments that up to 5 minutes to persist those changes, but you will receive a notification that it is been completed successfully.</p>
+
+
+
+<p>Once that was updated, the large message was processed just like the smaller ones.</p>
+
+
+
+<p>So if you are planning to use client certificate validation on your inbound policies, I would suggest that you enable this property on your gateway, to avoid having surprises when your messages go over a certain size. Microsoft documentation says around 60 KB, but my messages presented on much smaller values &#x2013; around 30 KB.</p>
+
+
+
+<div class="wp-block-media-text alignwide vertical-align: text-top;" style="grid-template-columns:17% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt="API call with client certificate policy failing to execute due to message size on Azure API Management" class="wp-image-1214" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p style="text-align:left"><em>Although this solves the problem on the subscription plans (developer, basic, standard, premium) this option is not available in the consumption plan. And seems like at this stage this is not a feature that will be available in that plan.</em></p>
+</div></div>
+
+
+
+<p>Hopefully if you had this issue too, you managed to find this post and it avoided you scratching your head for a couple of hours like I did&#x2026;</p>
+<!--kg-card-end: html-->]]></content:encoded></item></channel></rss>

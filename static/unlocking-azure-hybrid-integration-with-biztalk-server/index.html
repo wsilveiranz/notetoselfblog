@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Unlocking Azure Hybrid Integration with BizTalk Server</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preload" as="style" href="notetoselfblog/assets/built/screen.css?v=c95e7abf59">
+    <link rel="preload" as="script" href="notetoselfblog/assets/built/source.js?v=c95e7abf59">
+
+    <link rel="stylesheet" type="text/css" href="notetoselfblog/assets/built/screen.css?v=c95e7abf59">
+
+    <style>
+        :root {
+            --background-color: #ffffff
+        }
+    </style>
+
+    <script>
+        /* The script for calculating the color contrast has been taken from
+        https://gomakethings.com/dynamically-changing-the-text-color-based-on-background-color-contrast-with-vanilla-js/ */
+        var accentColor = getComputedStyle(document.documentElement).getPropertyValue('--background-color');
+        accentColor = accentColor.trim().slice(1);
+        var r = parseInt(accentColor.substr(0, 2), 16);
+        var g = parseInt(accentColor.substr(2, 2), 16);
+        var b = parseInt(accentColor.substr(4, 2), 16);
+        var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        var textColor = (yiq >= 128) ? 'dark' : 'light';
+
+        document.documentElement.className = `has-${textColor}-text`;
+    </script>
+
+    <link rel="canonical" href="http://wsilveiranz.github.io/notetoselfblog/unlocking-azure-hybrid-integration-with-biztalk-server/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Note to Self - Ghost Edition">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Unlocking Azure Hybrid Integration with BizTalk Server">
+    <meta property="og:description" content="Last June I was one of the presenters at Integrate 2017. And man, I had a blast! Can’t thank enough Theta for sponsoring me going to the event, and Biztalk360 for having me as presenter. It was an amazing experience…
+
+
+Today the video of my presentation has been published.">
+    <meta property="og:url" content="http://wsilveiranz.github.io/notetoselfblog/unlocking-azure-hybrid-integration-with-biztalk-server/">
+    <meta property="og:image" content="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/10/BizTalkServerLovesAzure.jpg">
+    <meta property="article:published_time" content="2017-10-21T22:09:50.000Z">
+    <meta property="article:modified_time" content="2018-09-03T22:19:35.000Z">
+    <meta property="article:tag" content="azure relays">
+    <meta property="article:tag" content="biztalk">
+    <meta property="article:tag" content="hybrid integration">
+    <meta property="article:tag" content="logic apps">
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Unlocking Azure Hybrid Integration with BizTalk Server">
+    <meta name="twitter:description" content="Last June I was one of the presenters at Integrate 2017. And man, I had a blast! Can’t thank enough Theta for sponsoring me going to the event, and Biztalk360 for having me as presenter. It was an amazing experience…
+
+
+Today the video of my presentation has been published.">
+    <meta name="twitter:url" content="http://wsilveiranz.github.io/notetoselfblog/unlocking-azure-hybrid-integration-with-biztalk-server/">
+    <meta name="twitter:image" content="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/10/BizTalkServerLovesAzure.jpg">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="wsilveiranz">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="azure relays, biztalk, hybrid integration, logic apps">
+    <meta name="twitter:site" content="@ghost">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="530">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Note to Self - Ghost Edition",
+        "url": "http://wsilveiranz.github.io/notetoselfblog/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "http://wsilveiranz.github.io/notetoselfblog/favicon.ico"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "wsilveiranz",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://secure.gravatar.com/avatar/8cf8f21650fd5355a5b2c08e0f9ca914?s=512&d=mm&r=g",
+            "width": 512,
+            "height": 512
+        },
+        "url": "http://wsilveiranz.github.io/notetoselfblog/author/wsilveiranz/",
+        "sameAs": []
+    },
+    "headline": "Unlocking Azure Hybrid Integration with BizTalk Server",
+    "url": "http://wsilveiranz.github.io/notetoselfblog/unlocking-azure-hybrid-integration-with-biztalk-server/",
+    "datePublished": "2017-10-21T22:09:50.000Z",
+    "dateModified": "2018-09-03T22:19:35.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/10/BizTalkServerLovesAzure.jpg",
+        "width": 1200,
+        "height": 530
+    },
+    "keywords": "azure relays, biztalk, hybrid integration, logic apps",
+    "description": "Last June I was one of the presenters at Integrate 2017. And man, I had a blast! Can’t thank enough Theta for sponsoring me going to the event, and Biztalk360 for having me as presenter. It was an amazing experience…\n\n\nToday the video of my presentation has been published. So go check it out and also check out the amazing presentations on this year’s edition.\n\n\n\nPutting theory into Practice\n\n\n\n\n\nI choose this topic after talking to Saravana Kumar, Biztalk360 founder, which was looking for some t",
+    "mainEntityOfPage": "http://wsilveiranz.github.io/notetoselfblog/unlocking-azure-hybrid-integration-with-biztalk-server/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.75">
+    <link rel="alternate" type="application/rss+xml" title="Note to Self - Ghost Edition" href="http://wsilveiranz.github.io/notetoselfblog/rss/">
+    <script defer src="https://cdn.jsdelivr.net/ghost/portal@~2.36/umd/portal.min.js" data-i18n="false" data-ghost="http://wsilveiranz.github.io/notetoselfblog/" data-key="4d946a7b27dfe0cf2428731cab" data-api="http://wsilveiranz.github.io/notetoselfblog/ghost/api/content/" crossorigin="anonymous"></script><style id="gh-members-styles">.gh-post-upgrade-cta-content,
+.gh-post-upgrade-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+    width: 100%;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.gh-post-upgrade-cta-content {
+    border-radius: 8px;
+    padding: 40px 4vw;
+}
+
+.gh-post-upgrade-cta h2 {
+    color: #ffffff;
+    font-size: 28px;
+    letter-spacing: -0.2px;
+    margin: 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta p {
+    margin: 20px 0 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta small {
+    font-size: 16px;
+    letter-spacing: -0.2px;
+}
+
+.gh-post-upgrade-cta a {
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a:hover {
+    color: #ffffff;
+    opacity: 0.8;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a.gh-btn {
+    display: block;
+    background: #ffffff;
+    text-decoration: none;
+    margin: 28px 0 0;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.gh-post-upgrade-cta a.gh-btn:hover {
+    opacity: 0.92;
+}</style>
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="4d946a7b27dfe0cf2428731cab" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="http://wsilveiranz.github.io/notetoselfblog/" crossorigin="anonymous"></script>
+    
+    <link href="http://wsilveiranz.github.io/notetoselfblog/webmentions/receive/" rel="webmention">
+    <script defer src="/public/member-attribution.min.js?v=c95e7abf59"></script><style>:root {--ghost-accent-color: #FF1A75;}</style>
+
+</head>
+<body class="post-template tag-azure-relays tag-biztalk tag-hybrid-integration tag-logic-apps tag-hash-wordpress tag-hash-import-2023-12-17-09-11 has-sans-title has-sans-body">
+
+<div class="gh-viewport">
+    
+    <header id="gh-navigation" class="gh-navigation is-middle-logo gh-outer">
+    <div class="gh-navigation-inner gh-inner">
+
+        <div class="gh-navigation-brand">
+            <a class="gh-navigation-logo is-title" href="http://wsilveiranz.github.io/notetoselfblog">
+                    Note to Self - Ghost Edition
+            </a>
+            <button class="gh-search gh-icon-button" aria-label="Search this site" data-ghost-search>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>            <button class="gh-burger gh-icon-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path></svg>                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg>            </button>
+        </div>
+
+        <nav class="gh-navigation-menu">
+            <ul class="nav">
+    <li class="nav-home"><a href="http://wsilveiranz.github.io/notetoselfblog/">Home</a></li>
+    <li class="nav-about"><a href="http://wsilveiranz.github.io/notetoselfblog/about/">About</a></li>
+</ul>
+
+        </nav>
+
+        <div class="gh-navigation-actions">
+                <button class="gh-search gh-icon-button" aria-label="Search this site" data-ghost-search>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>                <div class="gh-navigation-members">
+                            <a href="#/portal/signin" data-portal="signin">Sign in</a>
+                                <a class="gh-button" href="#/portal/signup" data-portal="signup">Subscribe</a>
+                </div>
+        </div>
+
+    </div>
+</header>
+
+    
+
+<main class="gh-main">
+
+    <article class="gh-article post tag-azure-relays tag-biztalk tag-hybrid-integration tag-logic-apps tag-hash-wordpress tag-hash-import-2023-12-17-09-11">
+
+        <header class="gh-article-header gh-canvas">
+
+                <a class="gh-article-tag" href="http://wsilveiranz.github.io/notetoselfblog/tag/azure-relays/">azure relays</a>
+            <h1 class="gh-article-title is-title">Unlocking Azure Hybrid Integration with BizTalk Server</h1>
+
+            <div class="gh-article-meta">
+                <div class="gh-article-author-image">
+                            <a href="/author/wsilveiranz/">
+                                <img class="author-profile-image" src="https://secure.gravatar.com/avatar/8cf8f21650fd5355a5b2c08e0f9ca914?s&#x3D;512&amp;d&#x3D;mm&amp;r&#x3D;g" alt="wsilveiranz" />
+                            </a>
+                </div>
+                <div class="gh-article-meta-wrapper">
+                    <h4 class="gh-article-author-name"><a href="/author/wsilveiranz/">wsilveiranz</a></h4>
+                    <div class="gh-article-meta-content">
+                        <time class="gh-article-meta-date" datetime="2017-10-21">Oct 21, 2017</time>
+                            <span class="gh-article-meta-length"><span class="bull">—</span> 3 min read</span>
+                    </div>
+                </div>
+            </div>
+
+                <figure class="gh-article-image">
+        <img
+            srcset="notetoselfblog/content/images/size/w320/wordpress/2017/10/BizTalkServerLovesAzure.jpg 320w,
+                    /content/images/size/w600/wordpress/2017/10/BizTalkServerLovesAzure.jpg 600w,
+                    /content/images/size/w960/wordpress/2017/10/BizTalkServerLovesAzure.jpg 960w,
+                    /content/images/size/w1200/wordpress/2017/10/BizTalkServerLovesAzure.jpg 1200w,
+                    /content/images/size/w2000/wordpress/2017/10/BizTalkServerLovesAzure.jpg 2000w"
+            src="notetoselfblog/content/images/size/w1200/wordpress/2017/10/BizTalkServerLovesAzure.jpg"
+            alt="Unlocking Azure Hybrid Integration with BizTalk Server"
+        >
+            <figcaption>Photo credit: Tom Canter</figcaption>
+    </figure>
+
+        </header>
+
+        <section class="gh-content gh-canvas is-body">
+            <!--kg-card-begin: html--><p>Last June I was one of the presenters at <a href="https://www.biztalk360.com/integrate-2017-resources/?ref=localhost" target="_blank" rel="noopener">Integrate 2017</a>. And man, I had a blast! Can&#8217;t thank enough <a href="https://www.theta.co.nz/?ref=localhost" target="_blank" rel="noopener">Theta</a> for sponsoring me going to the event, and <a href="https://www.biztalk360.com/?ref=localhost" target="_blank" rel="noopener">Biztalk360</a> for having me as presenter. It was an amazing experience&#8230;</p>
+<p>Today the <a href="https://www.biztalk360.com/integrate-2017-resources/unlocking-azure-hybrid-integration-biztalk-server/?ref=localhost" target="_blank" rel="noopener">video of my presentation</a> has been published. So go check it out and also check out the amazing presentations on this year&#8217;s edition.</p>
+<h3>Putting theory into Practice</h3>
+<p><!--more--></p>
+<p>I choose this topic after talking to Saravana Kumar, Biztalk360 founder, which was looking for some topics about BizTalk to balance out the conference. But since coming back from London, I keep bumping into real cases where the power of BizTalk combined Azure components made created the perfect solution. One of the scenarios I am working at the moment looks like this:</p>
+<p><img loading="lazy" width="840" height="310" class="alignnone size-large wp-image-1534" alt src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/10/Sales-Force-Hybrid-Integration-1024x378.png" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/10/Sales-Force-Hybrid-Integration-1024x378.png 1024w, http://localhost:2368/content/images/wordpress/2017/10/Sales-Force-Hybrid-Integration-300x111.png 300w, http://localhost:2368/content/images/wordpress/2017/10/Sales-Force-Hybrid-Integration-768x283.png 768w, http://localhost:2368/content/images/wordpress/2017/10/Sales-Force-Hybrid-Integration-1200x442.png 1200w, http://localhost:2368/content/images/wordpress/2017/10/Sales-Force-Hybrid-Integration.png 1264w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 1362px) 62vw, 840px"></p>
+<p>In this scenario, SalesForce needs to integrate with a Legacy CRM application on-prem. The client already uses BizTalk to integrate a couple of on-prem systems, including CRM application, which recently had an API layer implemented.</p>
+<p>The early designs for that solution was to use logic apps to integrate with SalesForce both ways, but that would have a cost implication because of the polling approach required and, to a lesser extent, to the number of API calls to SalesForce. SalesForce have a maximum number of API calls based on the number of licenses, and although this solution wouldn&#8217;t make a big enough dent on that to be of concern, it was another dimension to take in consideration during design.</p>
+<p>Discussing with the SalesForce developer, I found that SalesForce had&nbsp; the ability of executing outbound calls to a SOAP endpoint (1). So I suggested to leverage from BizTalk&#8217;s ability to integrate with Azure Relays&nbsp; (2). From there integrate with the CRM API (3,4,5) was known, as we had done that before.</p>
+<p>In order to integrate BizTalk to SalesForce, for example to enrich the message with extra information from SalesForce (2a), or to return updates form the CRM application (6), we decided that this was a good place to leverage from Logic Apps. The main reason for that was how fast was to implement the integration with SalesForce from Logic Apps, using the SalesForce connector (7).</p>
+<p>The best of all of this was that we could try variations of the approaches on our sandbox and prove what could work or not, adjusting and finding the best solutions in a couple of hours, during a brainstorm session. How about that for agile?</p>
+<h3>Security Considerations</h3>
+<h5>Securing SalesForce Calls to BizTalk</h5>
+<p>Next step on this discussion was security. Initially I thought about securing the transport using client certificates. But I was not sure about the implications of that when using the AzureRelay. RelayTokens would also create its own challenges, as we were using outbound messages, and were trying to keep SalesForce without code customizations as much as possible. Researching about this took me to this <a href="https://developer.salesforce.com/page/Connecting_Force.com_to_Azure_Service_Bus_Part2?ref=localhost" target="_blank" rel="noopener">article </a>from Richard Seroter, where he suggests that we can secure this call using a shared secret.</p>
+<p>We decided to go this route and created a simple pipeline component that validated the secret, rejecting messages that didn&#8217;t provided the secret.</p>
+<h5>Securing BizTalk calls to Logic Apps</h5>
+<p>In order to secure the logic apps that would be called by BizTalk, we used the IP filtering approach. This way, only calls initiated from company&#8217;s public IP would be accepted by Logic Apps. This was good enough for the proof of concept, but for final implementation, we might use a similar approach used to secure the SalesForce interface, and add a shared secret, to guarantee that only calls coming from authorized sources can be executed.</p>
+<h3>Summary</h3>
+<p>It was quite interesting to start identifying hybrid integration scenarios that expanded beyond the BizTalk + Logic Apps Dynamic Duo. In the scenario above, I found and option that was fit for purpose, cost effective and provided a good performance. Not bad for a couple of hours research.</p>
+<p>For me, the biggest advantages of Microsoft integration space right now, is the wide range of choices available. We just need to be aware of the options and make sure that we keep them in mind while designing hybrid solutions.</p>
+<p>I hope you enjoyed the post, and see you next time!</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<!--kg-card-end: html-->
+        </section>
+
+    </article>
+
+
+</main>
+
+
+        <section class="gh-container is-grid gh-outer">
+            <div class="gh-container-inner gh-inner">
+                <h2 class="gh-container-title">Read more</h2>
+                <div class="gh-feed">
+                        <article class="gh-card post">
+    <a class="gh-card-link" href="/and-all-of-a-sudden-its-2022/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="notetoselfblog/content/images/size/w160/format/webp/wordpress/2022/01/soar.png 160w,
+                            /content/images/size/w320/format/webp/wordpress/2022/01/soar.png 320w,
+                            /content/images/size/w600/format/webp/wordpress/2022/01/soar.png 600w,
+                            /content/images/size/w960/format/webp/wordpress/2022/01/soar.png 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2022/01/soar.png 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2022/01/soar.png 2000w"
+                    sizes="320px"
+                    src="notetoselfblog/content/images/size/w600/wordpress/2022/01/soar.png"
+                    alt="And all of a sudden, its 2022!"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">And all of a sudden, its 2022!</h3>
+                <p class="gh-card-excerpt is-body">And with that, another year goes by. Another year where communities had to revamp themselves and learn how to thrive in a online world. Here in NZ, after what started to look like we were pretty much bat to normal life, the reality of living during a pandemic stroked back,</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2022-01-09">Jan 9, 2022</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                        <article class="gh-card post">
+    <a class="gh-card-link" href="/calling-api-management-from-azure-function-using-managed-identities/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="notetoselfblog/content/images/size/w160/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 160w,
+                            /content/images/size/w320/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 320w,
+                            /content/images/size/w600/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 600w,
+                            /content/images/size/w960/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 2000w"
+                    sizes="320px"
+                    src="notetoselfblog/content/images/size/w600/wordpress/2017/09/field-notes-wide-e1515541406829.jpg"
+                    alt="Calling API Management from Azure Function using Managed Identities"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">Calling API Management from Azure Function using Managed Identities</h3>
+                <p class="gh-card-excerpt is-body">One of the solutions I am consulting on today is securing a number of APIs with OAuth with client credential flow, using Azure Active Directory as the identity provider. Those APIs are exposed via Azure API Management, which makes the validation of the access tokens provided as simple as injecting</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2021-04-05">Apr 5, 2021</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                        <article class="gh-card post">
+    <a class="gh-card-link" href="/countdown-to-global-integration-bootcamp-2021/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="notetoselfblog/content/images/size/w160/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 160w,
+                            /content/images/size/w320/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 320w,
+                            /content/images/size/w600/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 600w,
+                            /content/images/size/w960/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 2000w"
+                    sizes="320px"
+                    src="notetoselfblog/content/images/size/w600/wordpress/2021/02/GIB-2021-background.jpeg"
+                    alt="Countdown to Global Integration Bootcamp 2021"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">Countdown to Global Integration Bootcamp 2021</h3>
+                <p class="gh-card-excerpt is-body">Last January, I wrote about this year edition of Global Integration Bootcamp. As you might remember, this year we locked it on 26-27 February (UTC Time) running two different event streams starting at times that can be suitable for the three main time zone areas- APAC, EMEA and Americas.
+
+
+
+
+
+
+Lineup</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2021-02-19">Feb 19, 2021</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                        <article class="gh-card post">
+    <a class="gh-card-link" href="/global-integration-bootcamp-2021-goes-virtual/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="notetoselfblog/content/images/size/w160/format/webp/wordpress/2020/01/friends_banner.jpg 160w,
+                            /content/images/size/w320/format/webp/wordpress/2020/01/friends_banner.jpg 320w,
+                            /content/images/size/w600/format/webp/wordpress/2020/01/friends_banner.jpg 600w,
+                            /content/images/size/w960/format/webp/wordpress/2020/01/friends_banner.jpg 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2020/01/friends_banner.jpg 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2020/01/friends_banner.jpg 2000w"
+                    sizes="320px"
+                    src="notetoselfblog/content/images/size/w600/wordpress/2020/01/friends_banner.jpg"
+                    alt="Global Integration Bootcamp 2021 goes Virtual!!!"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">Global Integration Bootcamp 2021 goes Virtual!!!</h3>
+                <p class="gh-card-excerpt is-body">Hey there! Happy New Year!!!
+
+
+
+
+
+Many of you were asking about if we would be doing another Global Integration Bootcamp this year. I know that there is been a while since we provided any news about it, but the team was trying to come up with a formula that would</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2021-01-12">Jan 12, 2021</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                </div>
+            </div>
+        </section>
+
+    
+    <footer class="gh-footer gh-outer">
+    <div class="gh-footer-inner gh-inner">
+
+        <div class="gh-footer-bar">
+            <span class="gh-footer-logo is-title">
+                    Note to Self - Ghost Edition
+            </span>
+            <nav class="gh-footer-menu">
+                <ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>
+            <div class="gh-footer-copyright">
+                Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+        
+                <section class="gh-footer-signup">
+                    <h2 class="gh-footer-signup-header is-title">
+                        Note to Self - Ghost Edition
+                    </h2>
+                    <p class="gh-footer-signup-subhead is-body">
+                        Thoughts, stories and ideas.
+                    </p>
+                    <form class="gh-form" data-members-form>
+    <input class="gh-form-input" type="email" placeholder="jamie@example.com" required data-members-email>
+    <button class="gh-button" type="submit">
+        <span><span>Subscribe</span> <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 256 256"><path d="M224.49,136.49l-72,72a12,12,0,0,1-17-17L187,140H40a12,12,0,0,1,0-24H187L135.51,64.48a12,12,0,0,1,17-17l72,72A12,12,0,0,1,224.49,136.49Z"></path></svg></span>
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24">
+    <g stroke-linecap="round" stroke-width="2" fill="currentColor" stroke="none" stroke-linejoin="round" class="nc-icon-wrapper">
+        <g class="nc-loop-dots-4-24-icon-o">
+            <circle cx="4" cy="12" r="3"></circle>
+            <circle cx="12" cy="12" r="3"></circle>
+            <circle cx="20" cy="12" r="3"></circle>
+        </g>
+        <style data-cap="butt">
+            .nc-loop-dots-4-24-icon-o{--animation-duration:0.8s}
+            .nc-loop-dots-4-24-icon-o *{opacity:.4;transform:scale(.75);animation:nc-loop-dots-4-anim var(--animation-duration) infinite}
+            .nc-loop-dots-4-24-icon-o :nth-child(1){transform-origin:4px 12px;animation-delay:-.3s;animation-delay:calc(var(--animation-duration)/-2.666)}
+            .nc-loop-dots-4-24-icon-o :nth-child(2){transform-origin:12px 12px;animation-delay:-.15s;animation-delay:calc(var(--animation-duration)/-5.333)}
+            .nc-loop-dots-4-24-icon-o :nth-child(3){transform-origin:20px 12px}
+            @keyframes nc-loop-dots-4-anim{0%,100%{opacity:.4;transform:scale(.75)}50%{opacity:1;transform:scale(1)}}
+        </style>
+    </g>
+</svg>        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+    <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+    <style>
+        .checkmark {
+            width: 40px;
+            height: 40px;
+            display: block;
+            stroke-width: 2.5;
+            stroke: currentColor;
+            stroke-miterlimit: 10;
+        }
+
+        .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke .3s cubic-bezier(0.650, 0.000, 0.450, 1.000) forwards;
+        }
+
+        @keyframes stroke {
+            100% { stroke-dashoffset: 0; }
+        }
+    </style>
+</svg>    </button>
+</form>                </section>
+
+    </div>
+</footer>    
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="notetoselfblog/assets/built/source.js?v=c95e7abf59"></script>
+
+
+
+</body>
+</html>

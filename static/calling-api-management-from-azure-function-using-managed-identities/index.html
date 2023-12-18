@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Calling API Management from Azure Function using Managed Identities</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preload" as="style" href="notetoselfblog/assets/built/screen.css?v=c95e7abf59">
+    <link rel="preload" as="script" href="notetoselfblog/assets/built/source.js?v=c95e7abf59">
+
+    <link rel="stylesheet" type="text/css" href="notetoselfblog/assets/built/screen.css?v=c95e7abf59">
+
+    <style>
+        :root {
+            --background-color: #ffffff
+        }
+    </style>
+
+    <script>
+        /* The script for calculating the color contrast has been taken from
+        https://gomakethings.com/dynamically-changing-the-text-color-based-on-background-color-contrast-with-vanilla-js/ */
+        var accentColor = getComputedStyle(document.documentElement).getPropertyValue('--background-color');
+        accentColor = accentColor.trim().slice(1);
+        var r = parseInt(accentColor.substr(0, 2), 16);
+        var g = parseInt(accentColor.substr(2, 2), 16);
+        var b = parseInt(accentColor.substr(4, 2), 16);
+        var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        var textColor = (yiq >= 128) ? 'dark' : 'light';
+
+        document.documentElement.className = `has-${textColor}-text`;
+    </script>
+
+    <link rel="canonical" href="http://wsilveiranz.github.io/notetoselfblog/calling-api-management-from-azure-function-using-managed-identities/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Note to Self - Ghost Edition">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Calling API Management from Azure Function using Managed Identities">
+    <meta property="og:description" content="One of the solutions I am consulting on today is securing a number of APIs with OAuth with client credential flow, using Azure Active Directory as the identity provider. Those APIs are exposed via Azure API Management, which makes the validation of the access tokens provided as simple as injecting">
+    <meta property="og:url" content="http://wsilveiranz.github.io/notetoselfblog/calling-api-management-from-azure-function-using-managed-identities/">
+    <meta property="og:image" content="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/field-notes-wide-e1515541406829.jpg">
+    <meta property="article:published_time" content="2021-04-05T20:16:42.000Z">
+    <meta property="article:modified_time" content="2021-04-05T20:16:48.000Z">
+    <meta property="article:tag" content="api management">
+    <meta property="article:tag" content="Authentication/Authorization">
+    <meta property="article:tag" content="Azure AD">
+    <meta property="article:tag" content="azure functions">
+    <meta property="article:tag" content="logic apps">
+    <meta property="article:tag" content="managed identity">
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Calling API Management from Azure Function using Managed Identities">
+    <meta name="twitter:description" content="One of the solutions I am consulting on today is securing a number of APIs with OAuth with client credential flow, using Azure Active Directory as the identity provider. Those APIs are exposed via Azure API Management, which makes the validation of the access tokens provided as simple as injecting">
+    <meta name="twitter:url" content="http://wsilveiranz.github.io/notetoselfblog/calling-api-management-from-azure-function-using-managed-identities/">
+    <meta name="twitter:image" content="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/field-notes-wide-e1515541406829.jpg">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="wsilveiranz">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="api management, Authentication/Authorization, Azure AD, azure functions, logic apps, managed identity">
+    <meta name="twitter:site" content="@ghost">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="525">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Note to Self - Ghost Edition",
+        "url": "http://wsilveiranz.github.io/notetoselfblog/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "http://wsilveiranz.github.io/notetoselfblog/favicon.ico"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "wsilveiranz",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://secure.gravatar.com/avatar/8cf8f21650fd5355a5b2c08e0f9ca914?s=512&d=mm&r=g",
+            "width": 512,
+            "height": 512
+        },
+        "url": "http://wsilveiranz.github.io/notetoselfblog/author/wsilveiranz/",
+        "sameAs": []
+    },
+    "headline": "Calling API Management from Azure Function using Managed Identities",
+    "url": "http://wsilveiranz.github.io/notetoselfblog/calling-api-management-from-azure-function-using-managed-identities/",
+    "datePublished": "2021-04-05T20:16:42.000Z",
+    "dateModified": "2021-04-05T20:16:48.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/field-notes-wide-e1515541406829.jpg",
+        "width": 1200,
+        "height": 525
+    },
+    "keywords": "api management, Authentication/Authorization, Azure AD, azure functions, logic apps, managed identity",
+    "description": "\n\n\nOne of the solutions I am consulting on today is securing a number of APIs with OAuth with client credential flow, using Azure Active Directory as the identity provider. Those APIs are exposed via Azure API Management, which makes the validation of the access tokens provided as simple as injecting a policy at a product, API or operation level.\n\n\n\n\n\nWhile this all works nicely, there is one item in this process which is a painpoint from an operations point of view: as they use client certifica",
+    "mainEntityOfPage": "http://wsilveiranz.github.io/notetoselfblog/calling-api-management-from-azure-function-using-managed-identities/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.75">
+    <link rel="alternate" type="application/rss+xml" title="Note to Self - Ghost Edition" href="http://wsilveiranz.github.io/notetoselfblog/rss/">
+    <script defer src="https://cdn.jsdelivr.net/ghost/portal@~2.36/umd/portal.min.js" data-i18n="false" data-ghost="http://wsilveiranz.github.io/notetoselfblog/" data-key="4d946a7b27dfe0cf2428731cab" data-api="http://wsilveiranz.github.io/notetoselfblog/ghost/api/content/" crossorigin="anonymous"></script><style id="gh-members-styles">.gh-post-upgrade-cta-content,
+.gh-post-upgrade-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+    width: 100%;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.gh-post-upgrade-cta-content {
+    border-radius: 8px;
+    padding: 40px 4vw;
+}
+
+.gh-post-upgrade-cta h2 {
+    color: #ffffff;
+    font-size: 28px;
+    letter-spacing: -0.2px;
+    margin: 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta p {
+    margin: 20px 0 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta small {
+    font-size: 16px;
+    letter-spacing: -0.2px;
+}
+
+.gh-post-upgrade-cta a {
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a:hover {
+    color: #ffffff;
+    opacity: 0.8;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a.gh-btn {
+    display: block;
+    background: #ffffff;
+    text-decoration: none;
+    margin: 28px 0 0;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.gh-post-upgrade-cta a.gh-btn:hover {
+    opacity: 0.92;
+}</style>
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="4d946a7b27dfe0cf2428731cab" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="http://wsilveiranz.github.io/notetoselfblog/" crossorigin="anonymous"></script>
+    
+    <link href="http://wsilveiranz.github.io/notetoselfblog/webmentions/receive/" rel="webmention">
+    <script defer src="/public/member-attribution.min.js?v=c95e7abf59"></script><style>:root {--ghost-accent-color: #FF1A75;}</style>
+
+</head>
+<body class="post-template tag-api-management tag-authentication-authorization tag-azure-ad tag-azure-functions tag-logic-apps tag-managed-identity tag-hash-wordpress tag-hash-import-2023-12-17-09-11 has-sans-title has-sans-body">
+
+<div class="gh-viewport">
+    
+    <header id="gh-navigation" class="gh-navigation is-middle-logo gh-outer">
+    <div class="gh-navigation-inner gh-inner">
+
+        <div class="gh-navigation-brand">
+            <a class="gh-navigation-logo is-title" href="http://wsilveiranz.github.io/notetoselfblog">
+                    Note to Self - Ghost Edition
+            </a>
+            <button class="gh-search gh-icon-button" aria-label="Search this site" data-ghost-search>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>            <button class="gh-burger gh-icon-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path></svg>                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg>            </button>
+        </div>
+
+        <nav class="gh-navigation-menu">
+            <ul class="nav">
+    <li class="nav-home"><a href="http://wsilveiranz.github.io/notetoselfblog/">Home</a></li>
+    <li class="nav-about"><a href="http://wsilveiranz.github.io/notetoselfblog/about/">About</a></li>
+</ul>
+
+        </nav>
+
+        <div class="gh-navigation-actions">
+                <button class="gh-search gh-icon-button" aria-label="Search this site" data-ghost-search>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>                <div class="gh-navigation-members">
+                            <a href="#/portal/signin" data-portal="signin">Sign in</a>
+                                <a class="gh-button" href="#/portal/signup" data-portal="signup">Subscribe</a>
+                </div>
+        </div>
+
+    </div>
+</header>
+
+    
+
+<main class="gh-main">
+
+    <article class="gh-article post tag-api-management tag-authentication-authorization tag-azure-ad tag-azure-functions tag-logic-apps tag-managed-identity tag-hash-wordpress tag-hash-import-2023-12-17-09-11">
+
+        <header class="gh-article-header gh-canvas">
+
+                <a class="gh-article-tag" href="http://wsilveiranz.github.io/notetoselfblog/tag/api-management/">api management</a>
+            <h1 class="gh-article-title is-title">Calling API Management from Azure Function using Managed Identities</h1>
+
+            <div class="gh-article-meta">
+                <div class="gh-article-author-image">
+                            <a href="/author/wsilveiranz/">
+                                <img class="author-profile-image" src="https://secure.gravatar.com/avatar/8cf8f21650fd5355a5b2c08e0f9ca914?s&#x3D;512&amp;d&#x3D;mm&amp;r&#x3D;g" alt="wsilveiranz" />
+                            </a>
+                </div>
+                <div class="gh-article-meta-wrapper">
+                    <h4 class="gh-article-author-name"><a href="/author/wsilveiranz/">wsilveiranz</a></h4>
+                    <div class="gh-article-meta-content">
+                        <time class="gh-article-meta-date" datetime="2021-04-05">Apr 5, 2021</time>
+                            <span class="gh-article-meta-length"><span class="bull">—</span> 10 min read</span>
+                    </div>
+                </div>
+            </div>
+
+                <figure class="gh-article-image">
+        <img
+            srcset="notetoselfblog/content/images/size/w320/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 320w,
+                    /content/images/size/w600/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 600w,
+                    /content/images/size/w960/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 960w,
+                    /content/images/size/w1200/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 1200w,
+                    /content/images/size/w2000/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 2000w"
+            src="notetoselfblog/content/images/size/w1200/wordpress/2017/09/field-notes-wide-e1515541406829.jpg"
+            alt="Calling API Management from Azure Function using Managed Identities"
+        >
+    </figure>
+
+        </header>
+
+        <section class="gh-content gh-canvas is-body">
+            <!--kg-card-begin: html-->
+<p>One of the solutions I am consulting on today is securing a number of APIs with <a rel="noreferrer noopener" href="https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-client-creds-grant-flow?WT.mc_id=AZ-MVP-5002438&ref=localhost" target="_blank">OAuth with client credential flow</a>, using Azure Active Directory as the identity provider.  Those APIs are exposed via Azure API Management, which makes the validation of the access tokens provided as simple as injecting a policy at a product, API or operation level.</p>
+
+
+
+<p>While this all works nicely, there is one item in this process which is a painpoint from an operations point of view: as they use client certificates to request access tokens, the certificate management is becoming a bit of a chore with the number of APIs and clients that access those APIs increasing.</p>
+
+
+
+<p>A lot of those clients are either Azure Functions or Azure Logic Apps, which today provide the ability to using a <a rel="noreferrer noopener" href="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview?WT.mc_id=AZ-MVP-5002438&ref=localhost" target="_blank">managed identity</a> to easy the burden of maintaining credentials.</p>
+
+
+
+<p>So it was only logical to think about how would we be able to use the managed identities configured in both Azure Functions and Logic Apps to generate a token that can be validated by API Management. Turns out that this is quite possible, but needs a bit of preparation&#8230;</p>
+
+
+
+<!--more-->
+
+
+
+<h2>Pre-Requisites</h2>
+
+
+
+<p>I already had an Azure Function in place and needed to integrate using managed identities. So, in order to get this working I needed do to 3 things:</p>
+
+
+
+<ol><li>Register a new Azure AD Application, with at least one role.</li><li>Create a managed identity and associate it to your Azure Function. </li><li>Associate the managed identity with the Azure AD Application role.</li></ol>
+
+
+
+<p>Once this is setup, I could implement the code that would generate the JWT token and pass it to Azure API Management, which in turn could validate the token, securing the backend.</p>
+
+
+
+<h3>Register a new Azure AD Application</h3>
+
+
+
+<p>You can find the detailed instructions to Register a new Azure AD Application <a rel="noreferrer noopener" href="https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal?ref=localhost#register-an-application-with-azure-ad-and-create-a-service-principal?WT.mc_id=AZ-MVP-5002438" data-type="URL" data-id="https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#register-an-application-with-azure-ad-and-create-a-service-principal?WT.mc_id=AZ-MVP-5002438" target="_blank">here</a>. For your convenience here are the basic steps:</p>
+
+
+
+<p>From the Azure Portal, navigate to Active Directory. From there:</p>
+
+
+
+<figure class="wp-block-image size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-300x155.png" alt class="wp-image-3180" width="627" height="324" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-300x155.png 300w, http://localhost:2368/content/images/wordpress/2021/04/image-1024x528.png 1024w, http://localhost:2368/content/images/wordpress/2021/04/image-768x396.png 768w, http://localhost:2368/content/images/wordpress/2021/04/image-1200x619.png 1200w, http://localhost:2368/content/images/wordpress/2021/04/image.png 1486w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<ol><li>Click on Application Registrations</li><li>Click on New Registration</li></ol>
+
+
+
+<p>On the new Registration form:</p>
+
+
+
+<figure class="wp-block-image size-medium is-resized"><img loading="lazy" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-1-300x249.png" alt class="wp-image-3181" width="629" height="522" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-1-300x249.png 300w, http://localhost:2368/content/images/wordpress/2021/04/image-1-1024x850.png 1024w, http://localhost:2368/content/images/wordpress/2021/04/image-1-768x637.png 768w, http://localhost:2368/content/images/wordpress/2021/04/image-1.png 1121w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<ol><li>Provide a name</li><li>Select the types of supported accounts &#8211; if using this app registration exclusively to authenticate with managed identities, you can use the default option (Accounts in this organizational directory only)</li><li>Provide a Redirect URI &#8211; in this specific scenario, any URL is valid, since I believe this value is not used in the authentication with managed identity scenario.</li><li>After you complete the steps, the app registration is now ready to use.</li></ol>
+
+
+
+<p>There are a couple more steps to do to complete this process.</p>
+
+
+
+<h4>Expose the Registered App as an API</h4>
+
+
+
+<p>Find your newly created application registration and open it. From there:</p>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" width="643" height="181" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-2.png" alt class="wp-image-3182" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-2.png 643w, http://localhost:2368/content/images/wordpress/2021/04/image-2-300x84.png 300w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<ol><li>Click on expose an API</li><li>Define the Application ID URI &#8211; this is any valid URI that you will use later on to identity your application.</li></ol>
+
+
+
+<h4>Create a new role</h4>
+
+
+
+<p>Still from the App registration blade, follow the instructions below:</p>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" width="643" height="271" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-3.png" alt class="wp-image-3183" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-3.png 643w, http://localhost:2368/content/images/wordpress/2021/04/image-3-300x126.png 300w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<ol><li>Click on App Roles</li><li>Click on Create app role</li><li>Provide the display name &#8211; this is the string that will be showed in the App roles list)</li><li>Allowed member types &#8211; I am selected Applications, as I only wanted this role used by the managed identity, but you can select either applications or both.</li><li>Provide a Value &#8211; this is string that will be used later by the API Management to validate the token</li><li>Provide a description</li><li>Make sure you enable the role</li><li>Click on apply</li></ol>
+
+
+
+<p>This will create a new Role that you can use in a later step to associate to the managed identity.</p>
+
+
+
+<h3>Create a Managed Identity</h3>
+
+
+
+<p>There are two ways to ways to create a managed identity. You can either create a  managed identity and associate it to an Azure Function. You can either manually create a managed identity and associate it to the function, by associating an Azure Function to an <strong>User Assigned Managed Identity</strong> or let the system create one for you by associating an Azure Function to an <strong>System Assigned Managed Identity</strong>. In this post I will use a User Assigned Managed Identity, because this is what I needed on my example, and I didn&#8217;t find as many examples as this one (but I will try to make notes below on the difference).</p>
+
+
+
+<h3>Associating a Function with an User Assigned Managed Identity.</h3>
+
+
+
+<h4>Create a new Managed Identity</h4>
+
+
+
+<p>To create your own managed identity, navigage to Managed Identities within the Azure Portal and follow the steps below:</p>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" width="643" height="326" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-4.png" alt class="wp-image-3184" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-4.png 643w, http://localhost:2368/content/images/wordpress/2021/04/image-4-300x152.png 300w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<ol><li>Click on Add</li><li>Select the subscription where the User Assigned Managed Identity will be added</li><li>Select the Resource Group where it will be deployed</li><li>Select the Associated Region</li><li>Provide the name of the Managed Identity (you will need the name to associate it with the Azure Functions in the next step).</li><li>Click on Review and Create and once validations has passed, click on create.</li></ol>
+
+
+
+<h4>Connect User Assigned Identity to an Azure Function</h4>
+
+
+
+<p>Within the Azure Functions you want to connect, follow the steps below:</p>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" width="643" height="273" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-5.png" alt class="wp-image-3185" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-5.png 643w, http://localhost:2368/content/images/wordpress/2021/04/image-5-300x127.png 300w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></figure>
+
+
+
+<ol><li>On the side blade, select Identity</li><li>Within the Identity blade, select User assigned</li><li>Click on Add</li><li>Select the correct subscription</li><li>Search and select the user assigned managed identity (using the name you gave in the previous step)</li><li>Confirm that the identity was selected (it will move to Selected identities)</li><li>Click on Add</li></ol>
+
+
+
+<p>Once you finish this, the new identity will show on the list of User Assigned Identities.</p>
+
+
+
+<div class="wp-block-media-text alignwide is-stacked-on-mobile is-vertically-aligned-top" style="grid-template-columns:15% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt class="wp-image-1214 size-full" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p class="has-normal-font-size"><em>Things to notice:</em></p>
+
+
+
+<ul class="has-normal-font-size"><li><em>You can have more than one User Assigned Identity associated to a function. </em></li><li><em>You can follow the same process above to add an user assigned identity to a Logic Apps or Web Apps &#8211; It will probably follow the same steps for any resource that exposes the interface above.</em></li><li><em>Creating a System assigned identity is as simple as clicking on System Assigned on that screen, setting the status to <strong>On</strong> and clicking on save. In this case, the name of the System Assigned Identity will be the same as the name of the resource you created (e.g. if your Azure Function is called MyFunction, the System Assigned Identity will be called MyFunction.</em></li></ul>
+</div></div>
+
+
+
+<h2>Associating the Managed Identity to the Application Role</h2>
+
+
+
+<p>To be able to request a token for the application setup on the first step, the managed identity create on step 2 needs to be given permission to access that application and have a role assigned. This is not something that can be done in the portal today. The script below can be used to assign a managed identity to a role:</p>
+
+
+
+<pre class="wp-block-code"><code lang="powershell" class="language-powershell line-numbers"> # Install the Azure AD module if you don't have it yer. (You need admin on the machine.)
+ # Install-Module AzureAD
+ &nbsp;
+ <strong>$tenantID</strong> <strong>=</strong> '&lt;tenantID guid&gt;'
+ <strong>$serverApplicationName</strong> <strong>=</strong> '&lt;Application Registration Name&gt;'
+ <strong>$managedIdentityName</strong> <strong>=</strong> '&lt;managed identity name - for system assigned is the name of your resource&gt;'
+ <strong>$appRoleName</strong> <strong>=</strong> '&lt;role name&gt;'
+ &nbsp;
+ Connect-AzureAD <strong>-</strong>TenantId <strong>$tenantID</strong>
+ &nbsp;
+ # Look up the web app's managed identity's object ID.
+ <strong>$managedIdentity</strong> <strong>=</strong> <strong>(</strong>Get-AzureADServicePrincipal <strong>-Filter</strong> "DisplayName eq '$managedIdentityName'"<strong>)</strong>
+ <strong>$managedIdentityObjectId</strong> <strong>=</strong> <strong>$managedIdentity.</strong>ObjectId
+ &nbsp;
+ # Look up the details about the server app's service principal and app role.
+ <strong>$serverServicePrincipal</strong> <strong>=</strong> <strong>(</strong>Get-AzureADServicePrincipal <strong>-Filter</strong> "DisplayName eq '$serverApplicationName'"<strong>)</strong>
+ <strong>$serverServicePrincipalObjectId</strong> <strong>=</strong> <strong>$serverServicePrincipal.</strong>ObjectId
+ <strong>$appRoleId</strong> <strong>=</strong> <strong>($serverServicePrincipal.</strong>AppRoles <strong>|</strong> Where-Object <strong>{$_.</strong>Value <strong>-</strong>eq <strong>$appRoleName</strong> <strong>}).</strong>Id
+ &nbsp;
+ # Assign the managed identity access to the app role.
+ New-AzureADServiceAppRoleAssignment <strong>-</strong>ObjectId <strong>$managedIdentityObjectId</strong>&nbsp; <strong>-</strong>Id <strong>$appRoleId</strong> <strong>-</strong>PrincipalId <strong>$managedIdentityObjectId</strong> <strong>-</strong>ResourceId <strong>$serverServicePrincipalObjectId</strong> </code></pre>
+
+
+
+<p>The code above was adjusted from an original post on Microsoft Docs. For more information you can find it <a rel="noreferrer noopener" href="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-assign-app-role-managed-identity-powershell?WT.mc_id=AZ-MVP-5002438&ref=localhost" data-type="URL" data-id="https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/how-to-assign-app-role-managed-identity-powershell?WT.mc_id=AZ-MVP-5002438" target="_blank">here</a>.</p>
+
+
+
+<h2>Using the Managed Identity inside an Azure Function</h2>
+
+
+
+<p>Once all of this are setup, I could finally get the Azure Function to request an JWT token to the application in my tenant&#8217;s Azure Active Directory.</p>
+
+
+
+<p>To do that, I took advantage of the <a rel="noreferrer noopener" href="https://docs.microsoft.com/en-us/dotnet/api/overview/azure/service-to-service-authentication?ref=localhost#connection-string-support?WT.mc_id=AZ-MVP-5002438" data-type="URL" data-id="https://docs.microsoft.com/en-us/dotnet/api/overview/azure/service-to-service-authentication#connection-string-support?WT.mc_id=AZ-MVP-5002438" target="_blank">App Authentication client library for .NET</a> &#8211; that library allows you to get access tokens from a specific resource within Azure Active Directory, allowing you to define which identity you require to request that token.</p>
+
+
+
+<p>The code is pretty simple, and looks like this:</p>
+
+
+
+<pre class="wp-block-code"><code lang="csharp" class="language-csharp"> 
+ /*
+  The following entries should be added to your Application Settings:
+  TargetApp        - API URI of the application registration created
+                     in step 1
+  TargetTenantID   - The Tenant where the application registration and
+                     managed identities where created was created
+  FunctionIdentity - The connection string used to select the type
+                     of managed identity
+ */
+ var&nbsp;target&nbsp;=&nbsp;Environment.GetEnvironmentVariable("TargetApp");
+ var&nbsp;tenantID&nbsp;=&nbsp;Environment.GetEnvironmentVariable("TargetTentantID");
+ var&nbsp;identity&nbsp;=&nbsp;Environment.GetEnvironmentVariable("FunctionIdentity");
+ &nbsp;
+ var&nbsp;azureServiceTokenProvider&nbsp;=&nbsp;new&nbsp;AzureServiceTokenProvider(identity);
+ string&nbsp;accessToken&nbsp;=&nbsp;await&nbsp;azureServiceTokenProvider.GetAccessTokenAsync(target,tenantID); </code></pre>
+
+
+
+<p>Most of the items above are quite self explanatory. The FunctionIdentity environment variable, though, needs a bit of more information. The AzureServiceTokenProvider class can receive a connection-string-like parameter, which defines the type of identity you are using to connect. There are many permutations of those connections strings. For the purpose of this example, the one that must be used when running in Azure is:</p>
+
+
+
+<pre class="wp-block-code"><code lang="properties" class="language-properties"> RunAs=App;AppId={ClientId of user-assigned identity}</code></pre>
+
+
+
+<p>ClientID in this case is the client ID of the user assigned identity associated with the function.</p>
+
+
+
+<p>Other useful connection strings can be found in the table below:</p>
+
+
+
+<figure class="wp-block-table"><table class="has-subtle-pale-blue-background-color has-background"><thead><tr><th>Connection String</th><th>Description</th></tr></thead><tbody><tr><td>RunAs=Developer; DeveloperTool=AzureCli</td><td>Used for local development. Azure CLI (object ID 04b07795-8ddb-461a-bbee-02f9e1bf7b46 should be add as a client to the App Registration in order for development to work. See more details <a href="https://www.schaeflein.net/use-a-cli-to-get-an-access-token-for-your-aad-protected-web-api?WT.mc_id=AZ-MVP-5002438&ref=localhost" data-type="URL" data-id="https://www.schaeflein.net/use-a-cli-to-get-an-access-token-for-your-aad-protected-web-api?WT.mc_id=AZ-MVP-5002438" target="_blank" rel="noreferrer noopener">here</a>.</td></tr><tr><td>RunAs=App</td><td>Used for running in the cloud with System-Assigned Identity</td></tr></tbody></table></figure>
+
+
+
+<p>With access to the JWT token, it is just a matter now of making an HTTP request to API Management passing the token. In my case, the code looked like:</p>
+
+
+
+<pre class="wp-block-code"><code lang="csharp" class="language-csharp"> /*
+ The following entries should be added to your Application Settings:
+ ApimKey - the API Key associated to the API being called
+ ApimUrl - the Url of the endpoint being called
+ */
+ var apiKey = Environment.GetEnvironmentVariable("ApimKey");
+ var apiUrl = Environment.GetEnvironmentVariable("ApimUrl");
+
+ var wc = new System.Net.Http.HttpClient();
+ wc.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+ wc.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", apiKey);
+ // In this case the call is a GET, so using GetAsync.
+ var result = await wc.GetAsync(apiUrl);</code></pre>
+
+
+
+<div class="wp-block-media-text alignwide is-stacked-on-mobile is-vertically-aligned-top" style="grid-template-columns:15% auto"><figure class="wp-block-media-text__media"><img loading="lazy" width="240" height="240" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png" alt class="wp-image-1214 size-full" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/notetoself_logo-3.png 240w, http://localhost:2368/content/images/wordpress/2017/09/notetoself_logo-3-150x150.png 150w" sizes="(max-width: 240px) 85vw, 240px"></figure><div class="wp-block-media-text__content">
+<p class="has-normal-font-size"><em>In order to apply the same technique to Logic Apps, and invoke APIM using a managed identity, once you setup all the pre-requisites you just need to configure the Authentication of an HTTP action</em>, <em>selecting Managed Identities (1), the identity you want to use (2) and providing the API URI of the app registration you defined on the first step (3):</em></p>
+
+
+
+<figure class="wp-block-image size-large"><img loading="lazy" width="555" height="433" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-6.png" alt class="wp-image-3195" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2021/04/image-6.png 555w, http://localhost:2368/content/images/wordpress/2021/04/image-6-300x234.png 300w" sizes="(max-width: 555px) 85vw, 555px"></figure>
+</div></div>
+
+
+
+<h2>Finally, securing APIM</h2>
+
+
+
+<p>The last step of the puzzle was to make sure that APIM when receiving the call from Azure Functions would be able to validate the JWT token. That was something I did a couple of times before, and I was collecting pieces of the puzzle while creating the various App Registrations and roles.</p>
+
+
+
+<p>To secure an API in APIM, I simply included the following validate-JWT policy in the Inbound rule of my API:</p>
+
+
+
+<pre class="wp-block-code"><code lang="xml" class="language-xml">&lt;!--
+replace the following values with the values in your solution:
+tenantID - the guid representing your Azure Active Directory Tenant ID
+clientId - client ID of the Application registered on Step 1
+roleID   - the value of the role defined on Step 1
+--&gt;
+&lt;validate-jwt header-name="Authorization" failed-validation-httpcode="401" failed-validation-error-message="Unauthorized. Access token is missing or invalid." require-scheme="Bearer"&gt;
+ &nbsp;&nbsp;&nbsp; &lt;openid-config url="https://login.microsoftonline.com/{{tenantID}}/v2.0/.well-known/openid-configuration" /&gt;
+ &nbsp;&nbsp;&nbsp; &lt;audiences&gt;
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;audience&gt;{{clientID}}&lt;/audience&gt;
+ &nbsp;&nbsp;&nbsp; &lt;/audiences&gt;
+ &nbsp;&nbsp;&nbsp; &lt;issuers&gt;
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;issuer&gt;https://sts.windows.net/{{tenantID}}/&lt;/issuer&gt;
+ &nbsp;&nbsp;&nbsp; &lt;/issuers&gt;
+ &nbsp;&nbsp;&nbsp; &lt;required-claims&gt;
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;claim name="roles" match="any"&gt;
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;value&gt;{{roleId}}&lt;/value&gt;
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/claim&gt;
+ &nbsp;&nbsp;&nbsp; &lt;/required-claims&gt;
+&lt;/validate-jwt&gt; </code></pre>
+
+
+
+<h2>But why all this trouble?</h2>
+
+
+
+<p>Although this looks like a lot of work, there is a big reason to go through all of this trouble &#8211; once you have this in place, you will have a passwordless solution for all your API internal calls. The project I was working on had a lot of integration between systems, and in order to get all of this secured, using the classic client credentials flow, we would have to manage lots of certificates or shared secrets. That means that we had to make sure that:</p>
+
+
+
+<ul><li>We stored all the secrets in a secure manner</li><li>We have a good handle on rotating those secrets on a regular basis to avoid applications breaking due to secrets expiring.</li></ul>
+
+
+
+<p>Using this technique we would let Azure manage the secrets for us, removing a big burden from the operational maintenance of the app.</p>
+
+
+
+<h3> Food for thought: user assigned x system assigned managed identities</h3>
+
+
+
+<p>I initially implemented this using system assigned, as the process to create system assigned identities is so simple and now the identity inherits the name of the resource being created, which makes it much easier to identify.</p>
+
+
+
+<p>But think about it a bit more, I think user assigned identity in this case is a better option for the following reasons:</p>
+
+
+
+<ul><li>If you have multiple Function Apps that are logically the same application, you can give a single identity for all those apps.</li><li>On the other hand if in the same Function App you have different Functions that needs different roles, you can have multiple user assigned identities connected to the same function &#8211; you can for example have a reader Identity and a writer Identity and make sure that you use the right identity at the right time, instead of have one identity that does all.</li><li>If your application is deployed in multiple regions for redundancy, you don&#8217;t need to have each region creating its own identity. You can have a single identity that represents the actual application and centralize the permissions on that identity.</li></ul>
+
+
+
+<p>I couldn&#8217;t find any real guidance on the use of user x system managed identity on Microsoft Docs, but I will update this post if I find any. In the meantime, I am leaning towards user assigned identity because of the flexibility it seems to provide.</p>
+
+
+
+<p></p>
+<!--kg-card-end: html-->
+        </section>
+
+    </article>
+
+
+</main>
+
+
+        <section class="gh-container is-grid gh-outer">
+            <div class="gh-container-inner gh-inner">
+                <h2 class="gh-container-title">Read more</h2>
+                <div class="gh-feed">
+                        <article class="gh-card post">
+    <a class="gh-card-link" href="/and-all-of-a-sudden-its-2022/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="notetoselfblog/content/images/size/w160/format/webp/wordpress/2022/01/soar.png 160w,
+                            /content/images/size/w320/format/webp/wordpress/2022/01/soar.png 320w,
+                            /content/images/size/w600/format/webp/wordpress/2022/01/soar.png 600w,
+                            /content/images/size/w960/format/webp/wordpress/2022/01/soar.png 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2022/01/soar.png 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2022/01/soar.png 2000w"
+                    sizes="320px"
+                    src="notetoselfblog/content/images/size/w600/wordpress/2022/01/soar.png"
+                    alt="And all of a sudden, its 2022!"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">And all of a sudden, its 2022!</h3>
+                <p class="gh-card-excerpt is-body">And with that, another year goes by. Another year where communities had to revamp themselves and learn how to thrive in a online world. Here in NZ, after what started to look like we were pretty much bat to normal life, the reality of living during a pandemic stroked back,</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2022-01-09">Jan 9, 2022</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                        <article class="gh-card post">
+    <a class="gh-card-link" href="/countdown-to-global-integration-bootcamp-2021/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="notetoselfblog/content/images/size/w160/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 160w,
+                            /content/images/size/w320/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 320w,
+                            /content/images/size/w600/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 600w,
+                            /content/images/size/w960/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 2000w"
+                    sizes="320px"
+                    src="notetoselfblog/content/images/size/w600/wordpress/2021/02/GIB-2021-background.jpeg"
+                    alt="Countdown to Global Integration Bootcamp 2021"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">Countdown to Global Integration Bootcamp 2021</h3>
+                <p class="gh-card-excerpt is-body">Last January, I wrote about this year edition of Global Integration Bootcamp. As you might remember, this year we locked it on 26-27 February (UTC Time) running two different event streams starting at times that can be suitable for the three main time zone areas- APAC, EMEA and Americas.
+
+
+
+
+
+
+Lineup</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2021-02-19">Feb 19, 2021</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                        <article class="gh-card post">
+    <a class="gh-card-link" href="/global-integration-bootcamp-2021-goes-virtual/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="notetoselfblog/content/images/size/w160/format/webp/wordpress/2020/01/friends_banner.jpg 160w,
+                            /content/images/size/w320/format/webp/wordpress/2020/01/friends_banner.jpg 320w,
+                            /content/images/size/w600/format/webp/wordpress/2020/01/friends_banner.jpg 600w,
+                            /content/images/size/w960/format/webp/wordpress/2020/01/friends_banner.jpg 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2020/01/friends_banner.jpg 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2020/01/friends_banner.jpg 2000w"
+                    sizes="320px"
+                    src="notetoselfblog/content/images/size/w600/wordpress/2020/01/friends_banner.jpg"
+                    alt="Global Integration Bootcamp 2021 goes Virtual!!!"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">Global Integration Bootcamp 2021 goes Virtual!!!</h3>
+                <p class="gh-card-excerpt is-body">Hey there! Happy New Year!!!
+
+
+
+
+
+Many of you were asking about if we would be doing another Global Integration Bootcamp this year. I know that there is been a while since we provided any news about it, but the team was trying to come up with a formula that would</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2021-01-12">Jan 12, 2021</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                        <article class="gh-card post">
+    <a class="gh-card-link" href="/azure-functions-with-a-static-outbound-ip-address/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="notetoselfblog/content/images/size/w160/format/webp/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg 160w,
+                            /content/images/size/w320/format/webp/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg 320w,
+                            /content/images/size/w600/format/webp/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg 600w,
+                            /content/images/size/w960/format/webp/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg 2000w"
+                    sizes="320px"
+                    src="notetoselfblog/content/images/size/w600/wordpress/2017/08/pexels-photo-355988-e1523124973460.jpeg"
+                    alt="Azure Functions with a Static Outbound IP Address"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">Azure Functions with a Static Outbound IP Address</h3>
+                <p class="gh-card-excerpt is-body">“So to complete our configuration we just need your outbound static IP…” This is something that pops up again and again, specially if you work integrating legacy systems, like banks, government agencies or other older systems that requires a static IP Address to add to firewall inbound rules.
+
+
+
+
+
+In the</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2020-11-21">Nov 21, 2020</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                </div>
+            </div>
+        </section>
+
+    
+    <footer class="gh-footer gh-outer">
+    <div class="gh-footer-inner gh-inner">
+
+        <div class="gh-footer-bar">
+            <span class="gh-footer-logo is-title">
+                    Note to Self - Ghost Edition
+            </span>
+            <nav class="gh-footer-menu">
+                <ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>
+            <div class="gh-footer-copyright">
+                Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+        
+                <section class="gh-footer-signup">
+                    <h2 class="gh-footer-signup-header is-title">
+                        Note to Self - Ghost Edition
+                    </h2>
+                    <p class="gh-footer-signup-subhead is-body">
+                        Thoughts, stories and ideas.
+                    </p>
+                    <form class="gh-form" data-members-form>
+    <input class="gh-form-input" type="email" placeholder="jamie@example.com" required data-members-email>
+    <button class="gh-button" type="submit">
+        <span><span>Subscribe</span> <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 256 256"><path d="M224.49,136.49l-72,72a12,12,0,0,1-17-17L187,140H40a12,12,0,0,1,0-24H187L135.51,64.48a12,12,0,0,1,17-17l72,72A12,12,0,0,1,224.49,136.49Z"></path></svg></span>
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24">
+    <g stroke-linecap="round" stroke-width="2" fill="currentColor" stroke="none" stroke-linejoin="round" class="nc-icon-wrapper">
+        <g class="nc-loop-dots-4-24-icon-o">
+            <circle cx="4" cy="12" r="3"></circle>
+            <circle cx="12" cy="12" r="3"></circle>
+            <circle cx="20" cy="12" r="3"></circle>
+        </g>
+        <style data-cap="butt">
+            .nc-loop-dots-4-24-icon-o{--animation-duration:0.8s}
+            .nc-loop-dots-4-24-icon-o *{opacity:.4;transform:scale(.75);animation:nc-loop-dots-4-anim var(--animation-duration) infinite}
+            .nc-loop-dots-4-24-icon-o :nth-child(1){transform-origin:4px 12px;animation-delay:-.3s;animation-delay:calc(var(--animation-duration)/-2.666)}
+            .nc-loop-dots-4-24-icon-o :nth-child(2){transform-origin:12px 12px;animation-delay:-.15s;animation-delay:calc(var(--animation-duration)/-5.333)}
+            .nc-loop-dots-4-24-icon-o :nth-child(3){transform-origin:20px 12px}
+            @keyframes nc-loop-dots-4-anim{0%,100%{opacity:.4;transform:scale(.75)}50%{opacity:1;transform:scale(1)}}
+        </style>
+    </g>
+</svg>        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+    <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+    <style>
+        .checkmark {
+            width: 40px;
+            height: 40px;
+            display: block;
+            stroke-width: 2.5;
+            stroke: currentColor;
+            stroke-miterlimit: 10;
+        }
+
+        .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke .3s cubic-bezier(0.650, 0.000, 0.450, 1.000) forwards;
+        }
+
+        @keyframes stroke {
+            100% { stroke-dashoffset: 0; }
+        }
+    </style>
+</svg>    </button>
+</form>                </section>
+
+    </div>
+</footer>    
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="notetoselfblog/assets/built/source.js?v=c95e7abf59"></script>
+
+
+
+</body>
+</html>

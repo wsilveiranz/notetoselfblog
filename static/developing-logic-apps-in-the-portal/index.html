@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Developing Logic Apps in the Portal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preload" as="style" href="notetoselfblog/assets/built/screen.css?v=c95e7abf59">
+    <link rel="preload" as="script" href="notetoselfblog/assets/built/source.js?v=c95e7abf59">
+
+    <link rel="stylesheet" type="text/css" href="notetoselfblog/assets/built/screen.css?v=c95e7abf59">
+
+    <style>
+        :root {
+            --background-color: #ffffff
+        }
+    </style>
+
+    <script>
+        /* The script for calculating the color contrast has been taken from
+        https://gomakethings.com/dynamically-changing-the-text-color-based-on-background-color-contrast-with-vanilla-js/ */
+        var accentColor = getComputedStyle(document.documentElement).getPropertyValue('--background-color');
+        accentColor = accentColor.trim().slice(1);
+        var r = parseInt(accentColor.substr(0, 2), 16);
+        var g = parseInt(accentColor.substr(2, 2), 16);
+        var b = parseInt(accentColor.substr(4, 2), 16);
+        var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        var textColor = (yiq >= 128) ? 'dark' : 'light';
+
+        document.documentElement.className = `has-${textColor}-text`;
+    </script>
+
+    <link rel="canonical" href="http://wsilveiranz.github.io/notetoselfblog/developing-logic-apps-in-the-portal/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Note to Self - Ghost Edition">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Developing Logic Apps in the Portal">
+    <meta property="og:description" content="When it comes to developing Logic Apps, everyone has a preference. Some people like to develop in the portal, while others like to start development directly from Visual Studio. I am in the first group mainly because a lot of my logic apps involves integration with the Dynamics 365 CRM">
+    <meta property="og:url" content="http://wsilveiranz.github.io/notetoselfblog/developing-logic-apps-in-the-portal/">
+    <meta property="og:image" content="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/handson_blog.jpg">
+    <meta property="article:published_time" content="2017-09-29T22:54:00.000Z">
+    <meta property="article:modified_time" content="2017-09-29T22:57:14.000Z">
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Developing Logic Apps in the Portal">
+    <meta name="twitter:description" content="When it comes to developing Logic Apps, everyone has a preference. Some people like to develop in the portal, while others like to start development directly from Visual Studio. I am in the first group mainly because a lot of my logic apps involves integration with the Dynamics 365 CRM">
+    <meta name="twitter:url" content="http://wsilveiranz.github.io/notetoselfblog/developing-logic-apps-in-the-portal/">
+    <meta name="twitter:image" content="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/handson_blog.jpg">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="wsilveiranz">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="">
+    <meta name="twitter:site" content="@ghost">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="455">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Note to Self - Ghost Edition",
+        "url": "http://wsilveiranz.github.io/notetoselfblog/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "http://wsilveiranz.github.io/notetoselfblog/favicon.ico"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "wsilveiranz",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://secure.gravatar.com/avatar/8cf8f21650fd5355a5b2c08e0f9ca914?s=512&d=mm&r=g",
+            "width": 512,
+            "height": 512
+        },
+        "url": "http://wsilveiranz.github.io/notetoselfblog/author/wsilveiranz/",
+        "sameAs": []
+    },
+    "headline": "Developing Logic Apps in the Portal",
+    "url": "http://wsilveiranz.github.io/notetoselfblog/developing-logic-apps-in-the-portal/",
+    "datePublished": "2017-09-29T22:54:00.000Z",
+    "dateModified": "2017-09-29T22:57:14.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/handson_blog.jpg",
+        "width": 1200,
+        "height": 455
+    },
+    "description": "When it comes to developing Logic Apps, everyone has a preference. Some people like to develop in the portal, while others like to start development directly from Visual Studio. I am in the first group mainly because a lot of my logic apps involves integration with the Dynamics 365 CRM connector, which doesn’t play well with the Logic Apps editor after I apply the required parameterization (which reminds me that I have to blog about that – will write something about it soon). I also like the sim",
+    "mainEntityOfPage": "http://wsilveiranz.github.io/notetoselfblog/developing-logic-apps-in-the-portal/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.75">
+    <link rel="alternate" type="application/rss+xml" title="Note to Self - Ghost Edition" href="http://wsilveiranz.github.io/notetoselfblog/rss/">
+    <script defer src="https://cdn.jsdelivr.net/ghost/portal@~2.36/umd/portal.min.js" data-i18n="false" data-ghost="http://wsilveiranz.github.io/notetoselfblog/" data-key="4d946a7b27dfe0cf2428731cab" data-api="http://wsilveiranz.github.io/notetoselfblog/ghost/api/content/" crossorigin="anonymous"></script><style id="gh-members-styles">.gh-post-upgrade-cta-content,
+.gh-post-upgrade-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+    width: 100%;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.gh-post-upgrade-cta-content {
+    border-radius: 8px;
+    padding: 40px 4vw;
+}
+
+.gh-post-upgrade-cta h2 {
+    color: #ffffff;
+    font-size: 28px;
+    letter-spacing: -0.2px;
+    margin: 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta p {
+    margin: 20px 0 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta small {
+    font-size: 16px;
+    letter-spacing: -0.2px;
+}
+
+.gh-post-upgrade-cta a {
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a:hover {
+    color: #ffffff;
+    opacity: 0.8;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a.gh-btn {
+    display: block;
+    background: #ffffff;
+    text-decoration: none;
+    margin: 28px 0 0;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.gh-post-upgrade-cta a.gh-btn:hover {
+    opacity: 0.92;
+}</style>
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="4d946a7b27dfe0cf2428731cab" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="http://wsilveiranz.github.io/notetoselfblog/" crossorigin="anonymous"></script>
+    
+    <link href="http://wsilveiranz.github.io/notetoselfblog/webmentions/receive/" rel="webmention">
+    <script defer src="/public/member-attribution.min.js?v=c95e7abf59"></script><style>:root {--ghost-accent-color: #FF1A75;}</style>
+
+</head>
+<body class="post-template tag-hash-wordpress tag-hash-import-2023-12-17-09-11 has-sans-title has-sans-body">
+
+<div class="gh-viewport">
+    
+    <header id="gh-navigation" class="gh-navigation is-middle-logo gh-outer">
+    <div class="gh-navigation-inner gh-inner">
+
+        <div class="gh-navigation-brand">
+            <a class="gh-navigation-logo is-title" href="http://wsilveiranz.github.io/notetoselfblog">
+                    Note to Self - Ghost Edition
+            </a>
+            <button class="gh-search gh-icon-button" aria-label="Search this site" data-ghost-search>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>            <button class="gh-burger gh-icon-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path></svg>                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg>            </button>
+        </div>
+
+        <nav class="gh-navigation-menu">
+            <ul class="nav">
+    <li class="nav-home"><a href="http://wsilveiranz.github.io/notetoselfblog/">Home</a></li>
+    <li class="nav-about"><a href="http://wsilveiranz.github.io/notetoselfblog/about/">About</a></li>
+</ul>
+
+        </nav>
+
+        <div class="gh-navigation-actions">
+                <button class="gh-search gh-icon-button" aria-label="Search this site" data-ghost-search>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>                <div class="gh-navigation-members">
+                            <a href="#/portal/signin" data-portal="signin">Sign in</a>
+                                <a class="gh-button" href="#/portal/signup" data-portal="signup">Subscribe</a>
+                </div>
+        </div>
+
+    </div>
+</header>
+
+    
+
+<main class="gh-main">
+
+    <article class="gh-article post tag-hash-wordpress tag-hash-import-2023-12-17-09-11">
+
+        <header class="gh-article-header gh-canvas">
+
+            <h1 class="gh-article-title is-title">Developing Logic Apps in the Portal</h1>
+
+            <div class="gh-article-meta">
+                <div class="gh-article-author-image">
+                            <a href="/author/wsilveiranz/">
+                                <img class="author-profile-image" src="https://secure.gravatar.com/avatar/8cf8f21650fd5355a5b2c08e0f9ca914?s&#x3D;512&amp;d&#x3D;mm&amp;r&#x3D;g" alt="wsilveiranz" />
+                            </a>
+                </div>
+                <div class="gh-article-meta-wrapper">
+                    <h4 class="gh-article-author-name"><a href="/author/wsilveiranz/">wsilveiranz</a></h4>
+                    <div class="gh-article-meta-content">
+                        <time class="gh-article-meta-date" datetime="2017-09-29">Sep 29, 2017</time>
+                            <span class="gh-article-meta-length"><span class="bull">—</span> 4 min read</span>
+                    </div>
+                </div>
+            </div>
+
+                <figure class="gh-article-image">
+        <img
+            srcset="notetoselfblog/content/images/size/w320/wordpress/2017/09/handson_blog.jpg 320w,
+                    /content/images/size/w600/wordpress/2017/09/handson_blog.jpg 600w,
+                    /content/images/size/w960/wordpress/2017/09/handson_blog.jpg 960w,
+                    /content/images/size/w1200/wordpress/2017/09/handson_blog.jpg 1200w,
+                    /content/images/size/w2000/wordpress/2017/09/handson_blog.jpg 2000w"
+            src="notetoselfblog/content/images/size/w1200/wordpress/2017/09/handson_blog.jpg"
+            alt="Developing Logic Apps in the Portal"
+        >
+    </figure>
+
+        </header>
+
+        <section class="gh-content gh-canvas is-body">
+            <!--kg-card-begin: html--><p>When it comes to developing Logic Apps, everyone has a preference. Some people like to develop in the portal, while others like to start development directly from Visual Studio. I am in the first group mainly because a lot of my logic apps involves integration with the Dynamics 365 CRM connector, which doesn&#8217;t play well with the Logic Apps editor after I apply the required parameterization (which reminds me that I have to blog about that &#8211; will write something about it soon). I also like the simplicity of just opening the browser and be able to develop, debug all in one go.</p>
+<p><!--more-->The Logic Apps product team has put a lot of effort in making this experience simple, always improving the editor. So I decided to share a couple of the tricks (or hacks, if you choose) I use when developing/testing Logic Apps.</p>
+<h2>Using clone as a check-out / commit tool</h2>
+<p>The <em>Clone logic app </em>is quite a nice feature. It allow you to copy the whole definition of a logic app to either a new or existing logic app.</p>
+<p>I use this feature as a way to &#8220;check out&#8221; existing logic apps to either fix bugs, implement requirement changes or refactor it.</p>
+<p>Cloning is quite a simple process. On an existing logic app, you just need to click the Clone button</p>
+<p><img loading="lazy" class="alignnone wp-image-1314" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/clone_01-300x16.png" alt="Logic Apps toolbar" width="600" height="32" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/clone_01-300x16.png 300w, http://localhost:2368/content/images/wordpress/2017/09/clone_01-768x40.png 768w, http://localhost:2368/content/images/wordpress/2017/09/clone_01-1024x54.png 1024w, http://localhost:2368/content/images/wordpress/2017/09/clone_01.png 1158w" sizes="(max-width: 709px) 85vw, (max-width: 909px) 67vw, (max-width: 984px) 61vw, (max-width: 1362px) 45vw, 600px"></p>
+<p>Then you just need to provide a couple of details:</p>
+<p><img loading="lazy" class="wp-image-1334 aligncenter" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/clone_02-151x300.png" alt="Clone Logic App" width="295" height="586">From those, two are quite important.</p>
+<ul>
+<li>Name &#8211; the name of the cloned logic app will decide if a brand new workflow will be created, or if the logic app will overwrite an existing logic app &#8211; this is important for the whole check-out/commit idea. If you are overwriting a logic app, a warning will appear, so you don&#8217;t overwrite anything by mistake.</li>
+<li>Logic App Status &#8211; this decides if the status the logic app being deployed (either a new one or an existing) will be enabled or disabled. This is important, because for some types of triggers, having the cloned logic app enable means that you will either have competing consumers or duplicated subscriptions (more about that in a minute).</li>
+</ul>
+<h3>&#8220;Checking out&#8221; Logic Apps</h3>
+<p>I use this functionality to create a developement copy of a logic app. When I need to make changes in a workflow in my environment, I:</p>
+<ol>
+<li>Clone it to a DEV-&lt;LogicAppName&gt; in the same resource group.</li>
+<li>Work on the code of the DEV version</li>
+<li>Once I am happy that the code is ready to be promoted back to the main logic app, I clone the DEV-&lt;LogicAppName&gt; back to the &lt;LogicAppName&gt; workflow.</li>
+</ol>
+<p>What that gives me?</p>
+<ol>
+<li>The ability to continue using the existing Logic App while I am amending the code, changing the logic, etc.</li>
+<li>Ability to test against both under development and existing logic apps by enabling/disabling one of the versions.</li>
+<li>A cleaner version history on the main LogicApp, as it only keep release candidate versions in the history.</li>
+</ol>
+<p>There is one main gotcha on this approach, specially for Logic Apps that uses polling based triggers. <strong>You must remember to disable one of the copies</strong> &#8211; ideally the &#8220;checked out&#8221; version. I had cases where things mysteriously disappeared from queues or were executed twice, until I realized that I had two logic apps consuming the same resources.</p>
+<h2>Versioning as a Rollback mechanism</h2>
+<p>I&#8217;ve mentioned that one of the advantages on using the clone for &#8220;checkout/commit&#8221; is that I keep the main logic app version cleaner. This guarantee that rolling back is as easy as point to one of the previous versions, so in this case, the less the better.</p>
+<p>I also use versioning a lot to play &#8220;what if&#8221; scenarios. For example, when answering forum questions, I like to prototype my answer as a logic app. Then test various potential solutions. Having the ability to test a solution then roll back to the previous stable one if things go pear-shaped is quite useful.</p>
+<p>Versioning is also quite simple to use. You will find your versions in the Logic App blade.</p>
+<p><img loading="lazy" class="size-medium wp-image-1364 aligncenter" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/version_01-253x300.png" alt width="253" height="300" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/version_01-253x300.png 253w, http://localhost:2368/content/images/wordpress/2017/09/version_01.png 364w" sizes="(max-width: 253px) 85vw, 253px">Within the versions blade, you can see a list of versions with the dates it was saved. Each time you save a logic app, you create a new version.</p>
+<p><img loading="lazy" class="wp-image-1374 aligncenter" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/version_02-300x140.png" alt width="371" height="173" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/version_02-300x140.png 300w, http://localhost:2368/content/images/wordpress/2017/09/version_02-768x359.png 768w, http://localhost:2368/content/images/wordpress/2017/09/version_02-1024x479.png 1024w, http://localhost:2368/content/images/wordpress/2017/09/version_02.png 1059w" sizes="(max-width: 371px) 85vw, 371px"></p>
+<p>Clicking in one of the versions and you will see the workflow definition. You can see the designer or the code view, and you can also make any version the published (latest) version by clicking the promote button.</p>
+<p><img loading="lazy" class="wp-image-1384 aligncenter" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/version_03-300x103.png" alt width="393" height="135" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/version_03-300x103.png 300w, http://localhost:2368/content/images/wordpress/2017/09/version_03-768x264.png 768w, http://localhost:2368/content/images/wordpress/2017/09/version_03.png 918w" sizes="(max-width: 393px) 85vw, 393px">Unfortunately the versions feature don&#8217;t allow you to add a comment or a description in the version &#8211; seems like the only thing missing. Would be great to be able to search for annotated information</p>
+<p>So in summary, you can have a bit more control on your logic apps source code within your environment, by leveraging from clone and versions feature.</p>
+<p>See you next time, Wagner.</p>
+<!--kg-card-end: html-->
+        </section>
+
+    </article>
+
+
+</main>
+
+
+        <section class="gh-container is-grid gh-outer">
+            <div class="gh-container-inner gh-inner">
+                <h2 class="gh-container-title">Read more</h2>
+                <div class="gh-feed">
+                        <article class="gh-card post">
+    <a class="gh-card-link" href="/and-all-of-a-sudden-its-2022/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="notetoselfblog/content/images/size/w160/format/webp/wordpress/2022/01/soar.png 160w,
+                            /content/images/size/w320/format/webp/wordpress/2022/01/soar.png 320w,
+                            /content/images/size/w600/format/webp/wordpress/2022/01/soar.png 600w,
+                            /content/images/size/w960/format/webp/wordpress/2022/01/soar.png 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2022/01/soar.png 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2022/01/soar.png 2000w"
+                    sizes="320px"
+                    src="notetoselfblog/content/images/size/w600/wordpress/2022/01/soar.png"
+                    alt="And all of a sudden, its 2022!"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">And all of a sudden, its 2022!</h3>
+                <p class="gh-card-excerpt is-body">And with that, another year goes by. Another year where communities had to revamp themselves and learn how to thrive in a online world. Here in NZ, after what started to look like we were pretty much bat to normal life, the reality of living during a pandemic stroked back,</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2022-01-09">Jan 9, 2022</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                        <article class="gh-card post">
+    <a class="gh-card-link" href="/calling-api-management-from-azure-function-using-managed-identities/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="notetoselfblog/content/images/size/w160/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 160w,
+                            /content/images/size/w320/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 320w,
+                            /content/images/size/w600/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 600w,
+                            /content/images/size/w960/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 2000w"
+                    sizes="320px"
+                    src="notetoselfblog/content/images/size/w600/wordpress/2017/09/field-notes-wide-e1515541406829.jpg"
+                    alt="Calling API Management from Azure Function using Managed Identities"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">Calling API Management from Azure Function using Managed Identities</h3>
+                <p class="gh-card-excerpt is-body">One of the solutions I am consulting on today is securing a number of APIs with OAuth with client credential flow, using Azure Active Directory as the identity provider. Those APIs are exposed via Azure API Management, which makes the validation of the access tokens provided as simple as injecting</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2021-04-05">Apr 5, 2021</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                        <article class="gh-card post">
+    <a class="gh-card-link" href="/countdown-to-global-integration-bootcamp-2021/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="notetoselfblog/content/images/size/w160/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 160w,
+                            /content/images/size/w320/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 320w,
+                            /content/images/size/w600/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 600w,
+                            /content/images/size/w960/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 2000w"
+                    sizes="320px"
+                    src="notetoselfblog/content/images/size/w600/wordpress/2021/02/GIB-2021-background.jpeg"
+                    alt="Countdown to Global Integration Bootcamp 2021"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">Countdown to Global Integration Bootcamp 2021</h3>
+                <p class="gh-card-excerpt is-body">Last January, I wrote about this year edition of Global Integration Bootcamp. As you might remember, this year we locked it on 26-27 February (UTC Time) running two different event streams starting at times that can be suitable for the three main time zone areas- APAC, EMEA and Americas.
+
+
+
+
+
+
+Lineup</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2021-02-19">Feb 19, 2021</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                        <article class="gh-card post">
+    <a class="gh-card-link" href="/global-integration-bootcamp-2021-goes-virtual/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="notetoselfblog/content/images/size/w160/format/webp/wordpress/2020/01/friends_banner.jpg 160w,
+                            /content/images/size/w320/format/webp/wordpress/2020/01/friends_banner.jpg 320w,
+                            /content/images/size/w600/format/webp/wordpress/2020/01/friends_banner.jpg 600w,
+                            /content/images/size/w960/format/webp/wordpress/2020/01/friends_banner.jpg 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2020/01/friends_banner.jpg 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2020/01/friends_banner.jpg 2000w"
+                    sizes="320px"
+                    src="notetoselfblog/content/images/size/w600/wordpress/2020/01/friends_banner.jpg"
+                    alt="Global Integration Bootcamp 2021 goes Virtual!!!"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">Global Integration Bootcamp 2021 goes Virtual!!!</h3>
+                <p class="gh-card-excerpt is-body">Hey there! Happy New Year!!!
+
+
+
+
+
+Many of you were asking about if we would be doing another Global Integration Bootcamp this year. I know that there is been a while since we provided any news about it, but the team was trying to come up with a formula that would</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2021-01-12">Jan 12, 2021</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                </div>
+            </div>
+        </section>
+
+    
+    <footer class="gh-footer gh-outer">
+    <div class="gh-footer-inner gh-inner">
+
+        <div class="gh-footer-bar">
+            <span class="gh-footer-logo is-title">
+                    Note to Self - Ghost Edition
+            </span>
+            <nav class="gh-footer-menu">
+                <ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>
+            <div class="gh-footer-copyright">
+                Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+        
+                <section class="gh-footer-signup">
+                    <h2 class="gh-footer-signup-header is-title">
+                        Note to Self - Ghost Edition
+                    </h2>
+                    <p class="gh-footer-signup-subhead is-body">
+                        Thoughts, stories and ideas.
+                    </p>
+                    <form class="gh-form" data-members-form>
+    <input class="gh-form-input" type="email" placeholder="jamie@example.com" required data-members-email>
+    <button class="gh-button" type="submit">
+        <span><span>Subscribe</span> <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 256 256"><path d="M224.49,136.49l-72,72a12,12,0,0,1-17-17L187,140H40a12,12,0,0,1,0-24H187L135.51,64.48a12,12,0,0,1,17-17l72,72A12,12,0,0,1,224.49,136.49Z"></path></svg></span>
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24">
+    <g stroke-linecap="round" stroke-width="2" fill="currentColor" stroke="none" stroke-linejoin="round" class="nc-icon-wrapper">
+        <g class="nc-loop-dots-4-24-icon-o">
+            <circle cx="4" cy="12" r="3"></circle>
+            <circle cx="12" cy="12" r="3"></circle>
+            <circle cx="20" cy="12" r="3"></circle>
+        </g>
+        <style data-cap="butt">
+            .nc-loop-dots-4-24-icon-o{--animation-duration:0.8s}
+            .nc-loop-dots-4-24-icon-o *{opacity:.4;transform:scale(.75);animation:nc-loop-dots-4-anim var(--animation-duration) infinite}
+            .nc-loop-dots-4-24-icon-o :nth-child(1){transform-origin:4px 12px;animation-delay:-.3s;animation-delay:calc(var(--animation-duration)/-2.666)}
+            .nc-loop-dots-4-24-icon-o :nth-child(2){transform-origin:12px 12px;animation-delay:-.15s;animation-delay:calc(var(--animation-duration)/-5.333)}
+            .nc-loop-dots-4-24-icon-o :nth-child(3){transform-origin:20px 12px}
+            @keyframes nc-loop-dots-4-anim{0%,100%{opacity:.4;transform:scale(.75)}50%{opacity:1;transform:scale(1)}}
+        </style>
+    </g>
+</svg>        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+    <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+    <style>
+        .checkmark {
+            width: 40px;
+            height: 40px;
+            display: block;
+            stroke-width: 2.5;
+            stroke: currentColor;
+            stroke-miterlimit: 10;
+        }
+
+        .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke .3s cubic-bezier(0.650, 0.000, 0.450, 1.000) forwards;
+        }
+
+        @keyframes stroke {
+            100% { stroke-dashoffset: 0; }
+        }
+    </style>
+</svg>    </button>
+</form>                </section>
+
+    </div>
+</footer>    
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="notetoselfblog/assets/built/source.js?v=c95e7abf59"></script>
+
+
+
+</body>
+</html>

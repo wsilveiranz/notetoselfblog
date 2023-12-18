@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Rethinking an old Logic App deployment package- part IV</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preload" as="style" href="notetoselfblog/assets/built/screen.css?v=c95e7abf59">
+    <link rel="preload" as="script" href="notetoselfblog/assets/built/source.js?v=c95e7abf59">
+
+    <link rel="stylesheet" type="text/css" href="notetoselfblog/assets/built/screen.css?v=c95e7abf59">
+
+    <style>
+        :root {
+            --background-color: #ffffff
+        }
+    </style>
+
+    <script>
+        /* The script for calculating the color contrast has been taken from
+        https://gomakethings.com/dynamically-changing-the-text-color-based-on-background-color-contrast-with-vanilla-js/ */
+        var accentColor = getComputedStyle(document.documentElement).getPropertyValue('--background-color');
+        accentColor = accentColor.trim().slice(1);
+        var r = parseInt(accentColor.substr(0, 2), 16);
+        var g = parseInt(accentColor.substr(2, 2), 16);
+        var b = parseInt(accentColor.substr(4, 2), 16);
+        var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+        var textColor = (yiq >= 128) ? 'dark' : 'light';
+
+        document.documentElement.className = `has-${textColor}-text`;
+    </script>
+
+    <link rel="canonical" href="http://wsilveiranz.github.io/notetoselfblog/rethinking-an-old-logic-app-deployment-package-part-iv/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Note to Self - Ghost Edition">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Rethinking an old Logic App deployment package- part IV">
+    <meta property="og:description" content="Previously in Note to self…
+
+
+I got one step closer to my goal to export all logic apps from a resource group to a Visual Studio project, using linked templates to deploy all logic apps in one when required, but still being able to deploy individual logic apps for a">
+    <meta property="og:url" content="http://wsilveiranz.github.io/notetoselfblog/rethinking-an-old-logic-app-deployment-package-part-iv/">
+    <meta property="og:image" content="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/08/pexels-photo-268362-e1502877608258.jpg">
+    <meta property="article:published_time" content="2017-09-04T19:35:27.000Z">
+    <meta property="article:modified_time" content="2017-09-05T22:37:50.000Z">
+    <meta property="article:tag" content="arm">
+    <meta property="article:tag" content="automation">
+    <meta property="article:tag" content="azure">
+    <meta property="article:tag" content="logic apps">
+    <meta property="article:tag" content="powershell">
+    
+    <meta property="article:publisher" content="https://www.facebook.com/ghost">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Rethinking an old Logic App deployment package- part IV">
+    <meta name="twitter:description" content="Previously in Note to self…
+
+
+I got one step closer to my goal to export all logic apps from a resource group to a Visual Studio project, using linked templates to deploy all logic apps in one when required, but still being able to deploy individual logic apps for a">
+    <meta name="twitter:url" content="http://wsilveiranz.github.io/notetoselfblog/rethinking-an-old-logic-app-deployment-package-part-iv/">
+    <meta name="twitter:image" content="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/08/pexels-photo-268362-e1502877608258.jpg">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="wsilveiranz">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="arm, automation, azure, logic apps, powershell">
+    <meta name="twitter:site" content="@ghost">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="617">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Note to Self - Ghost Edition",
+        "url": "http://wsilveiranz.github.io/notetoselfblog/",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "http://wsilveiranz.github.io/notetoselfblog/favicon.ico"
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "wsilveiranz",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://secure.gravatar.com/avatar/8cf8f21650fd5355a5b2c08e0f9ca914?s=512&d=mm&r=g",
+            "width": 512,
+            "height": 512
+        },
+        "url": "http://wsilveiranz.github.io/notetoselfblog/author/wsilveiranz/",
+        "sameAs": []
+    },
+    "headline": "Rethinking an old Logic App deployment package- part IV",
+    "url": "http://wsilveiranz.github.io/notetoselfblog/rethinking-an-old-logic-app-deployment-package-part-iv/",
+    "datePublished": "2017-09-04T19:35:27.000Z",
+    "dateModified": "2017-09-05T22:37:50.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/08/pexels-photo-268362-e1502877608258.jpg",
+        "width": 1200,
+        "height": 617
+    },
+    "keywords": "arm, automation, azure, logic apps, powershell",
+    "description": "Previously in Note to self…\n\n\nI got one step closer to my goal to export all logic apps from a resource group to a Visual Studio project, using linked templates to deploy all logic apps in one when required, but still being able to deploy individual logic apps for a patch template. In previous posts, I’ve managed to use the extend a open source component originally created by Jeff Hollan and maintained by Mattias Lögdberg, adding a couple of extra cmdlets. You can get the last post here.\n\n\n\nVisu",
+    "mainEntityOfPage": "http://wsilveiranz.github.io/notetoselfblog/rethinking-an-old-logic-app-deployment-package-part-iv/"
+}
+    </script>
+
+    <meta name="generator" content="Ghost 5.75">
+    <link rel="alternate" type="application/rss+xml" title="Note to Self - Ghost Edition" href="http://wsilveiranz.github.io/notetoselfblog/rss/">
+    <script defer src="https://cdn.jsdelivr.net/ghost/portal@~2.36/umd/portal.min.js" data-i18n="false" data-ghost="http://wsilveiranz.github.io/notetoselfblog/" data-key="4d946a7b27dfe0cf2428731cab" data-api="http://wsilveiranz.github.io/notetoselfblog/ghost/api/content/" crossorigin="anonymous"></script><style id="gh-members-styles">.gh-post-upgrade-cta-content,
+.gh-post-upgrade-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: center;
+    width: 100%;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.gh-post-upgrade-cta-content {
+    border-radius: 8px;
+    padding: 40px 4vw;
+}
+
+.gh-post-upgrade-cta h2 {
+    color: #ffffff;
+    font-size: 28px;
+    letter-spacing: -0.2px;
+    margin: 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta p {
+    margin: 20px 0 0;
+    padding: 0;
+}
+
+.gh-post-upgrade-cta small {
+    font-size: 16px;
+    letter-spacing: -0.2px;
+}
+
+.gh-post-upgrade-cta a {
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a:hover {
+    color: #ffffff;
+    opacity: 0.8;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.gh-post-upgrade-cta a.gh-btn {
+    display: block;
+    background: #ffffff;
+    text-decoration: none;
+    margin: 28px 0 0;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.gh-post-upgrade-cta a.gh-btn:hover {
+    opacity: 0.92;
+}</style>
+    <script defer src="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/sodo-search.min.js" data-key="4d946a7b27dfe0cf2428731cab" data-styles="https://cdn.jsdelivr.net/ghost/sodo-search@~1.1/umd/main.css" data-sodo-search="http://wsilveiranz.github.io/notetoselfblog/" crossorigin="anonymous"></script>
+    
+    <link href="http://wsilveiranz.github.io/notetoselfblog/webmentions/receive/" rel="webmention">
+    <script defer src="/public/member-attribution.min.js?v=c95e7abf59"></script><style>:root {--ghost-accent-color: #FF1A75;}</style>
+
+</head>
+<body class="post-template tag-arm tag-automation tag-azure tag-logic-apps tag-powershell tag-hash-wordpress tag-hash-import-2023-12-17-09-11 has-sans-title has-sans-body">
+
+<div class="gh-viewport">
+    
+    <header id="gh-navigation" class="gh-navigation is-middle-logo gh-outer">
+    <div class="gh-navigation-inner gh-inner">
+
+        <div class="gh-navigation-brand">
+            <a class="gh-navigation-logo is-title" href="http://wsilveiranz.github.io/notetoselfblog">
+                    Note to Self - Ghost Edition
+            </a>
+            <button class="gh-search gh-icon-button" aria-label="Search this site" data-ghost-search>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>            <button class="gh-burger gh-icon-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path></svg>                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg>            </button>
+        </div>
+
+        <nav class="gh-navigation-menu">
+            <ul class="nav">
+    <li class="nav-home"><a href="http://wsilveiranz.github.io/notetoselfblog/">Home</a></li>
+    <li class="nav-about"><a href="http://wsilveiranz.github.io/notetoselfblog/about/">About</a></li>
+</ul>
+
+        </nav>
+
+        <div class="gh-navigation-actions">
+                <button class="gh-search gh-icon-button" aria-label="Search this site" data-ghost-search>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>                <div class="gh-navigation-members">
+                            <a href="#/portal/signin" data-portal="signin">Sign in</a>
+                                <a class="gh-button" href="#/portal/signup" data-portal="signup">Subscribe</a>
+                </div>
+        </div>
+
+    </div>
+</header>
+
+    
+
+<main class="gh-main">
+
+    <article class="gh-article post tag-arm tag-automation tag-azure tag-logic-apps tag-powershell tag-hash-wordpress tag-hash-import-2023-12-17-09-11">
+
+        <header class="gh-article-header gh-canvas">
+
+                <a class="gh-article-tag" href="http://wsilveiranz.github.io/notetoselfblog/tag/arm/">arm</a>
+            <h1 class="gh-article-title is-title">Rethinking an old Logic App deployment package- part IV</h1>
+
+            <div class="gh-article-meta">
+                <div class="gh-article-author-image">
+                            <a href="/author/wsilveiranz/">
+                                <img class="author-profile-image" src="https://secure.gravatar.com/avatar/8cf8f21650fd5355a5b2c08e0f9ca914?s&#x3D;512&amp;d&#x3D;mm&amp;r&#x3D;g" alt="wsilveiranz" />
+                            </a>
+                </div>
+                <div class="gh-article-meta-wrapper">
+                    <h4 class="gh-article-author-name"><a href="/author/wsilveiranz/">wsilveiranz</a></h4>
+                    <div class="gh-article-meta-content">
+                        <time class="gh-article-meta-date" datetime="2017-09-04">Sep 4, 2017</time>
+                            <span class="gh-article-meta-length"><span class="bull">—</span> 6 min read</span>
+                    </div>
+                </div>
+            </div>
+
+                <figure class="gh-article-image">
+        <img
+            srcset="notetoselfblog/content/images/size/w320/wordpress/2017/08/pexels-photo-268362-e1502877608258.jpg 320w,
+                    /content/images/size/w600/wordpress/2017/08/pexels-photo-268362-e1502877608258.jpg 600w,
+                    /content/images/size/w960/wordpress/2017/08/pexels-photo-268362-e1502877608258.jpg 960w,
+                    /content/images/size/w1200/wordpress/2017/08/pexels-photo-268362-e1502877608258.jpg 1200w,
+                    /content/images/size/w2000/wordpress/2017/08/pexels-photo-268362-e1502877608258.jpg 2000w"
+            src="notetoselfblog/content/images/size/w1200/wordpress/2017/08/pexels-photo-268362-e1502877608258.jpg"
+            alt="Rethinking an old Logic App deployment package- part IV"
+        >
+    </figure>
+
+        </header>
+
+        <section class="gh-content gh-canvas is-body">
+            <!--kg-card-begin: html--><h2>Previously in Note to self&#8230;</h2>
+<p>I got one step closer to my goal to export all logic apps from a resource group to a Visual Studio project, using linked templates to deploy all logic apps in one when required, but still being able to deploy individual logic apps for a patch template. In previous posts, I&#8217;ve managed to use the extend a open source component originally created by Jeff Hollan and maintained by <a href="http://mlogdberg.com/?ref=localhost" target="_blank" rel="noopener">Mattias Lögdberg</a>, adding a couple of extra cmdlets. You can get the last post <a href="http://notetoself.tech/2017/08/27/rethinking-and-old-logic-app-deployment-package-part-iii/?ref=localhost">here</a>.</p>
+<h2>Visual Studio ARM Deployment Project</h2>
+<p>For the last step in this process, I needed to create an Azure Resource Manager deployment project. I decided to go through the most pragmatic route &#8211; to use an existing project as template. So as a first step, I created an empty Azure Resource Group VS project and tried to find out how artefacts can be associated to it.<!--more--></p>
+<p><img loading="lazy" class="alignnone wp-image-984" src="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/Cloud-project-300x171.png" alt="Visual Studio project selection" width="583" height="332" srcset="http://wsilveiranz.github.io/notetoselfblog/content/images/wordpress/2017/09/Cloud-project-300x171.png 300w, http://localhost:2368/content/images/wordpress/2017/09/Cloud-project-768x438.png 768w, http://localhost:2368/content/images/wordpress/2017/09/Cloud-project-1024x585.png 1024w, http://localhost:2368/content/images/wordpress/2017/09/Cloud-project-1200x685.png 1200w, http://localhost:2368http://localhost:2368/content/images/wordpress/2017/09/Cloud-project.png 1883w, http://localhost:2368http://localhost:2368/content/images/wordpress/2017/09/Cloud-project.png 1680w" sizes="(max-width: 583px) 85vw, 583px"></p>
+<p>A new project creates the following files:</p>
+<ul>
+<li>azuredeploy.json &#8211; an empty ARM template</li>
+<li>azuredeploy.parameters.json &#8211; an empty ARM paramters file</li>
+<li>&lt;projectname&gt;.deployproj &#8211; the VS project definition</li>
+<li>Deploy-AzureResourceGroup.ps1 &#8211; the powershell script used to deploy the ARM templates</li>
+<li>Deployment.targets &#8211; a build definition file</li>
+</ul>
+<p>deployproj is an xml file representing the project components. Analysing the deployproj file, and adding a couple of resources to the project, I found that files are associated to the project using the ItemsGroup element, with the following syntax:</p>
+<pre class="lang:xhtml decode:true ">&lt;[buildaction] Include="[relativepath/filename.ext]"/&gt;</pre>
+<p>ARM templates are included with the <strong>Content</strong> build action. A new project would look like this:</p>
+<pre class="lang:xhtml decode:true">&lt;ItemGroup&gt;
+    &lt;Content Include="azuredeploy.json" /&gt;
+    &lt;Content Include="azuredeploy.parameters.json" /&gt;
+    &lt;None Include="Deployment.targets"&gt;
+      &lt;Visible&gt;False&lt;/Visible&gt;
+    &lt;/None&gt;
+    &lt;Content Include="Deploy-AzureResourceGroup.ps1" /&gt;
+&lt;/ItemGroup&gt;</pre>
+<p>Adding a new resource to the project would change it to:</p>
+<pre class="lang:default decode:true">&lt;ItemGroup&gt;
+	&lt;Content Include="azuredeploy.json" /&gt;
+	&lt;Content Include="azuredeploy.parameters.json" /&gt;
+	&lt;Content Include="newresource/newresource.json" /&gt;
+	&lt;Content Include="newresource/newresource.parameters.json" /&gt;
+	&lt;None Include="Deployment.targets"&gt;
+		&lt;Visible&gt;False&lt;/Visible&gt;
+	&lt;/None&gt;
+	&lt;Content Include="Deploy-AzureResourceGroup.ps1" /&gt;
+&lt;/ItemGroup&gt;</pre>
+<p>So that gave me the clue I needed to implement the cmdlets that would:</p>
+<ul>
+<li>Create the required files (&lt;project&gt;.deployproj, deployment.targets, Deploy-AzureResourceGroup.ps1)</li>
+<li>Include all files I&#8217;ve created as part of the previous steps into the ItemsGroup area.</li>
+</ul>
+<h2>Add-DeploymentVSProject cmdlet</h2>
+<p>By now I was quite used to the cmdlet classes, so here is how I defined the cmdlet:</p>
+<ul>
+<li>The cmdle will have a single input parameter called SourceDir, which would point to the folder where the project would be created.</li>
+<li>A base deployproj, as well as the deployment.targets and Deploy-AzureResourceGroup.ps1 files would be included as embedded resources.</li>
+<li>BeginProcessing virtual method would be overriden to create all three files &#8211; deployproj, targets and ps1 files in the folder.</li>
+</ul>
+<pre class="lang:c# decode:true">protected override void BeginProcessing()
+{
+	base.BeginProcessing();
+	string[] fileList = Directory.GetFiles(SourceDir, "*.deployproj");
+	if (fileList != null &amp;&amp; fileList.Length &gt; 0)
+	{
+		DeployProject = fileList[0];
+	}
+	else
+	{
+		InitializeSourceDir();
+	}
+}
+
+ private void InitializeSourceDir()
+{
+	string[] folder = SourceDir.Split('\\');
+	DeployProject = String.Format(@"{0}.deployproj", folder.Last());
+	string targetFile = "Deployment.targets";
+	string powershellFile = "Deploy-AzureResourceGroup.ps1";
+
+	CreateFile(DeployProject, SourceDir, "DeployProjectTemplate.deployproj");
+	CreateFile(targetFile, SourceDir, targetFile);
+	CreateFile(powershellFile, SourceDir, powershellFile);
+}</pre>
+<ul>
+<li>ProcessRecords virtual method would be overriden to include the files to the project. For each subfolder inside SourceDir, a couple of entries would be added to ItemsGroup &#8211; one for the template file and another for the parameters file.</li>
+</ul>
+<pre class="lang:c# decode:true">protected override void ProcessRecord()
+{
+	string projectfile = Path.Combine(SourceDir, DeployProject);
+	WriteDebug(projectfile);
+	XNamespace ns = @"http://schemas.microsoft.com/developer/msbuild/2003";
+	XDocument project = XDocument.Load(projectfile);
+	WriteDebug(project.Root.ToString());
+	XElement projectID = project.Descendants(ns + "ProjectGuid").FirstOrDefault();
+	if (projectID != null)
+	{ 
+		projectID.Value = Guid.NewGuid().ToString();
+	}
+	XElement itemGroups = project.Descendants(ns + "ItemGroup").Where(xl =&gt; !xl.HasAttributes).FirstOrDefault();
+	if (itemGroups != null)
+	{
+		WriteDebug("Inside Loop");
+		List&lt;string&gt; dirList = Directory.GetDirectories(SourceDir).ToList();
+		WriteDebug(dirList.Count.ToString());
+		foreach (string dir in dirList)
+		{
+			string folder = dir.Replace(SourceDir, "").Replace(@"\","");
+			string template = string.Format(@"{0}\{0}.json", folder);
+			string parameter =string.Format(@"{0}\{0}.parameters.json", folder);
+			XElement templateXML = new XElement(ns + "Content", new XAttribute("Include", template));
+			XElement parameterXML = new XElement(ns + "Content", new XAttribute("Include", parameter));
+
+			itemGroups.Add(templateXML);
+			itemGroups.Add(parameterXML);
+		}
+
+		project.Save(projectfile);
+	}
+}</pre>
+<p>The new cmdlet can be invoked by executing this command:</p>
+<pre class="lang:ps decode:true ">Add-DeploymentVSProject -SourceDir "d:\test"</pre>
+<h2>Finalizing Get-RGLogicAppTemplates</h2>
+<p>So now that the last piece of the puzzle was created, it was just a matter of adding one last line to Get-RGLogicAppTemplates:</p>
+<pre class="lang:ps decode:true">Add-DeploymentVSProject -SourceDir $destination</pre>
+<p>That last line would create the VS project files and add the files created in previous steps to the project. The final script looked like this:</p>
+<pre class="lang:ps decode:true">&lt;#
+.Synopsis
+   Create template Files for All logic Apps in a Resource Group.
+.DESCRIPTION
+   This script will create template files from all logic apps in a resource group and parameter files and saves them in folders defined as parameter.
+   It assumes that the user has already been authenticated against Azure.
+   It depends on the following components:
+   - armclient
+   - AzureRM
+.EXAMPLE
+   ./Get-RGLogicAppsTemplate.ps1 "My Subscription" "mytenant.onmicrosoft.com" "MyResourceGroup" "c:\mydestination"
+.PARAMETER subscriptionname
+    The subscription name where the resource group is deployed.
+.PARAMETER tenantname
+    The tenant associated to the subscription
+.PARAMETER resourcegroup
+    The Resource Group containing the Logic Apps to be extracted
+.PARAMETER destination
+    The local folder where the logic app templates will be created. if this folder doesn't exists it will be created. A new params folder will be created inside the destination folder.
+#&gt;
+param([string] $subscriptionname, [string] $tenantname, [string] $resourcegroup, [string] $destination)
+
+# Import the Logic Apps Template Module #
+$module = resolve-path ".\..\bin\Debug\LogicAppTemplate.dll"
+Import-Module $module
+
+# Create required folders #
+md -Force $destination | Out-Null
+
+# Select the correct subscription #
+Get-AzureRmSubscription -SubscriptionName $subscriptionname | Select-AzureRmSubscription | Out-Null
+
+Write-Host
+
+# Gets a list of logic app
+Find-AzureRmResource -ResourceGroupNameContains $resourcegroup -ResourceType Microsoft.Logic/workflows | ForEach-Object{ 
+
+	Write-Host $("Creating {0} Logic App Template" -f $_.Name)
+
+	# Define the destination folder #
+	$logicappfolder = [IO.Path]::GetFullPath((Join-Path $destination $_.Name))
+	md $logicappfolder -Force | Out-Null
+	
+	# Define the destination file names #
+	$destinationfile = $(Join-path $logicappfolder ($_.Name + ".json"))
+	$destinationparmfile = $(Join-path $logicappfolder ($_.Name + ".parameters.json"))
+	
+	# Create Logic App Template #
+	armclient token $_.SubscriptionId |	Get-LogicAppTemplate -LogicApp $_.Name -ResourceGroup $_.ResourceGroupName -SubscriptionId $_.SubscriptionId -TenantName $tenantname -Verbose | Out-File $destinationfile -Force
+	
+	# Generate the Parameter File #
+	Get-ParameterTemplate -TemplateFile $destinationfile | Out-File $destinationparmfile -Force}
+
+Write-Host
+# Initialize Azure Deploy nested Templates variable #
+$azuredeploytemplate = ""
+
+Write-Host "Creating AzureDeploy ARM Template"
+
+# Gets a list of resources to add to the nested template #
+Get-ChildItem $destination -Directory | ForEach-object {
+
+    # Adds the resource to the nested templates #
+    $azuredeploytemplate = Get-NestedResourceTemplate -ResourceName $_.Name -Template $azuredeploytemplate}
+
+#Save nested template to destination #
+$azuredeploytemplate | Out-File $(Join-path $destination "azuredeploy.json") -Force
+
+Write-Host
+
+Write-Host "Creating AzureDeploy ARM Parameter Template"
+
+#Generate an empty Azure Deploy Parameter
+
+Get-EmptyParameterTemplate | Out-File $(Join-path $destination "azuredeploy.parameters.json") -Force
+
+Write-Host
+
+Write-Host "Creating Visual Studio Project"
+
+Add-DeploymentVSProject -SourceDir $destination</pre>
+<p>In the end was quite pleased with the process. The project that triggered this whole process, where I needed to amend 3 out of 16 logic apps, was deployed with success, with much bigger confidence than I had before, as I could extract the DEV/TEST logic apps and just update those specific parameter files, guranteeing that none of the other logic apps would be redeployed.</p>
+<h2>Next steps</h2>
+<p>I could think in a couple of improvements for this process:</p>
+<ul>
+<li>As you probably noticed, I&#8217;ve only created the deployproj file, so there is no Visual Studio solution in this process. It was a concious decision, as I was running out of time to actually use the code to do the real work. Since VS wraps an &#8220;orphan&#8221; project in a solution, that was a safe bet.</li>
+<li>Ideally, I would define which environment I would like to create in order to create multiple parameter files.</li>
+<li>I still need to understand how nested and parent parameter files work, but maybe I could roll up all the parameters to the root parameter files. That might make life easier for full deployment.</li>
+</ul>
+<p>I will probably work on some of those items at a later stage or, if you are interested, you might want to <a href="https://github.com/jeffhollan/LogicAppTemplateCreator?ref=localhost" target="_blank" rel="noopener">fork the project </a>and have a go yourself? ;-D</p>
+<p>I hope that you had fun reading this series &#8211; I definitely had lots of fun working on this and documenting as I went.</p>
+<p>See you next time!</p>
+<!--kg-card-end: html-->
+        </section>
+
+    </article>
+
+
+</main>
+
+
+        <section class="gh-container is-grid gh-outer">
+            <div class="gh-container-inner gh-inner">
+                <h2 class="gh-container-title">Read more</h2>
+                <div class="gh-feed">
+                        <article class="gh-card post">
+    <a class="gh-card-link" href="/and-all-of-a-sudden-its-2022/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="notetoselfblog/content/images/size/w160/format/webp/wordpress/2022/01/soar.png 160w,
+                            /content/images/size/w320/format/webp/wordpress/2022/01/soar.png 320w,
+                            /content/images/size/w600/format/webp/wordpress/2022/01/soar.png 600w,
+                            /content/images/size/w960/format/webp/wordpress/2022/01/soar.png 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2022/01/soar.png 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2022/01/soar.png 2000w"
+                    sizes="320px"
+                    src="notetoselfblog/content/images/size/w600/wordpress/2022/01/soar.png"
+                    alt="And all of a sudden, its 2022!"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">And all of a sudden, its 2022!</h3>
+                <p class="gh-card-excerpt is-body">And with that, another year goes by. Another year where communities had to revamp themselves and learn how to thrive in a online world. Here in NZ, after what started to look like we were pretty much bat to normal life, the reality of living during a pandemic stroked back,</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2022-01-09">Jan 9, 2022</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                        <article class="gh-card post">
+    <a class="gh-card-link" href="/calling-api-management-from-azure-function-using-managed-identities/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="notetoselfblog/content/images/size/w160/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 160w,
+                            /content/images/size/w320/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 320w,
+                            /content/images/size/w600/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 600w,
+                            /content/images/size/w960/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2017/09/field-notes-wide-e1515541406829.jpg 2000w"
+                    sizes="320px"
+                    src="notetoselfblog/content/images/size/w600/wordpress/2017/09/field-notes-wide-e1515541406829.jpg"
+                    alt="Calling API Management from Azure Function using Managed Identities"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">Calling API Management from Azure Function using Managed Identities</h3>
+                <p class="gh-card-excerpt is-body">One of the solutions I am consulting on today is securing a number of APIs with OAuth with client credential flow, using Azure Active Directory as the identity provider. Those APIs are exposed via Azure API Management, which makes the validation of the access tokens provided as simple as injecting</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2021-04-05">Apr 5, 2021</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                        <article class="gh-card post">
+    <a class="gh-card-link" href="/countdown-to-global-integration-bootcamp-2021/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="notetoselfblog/content/images/size/w160/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 160w,
+                            /content/images/size/w320/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 320w,
+                            /content/images/size/w600/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 600w,
+                            /content/images/size/w960/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2021/02/GIB-2021-background.jpeg 2000w"
+                    sizes="320px"
+                    src="notetoselfblog/content/images/size/w600/wordpress/2021/02/GIB-2021-background.jpeg"
+                    alt="Countdown to Global Integration Bootcamp 2021"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">Countdown to Global Integration Bootcamp 2021</h3>
+                <p class="gh-card-excerpt is-body">Last January, I wrote about this year edition of Global Integration Bootcamp. As you might remember, this year we locked it on 26-27 February (UTC Time) running two different event streams starting at times that can be suitable for the three main time zone areas- APAC, EMEA and Americas.
+
+
+
+
+
+
+Lineup</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2021-02-19">Feb 19, 2021</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                        <article class="gh-card post">
+    <a class="gh-card-link" href="/global-integration-bootcamp-2021-goes-virtual/">
+            <figure class="gh-card-image">
+                <img
+                    srcset="notetoselfblog/content/images/size/w160/format/webp/wordpress/2020/01/friends_banner.jpg 160w,
+                            /content/images/size/w320/format/webp/wordpress/2020/01/friends_banner.jpg 320w,
+                            /content/images/size/w600/format/webp/wordpress/2020/01/friends_banner.jpg 600w,
+                            /content/images/size/w960/format/webp/wordpress/2020/01/friends_banner.jpg 960w,
+                            /content/images/size/w1200/format/webp/wordpress/2020/01/friends_banner.jpg 1200w,
+                            /content/images/size/w2000/format/webp/wordpress/2020/01/friends_banner.jpg 2000w"
+                    sizes="320px"
+                    src="notetoselfblog/content/images/size/w600/wordpress/2020/01/friends_banner.jpg"
+                    alt="Global Integration Bootcamp 2021 goes Virtual!!!"
+                    loading="lazy"
+                >
+            </figure>
+        <div class="gh-card-wrapper">
+            <h3 class="gh-card-title is-title">Global Integration Bootcamp 2021 goes Virtual!!!</h3>
+                <p class="gh-card-excerpt is-body">Hey there! Happy New Year!!!
+
+
+
+
+
+Many of you were asking about if we would be doing another Global Integration Bootcamp this year. I know that there is been a while since we provided any news about it, but the team was trying to come up with a formula that would</p>
+            <footer class="gh-card-meta"><!--
+             -->
+                    <span class="gh-card-author">By wsilveiranz</span>
+                    <time class="gh-card-date" datetime="2021-01-12">Jan 12, 2021</time>
+                <!--
+         --></footer>
+        </div>
+    </a>
+</article>                </div>
+            </div>
+        </section>
+
+    
+    <footer class="gh-footer gh-outer">
+    <div class="gh-footer-inner gh-inner">
+
+        <div class="gh-footer-bar">
+            <span class="gh-footer-logo is-title">
+                    Note to Self - Ghost Edition
+            </span>
+            <nav class="gh-footer-menu">
+                <ul class="nav">
+    <li class="nav-sign-up"><a href="#/portal/">Sign up</a></li>
+</ul>
+
+            </nav>
+            <div class="gh-footer-copyright">
+                Powered by <a href="https://ghost.org/" target="_blank" rel="noopener">Ghost</a>
+            </div>
+        </div>
+        
+                <section class="gh-footer-signup">
+                    <h2 class="gh-footer-signup-header is-title">
+                        Note to Self - Ghost Edition
+                    </h2>
+                    <p class="gh-footer-signup-subhead is-body">
+                        Thoughts, stories and ideas.
+                    </p>
+                    <form class="gh-form" data-members-form>
+    <input class="gh-form-input" type="email" placeholder="jamie@example.com" required data-members-email>
+    <button class="gh-button" type="submit">
+        <span><span>Subscribe</span> <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 256 256"><path d="M224.49,136.49l-72,72a12,12,0,0,1-17-17L187,140H40a12,12,0,0,1,0-24H187L135.51,64.48a12,12,0,0,1,17-17l72,72A12,12,0,0,1,224.49,136.49Z"></path></svg></span>
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24">
+    <g stroke-linecap="round" stroke-width="2" fill="currentColor" stroke="none" stroke-linejoin="round" class="nc-icon-wrapper">
+        <g class="nc-loop-dots-4-24-icon-o">
+            <circle cx="4" cy="12" r="3"></circle>
+            <circle cx="12" cy="12" r="3"></circle>
+            <circle cx="20" cy="12" r="3"></circle>
+        </g>
+        <style data-cap="butt">
+            .nc-loop-dots-4-24-icon-o{--animation-duration:0.8s}
+            .nc-loop-dots-4-24-icon-o *{opacity:.4;transform:scale(.75);animation:nc-loop-dots-4-anim var(--animation-duration) infinite}
+            .nc-loop-dots-4-24-icon-o :nth-child(1){transform-origin:4px 12px;animation-delay:-.3s;animation-delay:calc(var(--animation-duration)/-2.666)}
+            .nc-loop-dots-4-24-icon-o :nth-child(2){transform-origin:12px 12px;animation-delay:-.15s;animation-delay:calc(var(--animation-duration)/-5.333)}
+            .nc-loop-dots-4-24-icon-o :nth-child(3){transform-origin:20px 12px}
+            @keyframes nc-loop-dots-4-anim{0%,100%{opacity:.4;transform:scale(.75)}50%{opacity:1;transform:scale(1)}}
+        </style>
+    </g>
+</svg>        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+    <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+    <style>
+        .checkmark {
+            width: 40px;
+            height: 40px;
+            display: block;
+            stroke-width: 2.5;
+            stroke: currentColor;
+            stroke-miterlimit: 10;
+        }
+
+        .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke .3s cubic-bezier(0.650, 0.000, 0.450, 1.000) forwards;
+        }
+
+        @keyframes stroke {
+            100% { stroke-dashoffset: 0; }
+        }
+    </style>
+</svg>    </button>
+</form>                </section>
+
+    </div>
+</footer>    
+</div>
+
+    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="notetoselfblog/assets/built/source.js?v=c95e7abf59"></script>
+
+
+
+</body>
+</html>
